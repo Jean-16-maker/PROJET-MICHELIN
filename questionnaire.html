@@ -59,12 +59,12 @@
 
 .q-wrap button.principal{font:800 1rem/1 var(--titre);letter-spacing:.06em;text-transform:uppercase;padding:16px 26px;border-radius:999px;border:0;cursor:pointer;background:var(--jaune);color:var(--bleu-fonce);margin-top:18px;width:100%}
 .q-wrap button.principal:disabled{opacity:.45;cursor:default}
-.likert-ligne{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:14px 14px 10px;margin:0 0 12px}
-.likert-ligne p{font-weight:700;margin:0 0 10px}
+.kicker-avis{font:800 .8rem/1 var(--titre);letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin:0 0 10px}
 .echelle{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.echelle .opt{text-align:center;font:800 1.25rem/1 var(--titre);padding:12px 0}
-.bornes-likert{display:flex;justify-content:space-between;font-size:.75rem;color:var(--gris);margin-top:6px}
-.retour{background:none;border:0;color:var(--gris);font:600 .88rem/1 var(--texte);padding:14px 0 0;cursor:pointer;text-decoration:underline}
+.echelle .opt{text-align:center;font:800 1.6rem/1 var(--titre);padding:20px 0}
+.bornes-likert{display:flex;justify-content:space-between;font-size:.8rem;color:var(--gris);margin-top:8px}
+.retour{display:inline-block;margin-top:18px;background:#fff;border:1px solid var(--trait);border-radius:999px;color:var(--bleu);font:800 .9rem/1 var(--titre);letter-spacing:.06em;text-transform:uppercase;padding:12px 18px;cursor:pointer}
+.retour:hover{border-color:var(--bleu)}
 .erreur{color:var(--alerte);font-weight:700;margin:10px 0 0;min-height:1.2em}
 .mentions{font-size:.8rem;color:var(--gris);margin:14px 0 0}
 pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:#fff;border:1px dashed var(--trait);padding:10px;border-radius:8px}
@@ -144,13 +144,44 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 </div>
 </section>
 
-<!-- 6. Votre avis : trois échelles de 1 à 5, même texte dans les deux versions ; l'écran avance quand les trois sont remplies -->
-<section class="etape" data-etape="avis">
-<h1>Votre avis</h1>
-<p class="aide">De 1 = pas du tout d'accord à 5 = tout à fait d'accord.</p>
-<div class="likert-ligne" data-likert="likert_vaut_supplement"><p>10 000 km de plus valent bien un prix plus élevé.</p></div>
-<div class="likert-ligne" data-likert="likert_croit_duree"><p>Je crois à la durée de vie annoncée pour le pneu 1.</p></div>
-<div class="likert-ligne" data-likert="likert_confiance"><p>Je ferais confiance au pneu 1 pour rouler en sécurité toute l'année.</p></div>
+<!-- 6. Votre avis : trois écrans, une phrase chacun, à noter de 1 à 5 (même texte dans les deux versions) -->
+<section class="etape" data-etape="likert_vaut_supplement" data-champ="likert_vaut_supplement">
+<p class="kicker-avis">Votre avis · 1 sur 3</p>
+<h1>10 000 km de plus valent bien un prix plus élevé.</h1>
+<div class="echelle">
+<button type="button" class="opt" data-v="1" aria-label="1 sur 5">1</button>
+<button type="button" class="opt" data-v="2" aria-label="2 sur 5">2</button>
+<button type="button" class="opt" data-v="3" aria-label="3 sur 5">3</button>
+<button type="button" class="opt" data-v="4" aria-label="4 sur 5">4</button>
+<button type="button" class="opt" data-v="5" aria-label="5 sur 5">5</button>
+</div>
+<div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
+</section>
+
+<section class="etape" data-etape="likert_croit_duree" data-champ="likert_croit_duree">
+<p class="kicker-avis">Votre avis · 2 sur 3</p>
+<h1>Je crois à la durée de vie annoncée pour le pneu 1.</h1>
+<div class="echelle">
+<button type="button" class="opt" data-v="1" aria-label="1 sur 5">1</button>
+<button type="button" class="opt" data-v="2" aria-label="2 sur 5">2</button>
+<button type="button" class="opt" data-v="3" aria-label="3 sur 5">3</button>
+<button type="button" class="opt" data-v="4" aria-label="4 sur 5">4</button>
+<button type="button" class="opt" data-v="5" aria-label="5 sur 5">5</button>
+</div>
+<div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
+</section>
+
+<section class="etape" data-etape="likert_confiance" data-champ="likert_confiance">
+<p class="kicker-avis">Votre avis · 3 sur 3</p>
+<h1>Je ferais confiance au pneu 1 pour rouler en sécurité toute l'année.</h1>
+<div class="echelle">
+<button type="button" class="opt" data-v="1" aria-label="1 sur 5">1</button>
+<button type="button" class="opt" data-v="2" aria-label="2 sur 5">2</button>
+<button type="button" class="opt" data-v="3" aria-label="3 sur 5">3</button>
+<button type="button" class="opt" data-v="4" aria-label="4 sur 5">4</button>
+<button type="button" class="opt" data-v="5" aria-label="5 sur 5">5</button>
+</div>
+<div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
 </section>
 
 <section class="etape" data-etape="critere" data-champ="critere_principal">
@@ -254,8 +285,7 @@ function afficher(n){
   var nom = nomsEtapes[n];
   el('barre').style.width = Math.round(100 * n / (nomsEtapes.length - 1)) + '%';
   el('erreur').textContent = '';
-  /* Retour possible avant la jauge seulement : une réponse de prix ne se corrige pas après coup. */
-  el('retour').hidden = !(nom === 'filtre' || nom === 'offre');
+  el('retour').hidden = nom === 'accueil' || nom === 'fin';
   window.scrollTo(0, 0);
 }
 function suivant(){
@@ -281,32 +311,9 @@ document.querySelectorAll('[data-champ]').forEach(function(section){
   });
 });
 document.querySelectorAll('[data-suivant]').forEach(function(b){ b.addEventListener('click', function(){ if (b.closest('.etape') !== etapes[courante] || bloque()) return; verrou = true; suivant(); }); });
-el('retour').addEventListener('click', function(){ if (courante > 0) afficher(courante - 1); });
+el('retour').addEventListener('click', function(){ if (courante > 0 && !bloque()) afficher(courante - 1); });
 
-/* Les échelles de 1 à 5 : un clic par ligne ; quand les trois lignes ont une réponse, on passe à l'écran suivant. */
-var lignesLikert = Array.prototype.slice.call(document.querySelectorAll('[data-likert]'));
-lignesLikert.forEach(function(ligne){
-  var champ = ligne.getAttribute('data-likert');
-  var echelle = document.createElement('div'); echelle.className = 'echelle';
-  for (var i = 1; i <= 5; i++) {
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'opt'; b.textContent = i; b.setAttribute('data-v', i);
-    b.setAttribute('aria-label', i + ' sur 5');
-    echelle.appendChild(b);
-  }
-  var bornes = document.createElement('div'); bornes.className = 'bornes-likert';
-  bornes.innerHTML = '<span>Pas du tout d\u2019accord</span><span>Tout à fait d\u2019accord</span>';
-  ligne.appendChild(echelle); ligne.appendChild(bornes);
-  echelle.querySelectorAll('.opt').forEach(function(b){
-    b.addEventListener('click', function(){
-      if (ligne.closest('.etape') !== etapes[courante] || bloque()) return;
-      rep[champ] = b.getAttribute('data-v');
-      echelle.querySelectorAll('.opt').forEach(function(o){ o.classList.toggle('choisi', o === b); });
-      var complet = lignesLikert.every(function(l){ return rep[l.getAttribute('data-likert')]; });
-      if (complet) { verrou = true; setTimeout(suivant, 350); }
-    });
-  });
-});
+
 
 /* La jauge : la valeur ne s'affiche qu'une fois le curseur déplacé, pour ne pas suggérer de prix de départ. */
 var prix = el('prix');

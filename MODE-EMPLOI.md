@@ -22,9 +22,11 @@ Le questionnaire prend environ 2 minutes : une question par écran, et un clic s
 | 3 | Les deux pneus : pneu 1, 50 000 km, prix « ? » ; pneu 2, une grande marque, 40 000 km, 93 € |
 | 4 | La jauge : au maximum, combien paieriez-vous [le pneu 1 / le Michelin] ? De 60 à 140 € |
 | 5 | Paieriez-vous 15 € de plus par pneu pour le faire monter à domicile ? Oui / Non |
-| 6 | Votre avis, de 1 à 5, sur trois phrases (10 000 km valent un prix plus élevé ; je crois à la durée annoncée ; confiance pour la sécurité) |
-| 7 | Ce qui compte le plus pour choisir des pneus (5 cases) |
-| 8-10 | Âge (5 cases), kilomètres par an (4 cases), lieu d'achat habituel (6 cases) |
+| 6-8 | Votre avis, de 1 à 5, une phrase par écran : 10 000 km valent un prix plus élevé ; je crois à la durée annoncée ; confiance pour la sécurité |
+| 9 | Ce qui compte le plus pour choisir des pneus (5 cases) |
+| 10-12 | Âge (5 cases), kilomètres par an (4 cases), lieu d’achat habituel (6 cases) |
+
+Un bouton « Retour » permet de revenir à la question précédente sur chaque écran ; la réponse déjà donnée reste allumée et peut être changée.
 
 **Test A/B**, tiré au sort, avec une seule différence :
 - **version A** : le pneu 1 est « une grande marque », sans nom ;
