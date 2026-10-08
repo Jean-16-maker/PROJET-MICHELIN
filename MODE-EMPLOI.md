@@ -48,6 +48,7 @@ Pour chaque modification ultérieure : faites un commit dans GitHub Desktop, pui
 
 - Ajoutez `?test=1` à l'adresse du questionnaire. Les réponses arrivent dans la feuille avec `test = 1` et seront écartées à l'analyse.
 - `?test=1&v=A` ou `?test=1&v=B` force une version, pour vérifier les deux.
+- `?debug=1` affiche à la fin les données envoyées.
 - Le cours demande un essai auprès de **quelques personnes extérieures au groupe**, pour repérer ce qui est mal compris.
 
 ## 5. Diffuser (du 12 au 21 octobre)
@@ -63,7 +64,7 @@ Elle compte une ligne par répondant, dans l'onglet `reponses`. Les colonnes pri
 |---|---|
 | `test` | 1 = essai, à écarter |
 | `version` | A (fiche simple) ou B (fiche + durée de vie et coût au km) |
-| `cible` | 0 = hors cible (pas de voiture chaque semaine, ou ne choisit pas les pneus) |
+| `cible` | 0 = hors cible : pas de voiture chaque semaine (questionnaire arrêté au filtre) ou quelqu’un d’autre choisit les pneus (questionnaire complet, à écarter ou à comparer) |
 | `vw_…` | les 4 prix Van Westendorp, en euros |
 | `vw_coherent` | 0 si les 4 prix ne montent pas : à écarter, en disant combien |
 | `gg_104_90` … `gg_74_90` | réponses oui / non à chaque prix (vide = prix non proposé) |

@@ -275,7 +275,7 @@ var etapes = Array.prototype.slice.call(document.querySelectorAll('.etape'));
 var nomsEtapes = etapes.map(function(e){ return e.getAttribute('data-etape'); });
 var courante = 0, debut = null, vwAverti = false;
 var gg = { i: 0, reponses: {}, max: '' };
-var horsCible = false;
+var sansVoiture = false, horsCible = false;
 
 function el(id){ return document.getElementById(id); }
 function valeur(nom){
@@ -336,8 +336,11 @@ function suivant(){
   if (nom === 'accueil' && debut === null) debut = Date.now();
 
   if (nom === 'filtre') {
-    horsCible = valeur('filtre_voiture') !== 'oui' || valeur('filtre_decide') === 'autre' || valeur('filtre_decide') === 'sans_voiture';
-    if (horsCible) return envoyer();
+    /* Sans voiture utilisée chaque semaine : fin du questionnaire. Si quelqu'un d'autre choisit les pneus,
+       la personne continue, mais elle est marquée hors cible (cible = 0) pour pouvoir l'écarter ou la comparer à l'analyse. */
+    sansVoiture = valeur('filtre_voiture') !== 'oui' || valeur('filtre_decide') === 'sans_voiture';
+    horsCible = sansVoiture || valeur('filtre_decide') === 'autre';
+    if (sansVoiture) return envoyer();
   }
 
   /* Les quatre prix doivent monter ; on le signale une fois, sans bloquer (le nettoyage se fera à l'analyse). */
@@ -366,7 +369,7 @@ function donnees(){
     filtre_decide: valeur('filtre_decide'),
     cible: horsCible ? 0 : 1,
     vw_trop_bon_marche: v[0], vw_bon_marche: v[1], vw_cher: v[2], vw_trop_cher: v[3],
-    vw_coherent: horsCible ? '' : ((v[0] <= v[1] && v[1] <= v[2] && v[2] <= v[3]) ? 1 : 0),
+    vw_coherent: sansVoiture ? '' : ((v[0] <= v[1] && v[1] <= v[2] && v[2] <= v[3]) ? 1 : 0),
     gg_prix_max_accepte: gg.max,
     controle: valeur('controle'),
     likert_valeur: valeur('likert_valeur'), likert_qualite: valeur('likert_qualite'), likert_confiance: valeur('likert_confiance'),
@@ -381,9 +384,10 @@ function envoyer(){
   var d = donnees();
   var btn = el('suivant'); btn.disabled = true; btn.textContent = 'Envoi…';
   function fin(){
-    if (horsCible) { el('fin-titre').textContent = 'Merci !'; el('fin-texte').textContent = 'Ce questionnaire s’adresse aux personnes qui choisissent les pneus d’une voiture qu’elles utilisent chaque semaine. Merci beaucoup pour votre temps.'; }
-    if (!ENDPOINT) {
-      el('fin-texte').textContent += ' (Mode essai : aucune réponse envoyée, l’URL Google Sheets n’est pas encore réglée.)';
+    if (sansVoiture) { el('fin-titre').textContent = 'Merci !'; el('fin-texte').textContent = 'Ce questionnaire s’adresse aux personnes qui utilisent une voiture chaque semaine. Merci beaucoup pour votre temps.'; }
+    if (!ENDPOINT) el('fin-texte').textContent = (sansVoiture ? el('fin-texte').textContent : 'Merci pour votre aide.') + ' (Mode essai : aucune réponse envoyée, l’URL Google Sheets n’est pas encore réglée.)';
+    /* Aperçu des données envoyées, seulement avec ?debug=1 dans l'adresse. */
+    if (params.get('debug') === '1') {
       el('essai').innerHTML = '<pre class="essai"></pre>';
       el('essai').firstChild.textContent = JSON.stringify(d, null, 1);
     }
