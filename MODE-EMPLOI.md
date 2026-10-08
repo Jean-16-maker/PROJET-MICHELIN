@@ -52,10 +52,10 @@ N'importe quel hébergeur PHP convient. La méthode la plus simple passe par **a
 3. Collez cette commande, puis appuyez sur Entrée :
 
 ```bash
-cd ~/www && curl -sL https://github.com/Jean-16-maker/PROJET-MICHELIN/archive/refs/heads/main.tar.gz | tar xz --strip-components=1 PROJET-MICHELIN-main/serveur && cp -n serveur/config.exemple.php serveur/config.php && MDP=$(openssl rand -hex 8) && sed -i "s/'a-changer'/'$MDP'/" serveur/config.php && echo "Mot de passe de la page export : $(grep -o "'[0-9a-f]\{16\}'" serveur/config.php)"
+cd ~/www && curl -sL https://github.com/Jean-16-maker/PROJET-MICHELIN/archive/refs/heads/main.tar.gz | tar xz --strip-components=1 PROJET-MICHELIN-main/serveur && if [ ! -f serveur/config.php ]; then MDP=$(openssl rand -hex 8) && sed "s/^const MOT_DE_PASSE_EXPORT_SHA256 = '';/const MOT_DE_PASSE_EXPORT_SHA256 = '$(printf '%s' "$MDP" | sha256sum | cut -c1-64)';/" serveur/config.exemple.php > serveur/config.php && echo "Mot de passe de la page export : $MDP"; fi
 ```
 
-   La commande télécharge le dossier `serveur/` depuis GitHub, crée `config.php` et choisit un mot de passe au hasard. Ce mot de passe s'affiche à la fin : notez-le et gardez-le dans le groupe.
+   La commande télécharge le dossier `serveur/` depuis GitHub, crée `config.php` et choisit un mot de passe au hasard. Ce mot de passe s'affiche une seule fois : notez-le et gardez-le dans le groupe. Le serveur n'en garde que l'empreinte SHA-256.
 4. Ouvrez `https://NOMDUCOMPTE.alwaysdata.net/serveur/export.php` : la page de mot de passe doit s'afficher.
 5. Envoyez l'adresse `https://NOMDUCOMPTE.alwaysdata.net/serveur/enregistrer.php` à Claude, ou faites l'étape 2 ci-dessous.
 
@@ -66,7 +66,7 @@ Pour mettre à jour le serveur après une modification sur GitHub, relancez la m
 1. Créez le compte et le site chez l'hébergeur.
 2. Déposez le dossier `serveur/` (gestionnaire de fichiers de l'hébergeur ou FTP), avec `colonnes.php`, `enregistrer.php`, `export.php`, `config.exemple.php` et `donnees/.htaccess`.
 3. Sur l'hébergeur, **copiez `config.exemple.php` en `config.php`**, puis réglez :
-   - `MOT_DE_PASSE_EXPORT` : un mot de passe d'au moins 12 caractères, à garder dans le groupe ;
+   - `MOT_DE_PASSE_EXPORT_SHA256` : l'empreinte SHA-256 du mot de passe choisi (`printf '%s' 'mot-de-passe' | shasum -a 256` sur Mac) ;
    - `ORIGINES_AUTORISEES` : laissez `https://jean-16-maker.github.io`.
 4. Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` : la page de mot de passe doit s'afficher.
 

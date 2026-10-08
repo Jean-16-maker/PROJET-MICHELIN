@@ -1,6 +1,6 @@
 <?php
 /**
- * Extraction des réponses du questionnaire, protégée par mot de passe (config.php).
+ * Extraction des réponses du questionnaire, protégée par mot de passe (empreinte SHA-256 dans config.php).
  * - un tableau de bord : nombre de réponses et premiers résultats par version A / B ;
  * - le téléchargement en CSV, pour Excel (« ; » et virgule décimale) ou standard (« , »),
  *   avec toutes les réponses ou seulement les réponses exploitables.
@@ -24,17 +24,18 @@ if (isset($_POST['deconnexion'])) {
     exit;
 }
 if (isset($_POST['mot_de_passe'])) {
-    if (MOT_DE_PASSE_EXPORT !== 'a-changer' && strlen(MOT_DE_PASSE_EXPORT) >= 12
-        && hash_equals(MOT_DE_PASSE_EXPORT, (string) $_POST['mot_de_passe'])) {
+    $attendu = strtolower(MOT_DE_PASSE_EXPORT_SHA256);
+    if (preg_match('/^[0-9a-f]{64}$/', $attendu)
+        && hash_equals($attendu, hash('sha256', (string) $_POST['mot_de_passe']))) {
         session_regenerate_id(true);
         $_SESSION['export_ok'] = true;
         header('Location: export.php');
         exit;
     }
     sleep(2); // ralentit les essais de mot de passe
-    $erreur = MOT_DE_PASSE_EXPORT === 'a-changer' || strlen(MOT_DE_PASSE_EXPORT) < 12
-        ? 'Changez d’abord le mot de passe dans config.php (12 caractères au moins).'
-        : 'Mot de passe incorrect.';
+    $erreur = preg_match('/^[0-9a-f]{64}$/', $attendu)
+        ? 'Mot de passe incorrect.'
+        : 'Aucun mot de passe n’est réglé : mettez son empreinte SHA-256 dans config.php.';
 }
 $connecte = !empty($_SESSION['export_ok']);
 
