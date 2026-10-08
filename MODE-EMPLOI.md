@@ -43,7 +43,25 @@ La jauge ne montre aucun prix tant que le curseur n'a pas bougé, et « Valider 
 
 ## 1. Héberger le dossier `serveur/` (une seule fois)
 
-N'importe quel hébergeur PHP convient : un hébergement fourni par l'université, ou un hébergeur gratuit, comme alwaysdata.com (offre gratuite à vérifier lors de l'inscription).
+N'importe quel hébergeur PHP convient. La méthode la plus simple passe par **alwaysdata** (français, offre gratuite, sans carte bancaire).
+
+### Avec alwaysdata, en une commande
+
+1. Créez un compte gratuit sur alwaysdata.com. Le **nom du compte** donne l'adresse du site : `https://NOMDUCOMPTE.alwaysdata.net`.
+2. Dans l'administration, ouvrez **Accès distant › SSH**, modifiez l'utilisateur SSH et cochez **« Activer la connexion par mot de passe »**. Ouvrez ensuite la console SSH dans le navigateur (lien **« Web SSH »** de cette page) et connectez-vous.
+3. Collez cette commande, puis appuyez sur Entrée :
+
+```bash
+cd ~/www && curl -sL https://github.com/Jean-16-maker/PROJET-MICHELIN/archive/refs/heads/main.tar.gz | tar xz --strip-components=1 PROJET-MICHELIN-main/serveur && cp -n serveur/config.exemple.php serveur/config.php && MDP=$(openssl rand -hex 8) && sed -i "s/'a-changer'/'$MDP'/" serveur/config.php && echo "Mot de passe de la page export : $(grep -o "'[0-9a-f]\{16\}'" serveur/config.php)"
+```
+
+   La commande télécharge le dossier `serveur/` depuis GitHub, crée `config.php` et choisit un mot de passe au hasard. Ce mot de passe s'affiche à la fin : notez-le et gardez-le dans le groupe.
+4. Ouvrez `https://NOMDUCOMPTE.alwaysdata.net/serveur/export.php` : la page de mot de passe doit s'afficher.
+5. Envoyez l'adresse `https://NOMDUCOMPTE.alwaysdata.net/serveur/enregistrer.php` à Claude, ou faites l'étape 2 ci-dessous.
+
+Pour mettre à jour le serveur après une modification sur GitHub, relancez la même commande. `config.php` et les réponses déjà enregistrées ne sont pas touchés.
+
+### Avec un autre hébergeur
 
 1. Créez le compte et le site chez l'hébergeur.
 2. Déposez le dossier `serveur/` (gestionnaire de fichiers de l'hébergeur ou FTP), avec `colonnes.php`, `enregistrer.php`, `export.php`, `config.exemple.php` et `donnees/.htaccess`.
