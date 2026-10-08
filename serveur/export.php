@@ -98,6 +98,8 @@ function nb($x, int $dec = 0): string { return $x === null ? '—' : number_form
 function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 0, ',', ' ') . ' %' : '—'; }
 
 /* Paliers de la jauge pour la répartition des prix maximum. */
+const LIKERT = ['likert_vaut_supplement' => '« 10 000 km de plus valent un prix plus élevé »', 'likert_croit_duree' => '« Je crois à la durée de vie annoncée »', 'likert_confiance' => '« Confiance pour la sécurité »'];
+const CRITERES = ['prix' => 'le prix', 'securite' => 'la sécurité', 'duree_de_vie' => 'la durée de vie', 'marque' => 'la marque', 'conseil' => 'le conseil du vendeur'];
 const PALIERS = [[60, 89, 'moins de 90 €'], [90, 99, '90 à 99 €'], [100, 107, '100 à 107 €'], [108, 119, '108 à 119 €'], [120, 140, '120 € et plus']];
 
 $stats = null;
@@ -113,8 +115,7 @@ if ($connecte) {
     foreach (['A', 'B'] as $v) {
         $g = array_values(array_filter($propres, fn($r) => ($r['version'] ?? '') === $v));
         $prix = array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['prix_max_pneu1'] ?? '', $g), 'is_numeric')));
-        $oui = count(array_filter($g, fn($r) => ($r['sup_15'] ?? '') === 'oui'));
-        $controle_ok = count(array_filter($g, fn($r) => ($r['controle'] ?? '') === ($v === 'B' ? 'oui' : 'non')));
+        $oui = count(array_filter($g, fn($r) => ($r['montage_domicile_15'] ?? '') === 'oui'));
         $repartition = [];
         foreach (PALIERS as [$min, $max, $libelle]) {
             $repartition[$libelle] = pct(count(array_filter($prix, fn($x) => $x >= $min && $x <= $max)), count($prix));
@@ -126,9 +127,9 @@ if ($connecte) {
             'prix_moy' => moyenne($prix),
             'prix_med' => mediane($prix),
             'prime_moy' => $prix ? moyenne($prix) - PRIX_AUTRE : null,
-            'au_moins_108' => pct(count(array_filter($prix, fn($x) => $x >= PRIX_AUTRE + SUPPLEMENT)), count($prix)),
             'repartition' => $repartition,
-            'controle_ok' => pct($controle_ok, count($g)),
+            'likert' => array_combine(array_keys(LIKERT), array_map(fn($col) => moyenne(array_map('floatval', array_values(array_filter(array_map(fn($r) => $r[$col] ?? '', $g), 'is_numeric')))), array_keys(LIKERT))),
+            'critere' => array_combine(array_keys(CRITERES), array_map(fn($k) => pct(count(array_filter($g, fn($r) => ($r['critere_principal'] ?? '') === $k)), count($g)), array_keys(CRITERES))),
             'duree_med' => mediane(array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['duree_s'] ?? '', $g), 'is_numeric')))),
         ];
     }
@@ -202,15 +203,19 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <thead><tr><th></th><th class="n">Version A<br><span class="note">pneu 1 sans marque</span></th><th class="n">Version B<br><span class="note">pneu 1 Michelin</span></th></tr></thead>
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
-<tr class="cle"><td>Prêts à payer <?= SUPPLEMENT ?> € de plus par pneu (<?= PRIX_AUTRE + SUPPLEMENT ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
 <tr class="cle"><td>Jauge : prix maximum pour le pneu 1, moyenne</td><td class="n"><?= nb($A['prix_moy'], 1) ?> €</td><td class="n"><?= nb($B['prix_moy'], 1) ?> €</td></tr>
 <tr><td>Jauge : prix maximum, médiane</td><td class="n"><?= nb($A['prix_med']) ?> €</td><td class="n"><?= nb($B['prix_med']) ?> €</td></tr>
 <tr><td>Supplément moyen accepté par rapport au pneu 2 (<?= PRIX_AUTRE ?> €)</td><td class="n"><?= nb($A['prime_moy'], 1) ?> €</td><td class="n"><?= nb($B['prime_moy'], 1) ?> €</td></tr>
-<tr><td>Jauge à <?= PRIX_AUTRE + SUPPLEMENT ?> € ou plus</td><td class="n"><?= $A['au_moins_108'] ?></td><td class="n"><?= $B['au_moins_108'] ?></td></tr>
 <?php foreach (array_keys($A['repartition']) as $l): ?>
 <tr><td>Jauge : <?= h($l) ?></td><td class="n"><?= $A['repartition'][$l] ?></td><td class="n"><?= $B['repartition'][$l] ?></td></tr>
 <?php endforeach; ?>
-<tr><td>Contrôle réussi (B : a vu la marque ; A : n'en a pas vu)</td><td class="n"><?= $A['controle_ok'] ?></td><td class="n"><?= $B['controle_ok'] ?></td></tr>
+<tr class="cle"><td>Prêts à payer <?= SUPPLEMENT ?> € de plus par pneu pour le montage à domicile</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
+<?php foreach (LIKERT as $col => $libelle): ?>
+<tr><td>Avis <?= h($libelle) ?>, moyenne sur 5</td><td class="n"><?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= nb($B['likert'][$col], 1) ?></td></tr>
+<?php endforeach; ?>
+<?php foreach (CRITERES as $k => $libelle): ?>
+<tr><td>Critère principal : <?= h($libelle) ?></td><td class="n"><?= $A['critere'][$k] ?></td><td class="n"><?= $B['critere'][$k] ?></td></tr>
+<?php endforeach; ?>
 <tr><td>Durée de réponse, médiane</td><td class="n"><?= nb($A['duree_med']) ?> s</td><td class="n"><?= nb($B['duree_med']) ?> s</td></tr>
 </tbody>
 </table>

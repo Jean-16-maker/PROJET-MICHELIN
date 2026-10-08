@@ -13,17 +13,18 @@ Tant que l'adresse du serveur n'est pas réglée, le questionnaire tourne en **m
 
 **La question : combien le client paierait-il en plus pour un pneu qui dure 10 000 km de plus, et le nom Michelin change-t-il ce montant ?**
 
-Le questionnaire prend environ 1 minute : une question par écran, et un clic sur une grande case suffit pour passer à la suite.
+Le questionnaire prend environ 2 minutes : une question par écran, et un clic sur une grande case suffit pour passer à la suite.
 
 | Écran | Contenu |
 |---|---|
 | 1 | Accueil. Cliquer sur « C'est parti » vaut accord (anonymat, 18 ans et plus) |
 | 2 | Qui choisit les pneus de votre voiture ? Moi / Quelqu'un d'autre / Je n'ai pas de voiture |
 | 3 | Les deux pneus : pneu 1, 50 000 km, prix « ? » ; pneu 2, une grande marque, 40 000 km, 93 € |
-| 4 | Paieriez-vous 15 € de plus par pneu pour [le pneu 1 / le Michelin] ? Oui / Non |
-| 5 | La jauge : au maximum, combien paieriez-vous [le pneu 1 / le Michelin] ? De 60 à 140 € |
-| 6 | Contrôle : le pneu 1 avait-il un nom de marque ? |
-| 7-8 | Âge (3 cases) et kilomètres par an (3 cases) |
+| 4 | La jauge : au maximum, combien paieriez-vous [le pneu 1 / le Michelin] ? De 60 à 140 € |
+| 5 | Paieriez-vous 15 € de plus par pneu pour le faire monter à domicile ? Oui / Non |
+| 6 | Votre avis, de 1 à 5, sur trois phrases (10 000 km valent un prix plus élevé ; je crois à la durée annoncée ; confiance pour la sécurité) |
+| 7 | Ce qui compte le plus pour choisir des pneus (5 cases) |
+| 8-10 | Âge (5 cases), kilomètres par an (4 cases), lieu d'achat habituel (6 cases) |
 
 **Test A/B**, tiré au sort, avec une seule différence :
 - **version A** : le pneu 1 est « une grande marque », sans nom ;
@@ -32,7 +33,9 @@ Le questionnaire prend environ 1 minute : une question par écran, et un clic su
 Ce qu'on lit :
 - la **version A** donne ce que valent 10 000 km de plus, sans la marque ;
 - la **version B** donne la même chose pour le Michelin ;
-- **B − A** donne ce qu'ajoute le nom Michelin, sur la part de « oui » à 15 € comme sur le prix moyen de la jauge.
+- **B − A** donne ce qu'ajoute le nom Michelin, d'abord sur le prix moyen de la jauge.
+
+La question des 15 € mesure l'intérêt pour un service de **montage à domicile** ; elle est posée dans les deux versions.
 
 La jauge ne montre aucun prix tant que le curseur n'a pas bougé, et « Valider » reste grisé : on ne suggère pas de prix de départ.
 
@@ -82,7 +85,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : part prête à payer 15 € de plus, prix moyen et médian de la jauge, répartition des prix, taux de réussite du contrôle, durée de réponse ;
+- les premiers résultats par version A / B : prix moyen et médian de la jauge, répartition des prix, part prête à payer 15 € pour le montage à domicile, avis moyens, critère principal, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -97,10 +100,11 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 | `duree_s` | temps de réponse, en secondes |
 | `filtre_decide` | `moi`, `autre` ou `sans_voiture` |
 | `cible` | 1 = choisit lui-même ses pneus ; 0 = hors cible, à écarter ou à comparer |
-| `sup_15` | `oui` ou `non` : prêt à payer 15 € de plus par pneu (108 € au lieu de 93 €) |
 | `prix_max_pneu1` | le prix maximum choisi sur la jauge, de 60 à 140 € (60 = « 60 € ou moins », 140 = « 140 € ou plus ») |
-| `controle` | a-t-il vu un nom de marque ? On attend « oui » en B et « non » en A |
-| `age`, `km_an` | profil |
+| `montage_domicile_15` | `oui` ou `non` : prêt à payer 15 € de plus par pneu pour le montage à domicile |
+| `likert_…` | avis de 1 à 5 : 10 000 km valent un prix plus élevé, croit à la durée annoncée, confiance pour la sécurité |
+| `critere_principal` | prix, sécurité, durée de vie, marque ou conseil |
+| `age`, `km_an`, `canal_achat` | profil |
 
 ## Si vous modifiez le questionnaire
 
