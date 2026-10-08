@@ -1,1 +1,5 @@
 .DS_Store
+# Sur l hebergement seulement : mot de passe et reponses
+serveur/config.php
+serveur/donnees/*
+!serveur/donnees/.htaccess

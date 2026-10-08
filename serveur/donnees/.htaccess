@@ -1,0 +1,7 @@
+# Les réponses ne sont jamais servies directement : on passe par export.php (mot de passe).
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>
