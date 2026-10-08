@@ -51,11 +51,10 @@ function lire_reponses(): array
     return $lignes;
 }
 
-/* Exploitable : pas un essai, dans la cible, réponses Van Westendorp cohérentes. */
+/* Exploitable : pas un essai, et la personne choisit elle-même ses pneus. */
 function exploitable(array $r): bool
 {
-    return (string) ($r['test'] ?? '') === '0' && (string) ($r['cible'] ?? '') === '1'
-        && (string) ($r['vw_coherent'] ?? '') === '1';
+    return (string) ($r['test'] ?? '') === '0' && (string) ($r['cible'] ?? '') === '1';
 }
 
 /* ---------- Téléchargement CSV ---------- */
@@ -93,10 +92,13 @@ function mediane(array $x): ?float
     if (!$x) return null;
     sort($x);
     $n = count($x);
-    return $n % 2 ? $x[intdiv($n, 2)] : ($x[$n / 2 - 1] + $x[$n / 2]) / 2;
+    return (float) ($n % 2 ? $x[intdiv($n, 2)] : ($x[$n / 2 - 1] + $x[$n / 2]) / 2);
 }
-function nb($x, int $dec = 2): string { return $x === null ? '—' : number_format((float) $x, $dec, ',', ' '); }
+function nb($x, int $dec = 0): string { return $x === null ? '—' : number_format((float) $x, $dec, ',', ' '); }
 function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 0, ',', ' ') . ' %' : '—'; }
+
+/* Paliers de la jauge pour la répartition des prix maximum. */
+const PALIERS = [[60, 89, 'moins de 90 €'], [90, 99, '90 à 99 €'], [100, 107, '100 à 107 €'], [108, 119, '108 à 119 €'], [120, 140, '120 € et plus']];
 
 $stats = null;
 if ($connecte) {
@@ -105,37 +107,34 @@ if ($connecte) {
         'total' => count($toutes),
         'test' => count(array_filter($toutes, fn($r) => (string) ($r['test'] ?? '') === '1')),
         'hors_cible' => count(array_filter($toutes, fn($r) => (string) ($r['test'] ?? '') === '0' && (string) ($r['cible'] ?? '') === '0')),
-        'incoherents' => count(array_filter($toutes, fn($r) => (string) ($r['test'] ?? '') === '0' && (string) ($r['cible'] ?? '') === '1' && (string) ($r['vw_coherent'] ?? '') === '0')),
         'versions' => [],
     ];
     $propres = array_filter($toutes, 'exploitable');
     foreach (['A', 'B'] as $v) {
         $g = array_values(array_filter($propres, fn($r) => ($r['version'] ?? '') === $v));
-        $controle_ok = count(array_filter($g, fn($r) => ($r['controle'] ?? '') === ($v === 'B' ? 'oui' : 'non')));
+        $prix = array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['prix_max_pneu1'] ?? '', $g), 'is_numeric')));
         $oui = count(array_filter($g, fn($r) => ($r['sup_15'] ?? '') === 'oui'));
+        $controle_ok = count(array_filter($g, fn($r) => ($r['controle'] ?? '') === ($v === 'B' ? 'oui' : 'non')));
+        $repartition = [];
+        foreach (PALIERS as [$min, $max, $libelle]) {
+            $repartition[$libelle] = pct(count(array_filter($prix, fn($x) => $x >= $min && $x <= $max)), count($prix));
+        }
         $stats['versions'][$v] = [
             'n' => count($g),
-            'controle_ok' => pct($controle_ok, count($g)),
             'oui' => $oui,
             'oui_pct' => pct($oui, count($g)),
-            'vw_bon_marche' => tranche_mediane($g, 'vw_bon_marche'),
-            'vw_cher' => tranche_mediane($g, 'vw_cher'),
-            'vw_trop_cher' => tranche_mediane($g, 'vw_trop_cher'),
+            'prix_moy' => moyenne($prix),
+            'prix_med' => mediane($prix),
+            'prime_moy' => $prix ? moyenne($prix) - PRIX_AUTRE : null,
+            'au_moins_108' => pct(count(array_filter($prix, fn($x) => $x >= PRIX_AUTRE + SUPPLEMENT)), count($prix)),
+            'repartition' => $repartition,
+            'controle_ok' => pct($controle_ok, count($g)),
+            'duree_med' => mediane(array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['duree_s'] ?? '', $g), 'is_numeric')))),
         ];
     }
 }
-
-/* Tranche médiane d'une question Van Westendorp (médiane basse si le nombre de réponses est pair). */
-function tranche_mediane(array $g, string $col): string
-{
-    $idx = array_values(array_filter(array_map(fn($r) => array_search($r[$col] ?? '', TRANCHES, true), $g), fn($i) => $i !== false));
-    if (!$idx) return '—';
-    sort($idx);
-    $t = TRANCHES[$idx[intdiv(count($idx) - 1, 2)]];
-    if ($t[0] === '<') return 'moins de ' . substr($t, 1) . ' €';
-    if ($t[0] === '>') return 'plus de ' . substr($t, 1) . ' €';
-    return str_replace('-', ' à ', $t) . ' €';
-}
+$A = $stats['versions']['A'] ?? null;
+$B = $stats['versions']['B'] ?? null;
 ?>
 <!doctype html>
 <html lang="fr">
@@ -145,27 +144,29 @@ function tranche_mediane(array $g, string $col): string
 <meta name="robots" content="noindex">
 <title>Réponses du questionnaire</title>
 <style>
-:root{--accent:#2F5D62;--fond:#F5F6F7;--carte:#fff;--encre:#1D2327;--gris:#5C6670;--trait:#D7DCE0;--alerte:#B3261E}
-@media (prefers-color-scheme: dark){:root{--accent:#7FB7BC;--fond:#15191C;--carte:#1F2529;--encre:#E7EAEC;--gris:#A3ADB5;--trait:#36404A;--alerte:#F2857D}}
+:root{--bleu:#27509B;--bleu-fonce:#0F2A5C;--jaune:#FCE500;--fond:#F6F8FC;--carte:#fff;--encre:#10203F;--gris:#566179;--trait:#D5DDEC;--alerte:#C2410C}
 *{box-sizing:border-box}
 body{margin:0;font:16px/1.55 "Helvetica Neue","Segoe UI",system-ui,Arial,sans-serif;color:var(--encre);background:var(--fond)}
+header{background:var(--bleu);color:#fff;border-bottom:4px solid var(--jaune);padding:14px 16px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 main{max-width:900px;margin:0 auto;padding:24px 16px 60px}
-h1{font-size:1.6rem;margin:0 0 6px} h2{font-size:1.2rem;margin:28px 0 10px}
+h1{font-size:1.6rem;margin:0 0 6px;color:var(--bleu)} h2{font-size:1.2rem;margin:28px 0 10px;color:var(--bleu-fonce)}
 .carte{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:16px 18px;margin:0 0 14px}
 .chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.chiffres b{display:block;font-size:1.8rem;color:var(--accent)} .chiffres span{color:var(--gris);font-size:.88rem}
+.chiffres b{display:block;font-size:1.8rem;color:var(--bleu)} .chiffres span{color:var(--gris);font-size:.88rem}
 table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
 th,td{border-bottom:1px solid var(--trait);padding:7px 8px;text-align:left} td.n,th.n{text-align:right}
+tr.cle td{font-weight:700;background:#FFFBD1}
 .tableau{overflow-x:auto}
 .note{color:var(--gris);font-size:.88rem}
 form.inline{display:inline}
-button,.bouton{display:inline-block;font:700 .95rem/1 inherit;padding:11px 16px;border-radius:999px;border:0;background:var(--accent);color:#fff;text-decoration:none;cursor:pointer;margin:4px 6px 4px 0}
-.second{background:transparent;color:var(--accent);border:1px solid var(--trait)}
-input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait);border-radius:10px;width:100%;max-width:320px;background:var(--carte);color:var(--encre)}
+button,.bouton{display:inline-block;font:700 .95rem/1 inherit;padding:11px 16px;border-radius:999px;border:0;background:var(--jaune);color:var(--bleu-fonce);text-decoration:none;cursor:pointer;margin:4px 6px 4px 0}
+.second{background:#fff;color:var(--bleu);border:1px solid var(--trait)}
+input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait);border-radius:10px;width:100%;max-width:320px}
 .erreur{color:var(--alerte);font-weight:700}
 </style>
 </head>
 <body>
+<header>Questionnaire Michelin · réponses</header>
 <main>
 <?php if (!$connecte): ?>
 <h1>Réponses du questionnaire</h1>
@@ -183,9 +184,8 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <div class="carte chiffres">
 <div><b><?= $stats['total'] ?></b><span>réponses enregistrées</span></div>
 <div><b><?= $stats['test'] ?></b><span>essais (test = 1)</span></div>
-<div><b><?= $stats['hors_cible'] ?></b><span>hors cible</span></div>
-<div><b><?= $stats['incoherents'] ?></b><span>Van Westendorp incohérent, écartés</span></div>
-<div><b><?= $stats['versions']['A']['n'] + $stats['versions']['B']['n'] ?></b><span>réponses exploitables</span></div>
+<div><b><?= $stats['hors_cible'] ?></b><span>hors cible (ne choisit pas ses pneus, ou sans voiture)</span></div>
+<div><b><?= $A['n'] + $B['n'] ?></b><span>réponses exploitables</span></div>
 </div>
 
 <h2>Télécharger</h2>
@@ -193,23 +193,28 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=exploitables">Réponses exploitables · Excel</a>
 <a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=tout">Toutes les réponses · Excel</a>
 <a class="bouton second" href="?telecharger=1&amp;format=csv&amp;quoi=tout">Toutes · CSV standard (R, Python)</a>
-<p class="note">Excel : séparateur « ; » et virgule décimale. CSV standard : séparateur « , » et point décimal. Exploitables = hors essais, dans la cible, Van Westendorp cohérent.</p>
+<p class="note">Excel : séparateur « ; » et virgule décimale. CSV standard : séparateur « , » et point décimal. Exploitables = hors essais, et la personne choisit elle-même ses pneus.</p>
 </div>
 
 <h2>Premiers résultats (réponses exploitables)</h2>
 <div class="carte tableau">
 <table>
-<thead><tr><th></th><th class="n">Version A<br><span class="note">pneu sans marque</span></th><th class="n">Version B<br><span class="note">pneu Michelin</span></th></tr></thead>
+<thead><tr><th></th><th class="n">Version A<br><span class="note">pneu 1 sans marque</span></th><th class="n">Version B<br><span class="note">pneu 1 Michelin</span></th></tr></thead>
 <tbody>
-<tr><td>Répondants</td><td class="n"><?= $stats['versions']['A']['n'] ?></td><td class="n"><?= $stats['versions']['B']['n'] ?></td></tr>
-<tr><td>Contrôle réussi (B : a vu la marque ; A : n'en a pas vu)</td><td class="n"><?= $stats['versions']['A']['controle_ok'] ?></td><td class="n"><?= $stats['versions']['B']['controle_ok'] ?></td></tr>
-<tr><td>Prêts à payer <?= SUPPLEMENT ?> € de plus par pneu pour 10 000 km de plus (soit <?= PRIX_AUTRE + SUPPLEMENT ?> € le pneu)</td><td class="n"><?= $stats['versions']['A']['oui_pct'] ?> <span class="note">(<?= $stats['versions']['A']['oui'] ?>)</span></td><td class="n"><?= $stats['versions']['B']['oui_pct'] ?> <span class="note">(<?= $stats['versions']['B']['oui'] ?>)</span></td></tr>
-<tr><td>Van Westendorp, « bon marché » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_bon_marche']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_bon_marche']) ?></td></tr>
-<tr><td>Van Westendorp, « cher » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_cher']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_cher']) ?></td></tr>
-<tr><td>Van Westendorp, « trop cher » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_trop_cher']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_trop_cher']) ?></td></tr>
+<tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
+<tr class="cle"><td>Prêts à payer <?= SUPPLEMENT ?> € de plus par pneu (<?= PRIX_AUTRE + SUPPLEMENT ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
+<tr class="cle"><td>Jauge : prix maximum pour le pneu 1, moyenne</td><td class="n"><?= nb($A['prix_moy'], 1) ?> €</td><td class="n"><?= nb($B['prix_moy'], 1) ?> €</td></tr>
+<tr><td>Jauge : prix maximum, médiane</td><td class="n"><?= nb($A['prix_med']) ?> €</td><td class="n"><?= nb($B['prix_med']) ?> €</td></tr>
+<tr><td>Supplément moyen accepté par rapport au pneu 2 (<?= PRIX_AUTRE ?> €)</td><td class="n"><?= nb($A['prime_moy'], 1) ?> €</td><td class="n"><?= nb($B['prime_moy'], 1) ?> €</td></tr>
+<tr><td>Jauge à <?= PRIX_AUTRE + SUPPLEMENT ?> € ou plus</td><td class="n"><?= $A['au_moins_108'] ?></td><td class="n"><?= $B['au_moins_108'] ?></td></tr>
+<?php foreach (array_keys($A['repartition']) as $l): ?>
+<tr><td>Jauge : <?= h($l) ?></td><td class="n"><?= $A['repartition'][$l] ?></td><td class="n"><?= $B['repartition'][$l] ?></td></tr>
+<?php endforeach; ?>
+<tr><td>Contrôle réussi (B : a vu la marque ; A : n'en a pas vu)</td><td class="n"><?= $A['controle_ok'] ?></td><td class="n"><?= $B['controle_ok'] ?></td></tr>
+<tr><td>Durée de réponse, médiane</td><td class="n"><?= nb($A['duree_med']) ?> s</td><td class="n"><?= nb($B['duree_med']) ?> s</td></tr>
 </tbody>
 </table>
-<p class="note">Lecture : la version A mesure la part prête à payer 15 € de plus pour 10 000 km de plus, sur un pneu sans marque ; la version B, sur le Michelin. L'écart entre B et A mesure ce qu'ajoute le nom Michelin. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
+<p class="note">Lecture : la version A mesure ce que valent 10 000 km de plus pour un pneu sans marque ; la version B, pour le Michelin. L'écart entre B et A mesure ce qu'ajoute le nom Michelin. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
 
 <form method="post" class="inline"><button class="second" name="deconnexion" value="1">Se déconnecter</button></form>

@@ -13,24 +13,28 @@ Tant que l'adresse du serveur n'est pas réglée, le questionnaire tourne en **m
 
 **La question : combien le client paierait-il en plus pour un pneu qui dure 10 000 km de plus, et le nom Michelin change-t-il ce montant ?**
 
-Chaque répondant voit deux pneus 4 saisons en 205/55 R16 :
-- **pneu 1** : durée de vie annoncée d'environ 50 000 km, prix à déterminer ;
-- **pneu 2** : une grande marque, environ 40 000 km, **93 €** (le prix plafond relevé chez les concurrents directs).
+Le questionnaire prend environ 1 minute : une question par écran, et un clic sur une grande case suffit pour passer à la suite.
 
-Les 10 000 km de plus apparaissent dans les deux versions. **Test A/B**, tiré au sort, avec une seule différence :
-- **version A** : le pneu 1 n'a pas de nom (« un pneu 4 saisons d'une grande marque ») ;
+| Écran | Contenu |
+|---|---|
+| 1 | Accueil. Cliquer sur « C'est parti » vaut accord (anonymat, 18 ans et plus) |
+| 2 | Qui choisit les pneus de votre voiture ? Moi / Quelqu'un d'autre / Je n'ai pas de voiture |
+| 3 | Les deux pneus : pneu 1, 50 000 km, prix « ? » ; pneu 2, une grande marque, 40 000 km, 93 € |
+| 4 | Paieriez-vous 15 € de plus par pneu pour [le pneu 1 / le Michelin] ? Oui / Non |
+| 5 | La jauge : au maximum, combien paieriez-vous [le pneu 1 / le Michelin] ? De 60 à 140 € |
+| 6 | Contrôle : le pneu 1 avait-il un nom de marque ? |
+| 7-8 | Âge (3 cases) et kilomètres par an (3 cases) |
+
+**Test A/B**, tiré au sort, avec une seule différence :
+- **version A** : le pneu 1 est « une grande marque », sans nom ;
 - **version B** : le pneu 1 est le **Michelin CrossClimate 3**.
 
-Les mesures :
-- **Le supplément**, une seule question : « Seriez-vous prêt(e) à payer 15 € de plus par pneu pour [le pneu 1 / le Michelin CrossClimate 3], qui dure 10 000 km de plus ? Soit 108 € par pneu au lieu de 93 € », avec une réponse oui ou non (colonne `sup_15`).
-- **Van Westendorp en 5 tranches**, pour le pneu 1 : quatre questions (trop bon marché, bon marché, cher, trop cher), avec les cases moins de 80 €, 80 à 90 €, 90 à 100 €, 100 à 110 € et plus de 110 €.
-
 Ce qu'on lit :
-- la **version A** donne la part prête à payer 15 € de plus pour 10 000 km de plus, sans marque ;
-- la **version B** donne la même part pour le Michelin ;
-- **B − A** donne ce qu'ajoute le nom Michelin.
+- la **version A** donne ce que valent 10 000 km de plus, sans la marque ;
+- la **version B** donne la même chose pour le Michelin ;
+- **B − A** donne ce qu'ajoute le nom Michelin, sur la part de « oui » à 15 € comme sur le prix moyen de la jauge.
 
-Le questionnaire reprend la charte bleu et jaune du dossier.
+La jauge ne montre aucun prix tant que le curseur n'a pas bougé, et « Valider » reste grisé : on ne suggère pas de prix de départ.
 
 ## 1. Héberger le dossier `serveur/` (une seule fois)
 
@@ -78,11 +82,11 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : part prête à payer 15 € de plus, tranches médianes de Van Westendorp, taux de réussite du contrôle ;
+- les premiers résultats par version A / B : part prête à payer 15 € de plus, prix moyen et médian de la jauge, répartition des prix, taux de réussite du contrôle, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
-  - toutes les réponses, ou seulement les **exploitables** (hors essais, dans la cible, Van Westendorp cohérent).
+  - toutes les réponses, ou seulement les **exploitables** (hors essais, et la personne choisit elle-même ses pneus).
 
 ## Les colonnes
 
@@ -90,14 +94,14 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 |---|---|
 | `test` | 1 = essai, à écarter |
 | `version` | A (pneu 1 sans marque) ou B (pneu 1 = Michelin CrossClimate 3) |
-| `cible` | 0 = hors cible : pas de voiture chaque semaine (arrêt au filtre) ou quelqu'un d'autre choisit les pneus (questionnaire complet, à écarter ou à comparer) |
-| `sup_15` | `oui` ou `non` : prêt à payer 15 € de plus par pneu pour 10 000 km de plus |
-| `vw_…` | les 4 tranches Van Westendorp du pneu 1 : `<80`, `80-90`, `90-100`, `100-110` ou `>110` |
-| `vw_coherent` | 0 si les 4 tranches ne montent pas : à écarter, en disant combien |
+| `duree_s` | temps de réponse, en secondes |
+| `filtre_decide` | `moi`, `autre` ou `sans_voiture` |
+| `cible` | 1 = choisit lui-même ses pneus ; 0 = hors cible, à écarter ou à comparer |
+| `sup_15` | `oui` ou `non` : prêt à payer 15 € de plus par pneu (108 € au lieu de 93 €) |
+| `prix_max_pneu1` | le prix maximum choisi sur la jauge, de 60 à 140 € (60 = « 60 € ou moins », 140 = « 140 € ou plus ») |
 | `controle` | a-t-il vu un nom de marque ? On attend « oui » en B et « non » en A |
-| `likert_…` | 10 000 km valent un prix plus élevé, croit à la durée annoncée, confiance pour la sécurité (1 à 5) |
-| `critere_principal`, `age`, `km_an`, `canal_achat` | critère de choix et profil |
+| `age`, `km_an` | profil |
 
 ## Si vous modifiez le questionnaire
 
-Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez le supplément ou les tranches, changez-les aux deux endroits : `SUPPLEMENT` et `TRANCHES` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.
+Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez le supplément ou le prix du pneu 2, changez-les aux deux endroits : `SUPPLEMENT` et `PRIX_AUTRE` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.
