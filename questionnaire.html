@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questionnaire pneus 4 saisons</title>
+<meta name="description" content="Questionnaire anonyme sur le prix des pneus 4 saisons — étudiants M1 Marketing, IAE Clermont Auvergne.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' aria-hidden='true'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23FCE500'/%3E%3Ccircle cx='20' cy='20' r='18' fill='none' stroke='%230F2A5C' stroke-width='3' stroke-dasharray='5 3.4'/%3E%3Ccircle cx='20' cy='20' r='10' fill='%2327509B'/%3E%3Ccircle cx='20' cy='20' r='3.4' fill='%23FCE500'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Questionnaire : une étape visible à la fois, sans menu vers le dossier (les répondants ne doivent voir ni nos prix ni notre hypothèse). */
+.q-haut{background:var(--bleu);color:#fff;border-bottom:4px solid var(--jaune)}
+.q-haut .wrap{display:flex;align-items:center;gap:12px;min-height:58px}
+.q-haut b{font:800 1.05rem/1 var(--titre);letter-spacing:.06em;text-transform:uppercase}
+.q-haut small{display:block;font:600 .7rem/1.3 var(--texte);opacity:.85;letter-spacing:.04em}
+.q-wrap{max-width:680px;margin:0 auto;padding:26px 16px 70px}
+.progres{height:8px;background:var(--trait);border-radius:999px;overflow:hidden;margin:0 0 6px}
+.progres i{display:block;height:100%;width:0;background:var(--bleu);transition:width .25s}
+.etape-n{font-size:.85rem;color:var(--gris);margin:0 0 18px}
+.etape{display:none}
+.etape.active{display:block}
+.etape h1{font:800 clamp(1.6rem,5vw,2.2rem)/1.1 var(--titre);color:var(--bleu);margin:0 0 14px;text-transform:uppercase}
+fieldset{border:0;padding:0;margin:0 0 22px}
+legend{font-weight:700;margin:0 0 10px;padding:0}
+.choix label{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--trait);border-radius:10px;padding:12px 14px;margin:0 0 8px;cursor:pointer}
+.choix label:has(input:checked){border-color:var(--bleu);box-shadow:0 0 0 2px var(--bleu) inset}
+.choix input{margin-top:5px;flex:none;accent-color:var(--bleu)}
+.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.likert label{flex-direction:column;align-items:center;text-align:center;font-size:.78rem;line-height:1.25;padding:10px 4px;margin:0}
+.likert input{margin:0 0 4px}
+.euros{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+.euros input{font:inherit;font-size:1.15rem;width:9em;max-width:60%;padding:10px 12px;border:1px solid var(--trait);border-radius:10px;background:#fff}
+.euros input:focus{outline:3px solid var(--jaune);border-color:var(--bleu)}
+.aide{font-size:.88rem;color:var(--gris);margin:0 0 4px}
+.boutons{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+button{font:800 1rem/1 var(--titre);letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;border-radius:999px;border:0;cursor:pointer;background:var(--jaune);color:var(--bleu-fonce)}
+button.second{background:#fff;color:var(--bleu);border:1px solid var(--trait)}
+button:disabled{opacity:.5;cursor:default}
+.erreur{color:var(--alerte);font-weight:700;margin:10px 0 0;min-height:1.2em}
+.produit{background:#fff;border:1px solid var(--trait);border-top:6px solid var(--jaune);border-radius:var(--rayon);padding:20px 22px;margin:0 0 18px}
+.produit h2{margin:0 0 4px;font-size:1.5rem}
+.produit h2::before{display:none}
+.produit ul{margin:10px 0 0;padding-left:20px}
+.produit li{margin:6px 0}
+.gg-prix{font:800 2.6rem/1 var(--titre);color:var(--bleu);margin:6px 0 14px}
+.rappel{font-size:.88rem;color:var(--gris);border-left:4px solid var(--jaune);padding-left:10px;margin:0 0 18px}
+pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:#fff;border:1px dashed var(--trait);padding:10px;border-radius:8px}
+.bandeau-test{background:var(--alerte);color:#fff;text-align:center;font-weight:700;font-size:.85rem;padding:6px}
+</style>
+</head>
+<body>
+<div class="bandeau-test" id="bandeau-test" hidden>Mode essai : ces réponses sont marquées « test » et seront écartées de l'analyse.</div>
+<header class="q-haut"><div class="wrap">
+<svg viewBox="0 0 40 40" width="32" height="32" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg>
+<span><b>Les pneus 4 saisons</b><small>Questionnaire anonyme · M1 Marketing, IAE Clermont Auvergne</small></span>
+</div></header>
+
+<main class="q-wrap">
+<div class="progres" aria-hidden="true"><i id="barre"></i></div>
+<p class="etape-n" id="etape-n"></p>
+
+<form id="q" novalidate>
+
+<!-- 1. Accueil -->
+<section class="etape" data-etape="accueil">
+<h1>Bonjour !</h1>
+<p>Nous sommes étudiants en master 1 Marketing à l'IAE Clermont Auvergne (Université Clermont Auvergne). Ce questionnaire porte sur <b>le prix que vous accepteriez de payer pour un pneu 4 saisons</b>. Il dure environ <b>4 minutes</b>.</p>
+<div class="carte">
+<p><b>Vos réponses sont anonymes.</b> Nous ne demandons ni votre nom, ni votre adresse e-mail, et nous n'enregistrons pas votre adresse IP. Les réponses servent uniquement à un travail universitaire et seront supprimées à la fin de l'année universitaire 2026-2027.</p>
+<p>Il n'y a pas de bonne ou de mauvaise réponse : c'est votre avis qui compte.</p>
+</div>
+<fieldset class="choix">
+<legend>Acceptez-vous de participer ?</legend>
+<label><input type="checkbox" name="consentement" value="oui" required> J'ai 18 ans ou plus et j'accepte que mes réponses anonymes soient utilisées pour ce travail universitaire.</label>
+</fieldset>
+</section>
+
+<!-- 2. Filtre -->
+<section class="etape" data-etape="filtre">
+<h1>Votre voiture</h1>
+<fieldset class="choix">
+<legend>Utilisez-vous une voiture au moins une fois par semaine ?</legend>
+<label><input type="radio" name="filtre_voiture" value="oui" required> Oui</label>
+<label><input type="radio" name="filtre_voiture" value="non"> Non</label>
+</fieldset>
+<fieldset class="choix">
+<legend>Qui choisit les pneus de cette voiture quand il faut les changer ?</legend>
+<label><input type="radio" name="filtre_decide" value="moi" required> Moi</label>
+<label><input type="radio" name="filtre_decide" value="moi_et_autre"> Moi, avec quelqu'un d'autre</label>
+<label><input type="radio" name="filtre_decide" value="autre"> Quelqu'un d'autre (conjoint, parent, entreprise…)</label>
+<label><input type="radio" name="filtre_decide" value="sans_voiture"> Je n'ai pas de voiture</label>
+</fieldset>
+</section>
+
+<!-- 3. L'offre (version A ou B, une seule ligne diffère) -->
+<section class="etape" data-etape="offre">
+<h1>Le pneu</h1>
+<p>Lisez attentivement la description de ce pneu. Les questions suivantes portent sur lui.</p>
+<div class="produit" id="fiche">
+<h2>Michelin CrossClimate 3</h2>
+<p class="aide">Pneu 4 saisons pour voiture de tourisme · dimension 205/55 R16, l'une des plus courantes en France</p>
+<ul>
+<li>Utilisable toute l'année : pas besoin de changer de pneus entre l'été et l'hiver.</li>
+<li>Homologué pour l'hiver (marquage montagne à trois pics) : il répond à l'obligation d'équipement hivernal dans les zones de montagne.</li>
+<li>Freinage annoncé 4 % plus court sur sol mouillé et sur neige que le modèle précédent.</li>
+<li id="ligne-b" hidden><b>Durée de vie annoncée : environ 50 000 km, soit jusqu'à 15 % de kilomètres en plus que le modèle précédent. Plus il dure, moins il vous coûte au kilomètre.</b></li>
+</ul>
+</div>
+<p class="aide">Quand vous êtes prêt(e), passez à la suite. La description restera rappelée en haut des questions de prix.</p>
+</section>
+
+<!-- 4a. Mesure : Van Westendorp (ordre fixe, réponse libre en euros) -->
+<section class="etape" data-etape="vw">
+<h1>Votre prix</h1>
+<p class="rappel" id="rappel-vw"></p>
+<p>Pour chaque question, indiquez un <b>prix pour un pneu</b>, en euros TTC, <b>montage non compris</b>.</p>
+<fieldset>
+<legend><label for="vw1">1. À partir de quel prix trouveriez-vous ce pneu <b>tellement bon marché</b> que vous douteriez de sa qualité ?</label></legend>
+<div class="euros"><input id="vw1" name="vw_trop_bon_marche" type="number" inputmode="decimal" min="1" max="1000" step="0.01" required><span>€</span></div>
+</fieldset>
+<fieldset>
+<legend><label for="vw2">2. À partir de quel prix le trouveriez-vous <b>bon marché</b>, c'est-à-dire une bonne affaire ?</label></legend>
+<div class="euros"><input id="vw2" name="vw_bon_marche" type="number" inputmode="decimal" min="1" max="1000" step="0.01" required><span>€</span></div>
+</fieldset>
+<fieldset>
+<legend><label for="vw3">3. À partir de quel prix commenceriez-vous à le trouver <b>cher</b>, tout en envisageant encore de l'acheter ?</label></legend>
+<div class="euros"><input id="vw3" name="vw_cher" type="number" inputmode="decimal" min="1" max="1000" step="0.01" required><span>€</span></div>
+</fieldset>
+<fieldset>
+<legend><label for="vw4">4. À partir de quel prix le trouveriez-vous <b>trop cher</b> pour l'acheter ?</label></legend>
+<div class="euros"><input id="vw4" name="vw_trop_cher" type="number" inputmode="decimal" min="1" max="1000" step="0.01" required><span>€</span></div>
+</fieldset>
+</section>
+
+<!-- 4b. Mesure : Gabor-Granger (prix décroissants, arrêt au premier « oui ») -->
+<section class="etape" data-etape="gg">
+<h1>Achèteriez-vous ?</h1>
+<p class="rappel" id="rappel-gg"></p>
+<p>Ce pneu vous est proposé au prix suivant, par pneu, TTC, montage non compris.</p>
+<div class="gg-prix" id="gg-prix" aria-live="polite"></div>
+<fieldset class="choix">
+<legend>L'achèteriez-vous à ce prix ?</legend>
+<label><input type="radio" name="gg_reponse" value="oui"> Oui, je l'achèterais</label>
+<label><input type="radio" name="gg_reponse" value="non"> Non, pas à ce prix</label>
+</fieldset>
+</section>
+
+<!-- 5. Contrôle -->
+<section class="etape" data-etape="controle">
+<h1>Une vérification</h1>
+<fieldset class="choix">
+<legend>Dans la description du pneu, une durée de vie en kilomètres était-elle indiquée ?</legend>
+<label><input type="radio" name="controle" value="oui" required> Oui</label>
+<label><input type="radio" name="controle" value="non"> Non</label>
+<label><input type="radio" name="controle" value="ne_sait_plus"> Je ne sais plus</label>
+</fieldset>
+</section>
+
+<!-- 6. Perception (Likert) -->
+<section class="etape" data-etape="perception">
+<h1>Votre avis sur ce pneu</h1>
+<p class="aide">De 1 = pas du tout d'accord à 5 = tout à fait d'accord.</p>
+<fieldset class="choix">
+<legend>Ce pneu offre un bon rapport entre ce qu'il coûte et ce qu'il apporte.</legend>
+<div class="likert" data-likert="likert_valeur"></div>
+</fieldset>
+<fieldset class="choix">
+<legend>Ce pneu est de bonne qualité.</legend>
+<div class="likert" data-likert="likert_qualite"></div>
+</fieldset>
+<fieldset class="choix">
+<legend>Je ferais confiance à ce pneu pour rouler en sécurité toute l'année.</legend>
+<div class="likert" data-likert="likert_confiance"></div>
+</fieldset>
+<fieldset class="choix">
+<legend>Quand vous choisissez des pneus, qu'est-ce qui compte le plus pour vous ?</legend>
+<label><input type="radio" name="critere_principal" value="prix" required> Le prix</label>
+<label><input type="radio" name="critere_principal" value="securite"> La sécurité (freinage, adhérence)</label>
+<label><input type="radio" name="critere_principal" value="duree_de_vie"> La durée de vie</label>
+<label><input type="radio" name="critere_principal" value="marque"> La marque</label>
+<label><input type="radio" name="critere_principal" value="conseil"> Le conseil du garagiste ou du vendeur</label>
+</fieldset>
+</section>
+
+<!-- 7. Profil (le strict nécessaire) -->
+<section class="etape" data-etape="profil">
+<h1>Pour finir</h1>
+<fieldset class="choix">
+<legend>Votre âge</legend>
+<label><input type="radio" name="age" value="18-24" required> 18 à 24 ans</label>
+<label><input type="radio" name="age" value="25-34"> 25 à 34 ans</label>
+<label><input type="radio" name="age" value="35-49"> 35 à 49 ans</label>
+<label><input type="radio" name="age" value="50-64"> 50 à 64 ans</label>
+<label><input type="radio" name="age" value="65+"> 65 ans ou plus</label>
+</fieldset>
+<fieldset class="choix">
+<legend>Combien de kilomètres faites-vous par an, environ ?</legend>
+<label><input type="radio" name="km_an" value="<8000" required> Moins de 8 000 km</label>
+<label><input type="radio" name="km_an" value="8000-15000"> De 8 000 à 15 000 km</label>
+<label><input type="radio" name="km_an" value="15000-25000"> De 15 000 à 25 000 km</label>
+<label><input type="radio" name="km_an" value=">25000"> Plus de 25 000 km</label>
+</fieldset>
+<fieldset class="choix">
+<legend>Où achetez-vous vos pneus, le plus souvent ?</legend>
+<label><input type="radio" name="canal_achat" value="garage" required> Garage ou concessionnaire</label>
+<label><input type="radio" name="canal_achat" value="specialiste"> Spécialiste du pneu (Euromaster, Point S…)</label>
+<label><input type="radio" name="canal_achat" value="centre_auto"> Centre auto (Norauto, Feu Vert…)</label>
+<label><input type="radio" name="canal_achat" value="internet"> Sur Internet (Allopneus…)</label>
+<label><input type="radio" name="canal_achat" value="reparateur_rapide"> Réparateur rapide (Speedy, Midas…)</label>
+<label><input type="radio" name="canal_achat" value="ne_sait_pas"> Je ne sais pas, je n'en ai jamais acheté</label>
+</fieldset>
+</section>
+
+<!-- Fin -->
+<section class="etape" data-etape="fin">
+<h1 id="fin-titre">Merci !</h1>
+<p id="fin-texte">Vos réponses ont bien été envoyées. Merci pour votre aide.</p>
+<div id="essai"></div>
+</section>
+
+<p class="erreur" id="erreur" role="alert"></p>
+<div class="boutons" id="boutons">
+<button type="button" class="second" id="retour">Retour</button>
+<button type="button" id="suivant">Commencer</button>
+</div>
+</form>
+</main>
+
+<script>
+/* ===== Réglage : coller ici l'URL de l'application web Google Apps Script (voir MODE-EMPLOI.md). =====
+   Tant qu'elle est vide, le questionnaire tourne en mode essai : rien n'est envoyé, les réponses s'affichent à la fin. */
+var ENDPOINT = '';
+
+/* Prix soumis dans Gabor-Granger, du plus cher au moins cher : on s'arrête au premier « oui ».
+   Si vous les changez, changez aussi les colonnes gg_… dans apps-script.gs. */
+var PRIX_GG = [104.90, 99.90, 97.90, 94.90, 92.90, 89.90, 84.90, 79.90, 74.90];
+
+var params = new URLSearchParams(location.search);
+var estTest = params.get('test') === '1' || !ENDPOINT;
+if (estTest) document.getElementById('bandeau-test').hidden = false;
+
+/* Tirage au sort de la version à l'ouverture, gardé si la page est rechargée. */
+function lire(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
+function ecrire(k,v){ try { sessionStorage.setItem(k,v); } catch(e){} }
+var version = lire('cc3_version');
+if (params.get('test') === '1' && /^[AB]$/.test(params.get('v') || '')) version = params.get('v');
+if (version !== 'A' && version !== 'B') { version = Math.random() < 0.5 ? 'A' : 'B'; ecrire('cc3_version', version); }
+document.getElementById('ligne-b').hidden = version !== 'B';
+
+function idAleatoire(){
+  var a = new Uint8Array(6); (window.crypto || window.msCrypto).getRandomValues(a);
+  return Array.prototype.map.call(a, function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
+}
+
+/* Échelles de Likert, générées pour être identiques partout. */
+document.querySelectorAll('[data-likert]').forEach(function(div){
+  var nom = div.getAttribute('data-likert');
+  var libelles = ['Pas du tout d’accord', '', '', '', 'Tout à fait d’accord'];
+  for (var i = 1; i <= 5; i++) {
+    var l = document.createElement('label');
+    l.innerHTML = '<input type="radio" name="' + nom + '" value="' + i + '" required><b>' + i + '</b>' + (libelles[i-1] ? '<span>' + libelles[i-1] + '</span>' : '');
+    div.appendChild(l);
+  }
+});
+
+/* Rappel de l'offre au-dessus des questions de prix (même texte, version comprise). */
+var rappel = 'Rappel : Michelin CrossClimate 3, pneu 4 saisons homologué hiver, 205/55 R16, freinage 4 % plus court sur sol mouillé et sur neige que le modèle précédent' +
+  (version === 'B' ? ', durée de vie annoncée d’environ 50 000 km (jusqu’à 15 % de plus que le modèle précédent).' : '.');
+document.getElementById('rappel-vw').textContent = rappel;
+document.getElementById('rappel-gg').textContent = rappel;
+
+var form = document.getElementById('q');
+var etapes = Array.prototype.slice.call(document.querySelectorAll('.etape'));
+var nomsEtapes = etapes.map(function(e){ return e.getAttribute('data-etape'); });
+var courante = 0, debut = null, vwAverti = false;
+var gg = { i: 0, reponses: {}, max: '' };
+var horsCible = false;
+
+function el(id){ return document.getElementById(id); }
+function valeur(nom){
+  var champ = form.elements[nom]; if (!champ) return '';
+  if (champ.type === 'checkbox') return champ.checked ? champ.value : '';
+  return champ.value || '';
+}
+function euros(x){ return x.toFixed(2).replace('.', ',') + ' €'; }
+
+function afficher(n){
+  courante = n;
+  etapes.forEach(function(e, i){ e.classList.toggle('active', i === n); });
+  var nom = nomsEtapes[n];
+  var total = nomsEtapes.length - 1;
+  el('barre').style.width = Math.round(100 * n / total) + '%';
+  el('etape-n').textContent = nom === 'fin' ? '' : 'Étape ' + (n + 1) + ' sur ' + total;
+  el('erreur').textContent = '';
+  el('retour').hidden = n === 0 || nom === 'gg' || nom === 'fin' || nom === 'controle';
+  el('suivant').textContent = n === 0 ? 'Commencer' : (nom === 'profil' ? 'Envoyer mes réponses' : 'Suivant');
+  el('boutons').hidden = nom === 'fin';
+  if (nom === 'gg') montrerPrixGG();
+  window.scrollTo(0, 0);
+}
+
+function montrerPrixGG(){
+  el('gg-prix').textContent = euros(PRIX_GG[gg.i]);
+  form.querySelectorAll('input[name=gg_reponse]').forEach(function(r){ r.checked = false; });
+}
+
+/* Vérifie que chaque question de l'étape a une réponse. */
+function etapeComplete(section){
+  var noms = {};
+  section.querySelectorAll('input[required]').forEach(function(i){ noms[i.name] = true; });
+  return Object.keys(noms).every(function(n){
+    var v = valeur(n);
+    if (form.elements[n] && form.elements[n].type === 'number') return v !== '' && +v > 0 && +v <= 1000;
+    return v !== '';
+  });
+}
+
+function suivant(){
+  var section = etapes[courante], nom = nomsEtapes[courante];
+
+  if (nom === 'gg') {
+    var r = valeur('gg_reponse');
+    if (!r) { el('erreur').textContent = 'Merci de choisir une réponse.'; return; }
+    gg.reponses[PRIX_GG[gg.i]] = r;
+    if (r === 'oui') { gg.max = PRIX_GG[gg.i]; return afficher(courante + 1); }
+    if (gg.i < PRIX_GG.length - 1) { gg.i++; montrerPrixGG(); return; }
+    gg.max = 'aucun';
+    return afficher(courante + 1);
+  }
+
+  if (!etapeComplete(section)) {
+    el('erreur').textContent = nom === 'vw' ? 'Merci d’indiquer un prix entre 1 et 1 000 € pour chaque question.' : 'Merci de répondre à chaque question.';
+    return;
+  }
+  if (nom === 'accueil' && debut === null) debut = Date.now();
+
+  if (nom === 'filtre') {
+    horsCible = valeur('filtre_voiture') !== 'oui' || valeur('filtre_decide') === 'autre' || valeur('filtre_decide') === 'sans_voiture';
+    if (horsCible) return envoyer();
+  }
+
+  /* Les quatre prix doivent monter ; on le signale une fois, sans bloquer (le nettoyage se fera à l'analyse). */
+  if (nom === 'vw' && !vwAverti) {
+    var v = ['vw_trop_bon_marche','vw_bon_marche','vw_cher','vw_trop_cher'].map(function(n){ return +valeur(n); });
+    if (!(v[0] <= v[1] && v[1] <= v[2] && v[2] <= v[3])) {
+      vwAverti = true;
+      el('erreur').textContent = 'Vos prix devraient normalement augmenter de la question 1 à la question 4. Vérifiez-les, puis cliquez de nouveau sur « Suivant ».';
+      return;
+    }
+  }
+
+  if (nom === 'profil') return envoyer();
+  afficher(courante + 1);
+}
+
+function donnees(){
+  var v = ['vw_trop_bon_marche','vw_bon_marche','vw_cher','vw_trop_cher'].map(function(n){ return valeur(n) === '' ? '' : +valeur(n); });
+  var d = {
+    id: idAleatoire(),
+    test: estTest ? 1 : 0,
+    version: version,
+    duree_s: debut ? Math.round((Date.now() - debut) / 1000) : '',
+    consentement: valeur('consentement'),
+    filtre_voiture: valeur('filtre_voiture'),
+    filtre_decide: valeur('filtre_decide'),
+    cible: horsCible ? 0 : 1,
+    vw_trop_bon_marche: v[0], vw_bon_marche: v[1], vw_cher: v[2], vw_trop_cher: v[3],
+    vw_coherent: horsCible ? '' : ((v[0] <= v[1] && v[1] <= v[2] && v[2] <= v[3]) ? 1 : 0),
+    gg_prix_max_accepte: gg.max,
+    controle: valeur('controle'),
+    likert_valeur: valeur('likert_valeur'), likert_qualite: valeur('likert_qualite'), likert_confiance: valeur('likert_confiance'),
+    critere_principal: valeur('critere_principal'),
+    age: valeur('age'), km_an: valeur('km_an'), canal_achat: valeur('canal_achat')
+  };
+  PRIX_GG.forEach(function(p){ d['gg_' + p.toFixed(2).replace('.', '_')] = gg.reponses[p] || ''; });
+  return d;
+}
+
+function envoyer(){
+  var d = donnees();
+  var btn = el('suivant'); btn.disabled = true; btn.textContent = 'Envoi…';
+  function fin(){
+    if (horsCible) { el('fin-titre').textContent = 'Merci !'; el('fin-texte').textContent = 'Ce questionnaire s’adresse aux personnes qui choisissent les pneus d’une voiture qu’elles utilisent chaque semaine. Merci beaucoup pour votre temps.'; }
+    if (!ENDPOINT) {
+      el('fin-texte').textContent += ' (Mode essai : aucune réponse envoyée, l’URL Google Sheets n’est pas encore réglée.)';
+      el('essai').innerHTML = '<pre class="essai"></pre>';
+      el('essai').firstChild.textContent = JSON.stringify(d, null, 1);
+    }
+    try { sessionStorage.removeItem('cc3_version'); } catch(e){}
+    afficher(nomsEtapes.indexOf('fin'));
+  }
+  if (!ENDPOINT) return fin();
+  /* text/plain évite la requête préalable CORS, qu'Apps Script ne sait pas traiter ; la réponse n'est pas lisible en no-cors. */
+  fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(d) })
+    .then(fin)
+    .catch(function(){
+      btn.disabled = false; btn.textContent = 'Réessayer l’envoi';
+      el('erreur').textContent = 'L’envoi a échoué. Vérifiez votre connexion, puis réessayez.';
+    });
+}
+
+el('suivant').addEventListener('click', suivant);
+el('retour').addEventListener('click', function(){ if (courante > 0) afficher(courante - 1); });
+form.addEventListener('submit', function(e){ e.preventDefault(); suivant(); });
+afficher(0);
+</script>
+</body>
+</html>
