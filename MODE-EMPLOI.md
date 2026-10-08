@@ -11,35 +11,29 @@ Tant que l'adresse du serveur n'est pas réglée, le questionnaire tourne en **m
 
 ## Ce que mesure le questionnaire
 
-**La question : combien le client paierait-il en plus pour un pneu qui dure 10 000 km de plus, et le nom Michelin change-t-il ce montant ?**
+**La question : les gens sont-ils prêts à payer plus pour un pneu qui dure 10 000 km de plus ?** Michelin met en avant pour le CrossClimate 3 une durée de vie supérieure à celle de ses concurrents.
 
-Le questionnaire prend environ 2 minutes : une question par écran, et un clic sur une grande case suffit pour passer à la suite.
+**Test A/B**, tiré au sort à l'ouverture : le même **Michelin CrossClimate 3** (4 saisons, 205/55 R16, homologué hiver) est présenté avec une durée de vie annoncée de
+- **40 000 km** en version A ;
+- **50 000 km** en version B.
+
+C'est la seule différence entre les deux versions. L'écart entre B et A mesure ce que valent 10 000 km de plus.
+
+Le questionnaire prend environ 1 min 30 : une question par écran, un clic sur une grande case pour avancer, et un bouton « Retour » sur chaque écran.
 
 | Écran | Contenu |
 |---|---|
-| 1 | Accueil. Cliquer sur « C'est parti » vaut accord (anonymat, 18 ans et plus) |
-| 2 | Qui choisit les pneus de votre voiture ? Moi / Quelqu'un d'autre / Je n'ai pas de voiture |
-| 3 | Les deux pneus : pneu 1, 50 000 km, prix « ? » ; pneu 2, une grande marque, 40 000 km, 93 € |
-| 4 | La jauge : au maximum, combien paieriez-vous [le pneu 1 / le Michelin] ? De 60 à 140 € |
-| 5 | Paieriez-vous 15 € de plus par pneu pour le faire monter à domicile ? Oui / Non |
-| 6-8 | Votre avis, de 1 à 5, une phrase par écran : 10 000 km valent un prix plus élevé ; je crois à la durée annoncée ; confiance pour la sécurité |
-| 9 | Ce qui compte le plus pour choisir des pneus (5 cases) |
-| 10-12 | Âge (5 cases), kilomètres par an (4 cases), lieu d’achat habituel (6 cases) |
+| 1 | Accueil. Cliquer sur « C'est parti » vaut accord (anonymat) |
+| 2 | Âge : **moins de 18 ans → fin du questionnaire** |
+| 3 | Avez-vous une voiture ? **Non → fin du questionnaire** |
+| 4 | Le pneu : Michelin CrossClimate 3, durée de vie annoncée 40 000 km (A) ou 50 000 km (B), sans prix |
+| 5 | La jauge : au maximum, combien paieriez-vous ce pneu ? De 60 à 140 €, montage non compris |
+| 6 | « Ce pneu coûte 97,90 €. Le paieriez-vous 10 € de plus, soit 107,90 € ? » Oui / Non |
+| 7-9 | Votre avis, de 1 à 5 : cette durée de vie justifie un prix plus élevé ; je crois à la durée annoncée ; un pneu qui dure plus fait faire des économies |
+| 10 | Ce qui compte le plus : prix, durée de vie, sécurité ou marque |
+| 11 | Kilomètres par an |
 
-Un bouton « Retour » permet de revenir à la question précédente sur chaque écran ; la réponse déjà donnée reste allumée et peut être changée.
-
-**Test A/B**, tiré au sort, avec une seule différence :
-- **version A** : le pneu 1 est « une grande marque », sans nom ;
-- **version B** : le pneu 1 est le **Michelin CrossClimate 3**.
-
-Ce qu'on lit :
-- la **version A** donne ce que valent 10 000 km de plus, sans la marque ;
-- la **version B** donne la même chose pour le Michelin ;
-- **B − A** donne ce qu'ajoute le nom Michelin, d'abord sur le prix moyen de la jauge.
-
-La question des 15 € mesure l'intérêt pour un service de **montage à domicile** ; elle est posée dans les deux versions.
-
-La jauge ne montre aucun prix tant que le curseur n'a pas bougé, et « Valider » reste grisé : on ne suggère pas de prix de départ.
+La jauge ne montre aucun prix tant que le curseur n'a pas bougé, et le prix de 97,90 € n'apparaît qu'après la jauge : on ne suggère pas de prix de départ.
 
 ## 1. Héberger le dossier `serveur/` (une seule fois)
 
@@ -105,27 +99,28 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : prix moyen et médian de la jauge, répartition des prix, part prête à payer 15 € pour le montage à domicile, avis moyens, critère principal, durée de réponse ;
+- les premiers résultats par version A / B : part prête à payer 10 € de plus, prix moyen et médian de la jauge, répartition des prix, avis moyens, critère principal, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
-  - toutes les réponses, ou seulement les **exploitables** (hors essais, et la personne choisit elle-même ses pneus).
+  - toutes les réponses, ou seulement les **exploitables** (hors essais, 18 ans ou plus, avec une voiture).
 
 ## Les colonnes
 
 | Colonne | Contenu |
 |---|---|
 | `test` | 1 = essai, à écarter |
-| `version` | A (pneu 1 sans marque) ou B (pneu 1 = Michelin CrossClimate 3) |
+| `version` | A (40 000 km annoncés) ou B (50 000 km annoncés) |
 | `duree_s` | temps de réponse, en secondes |
-| `filtre_decide` | `moi`, `autre` ou `sans_voiture` |
-| `cible` | 1 = choisit lui-même ses pneus ; 0 = hors cible, à écarter ou à comparer |
-| `prix_max_pneu1` | le prix maximum choisi sur la jauge, de 60 à 140 € (60 = « 60 € ou moins », 140 = « 140 € ou plus ») |
-| `montage_domicile_15` | `oui` ou `non` : prêt à payer 15 € de plus par pneu pour le montage à domicile |
-| `likert_…` | avis de 1 à 5 : 10 000 km valent un prix plus élevé, croit à la durée annoncée, confiance pour la sécurité |
-| `critere_principal` | prix, sécurité, durée de vie, marque ou conseil |
-| `age`, `km_an`, `canal_achat` | profil |
+| `age` | `<18`, `18-24`, `25-34`, `35-49`, `50-64` ou `65+` |
+| `voiture` | `oui` ou `non` |
+| `cible` | 1 = 18 ans ou plus et a une voiture ; 0 = arrêté au filtre |
+| `prix_max` | le prix maximum choisi sur la jauge, de 60 à 140 € (60 = « 60 € ou moins », 140 = « 140 € ou plus ») |
+| `accepte_plus_10` | `oui` ou `non` : paierait 107,90 € au lieu de 97,90 € |
+| `likert_…` | avis de 1 à 5 : la durée justifie un prix plus élevé, croit à la durée annoncée, économies |
+| `critere_principal` | prix, durée de vie, sécurité ou marque |
+| `km_an` | kilomètres par an |
 
 ## Si vous modifiez le questionnaire
 
-Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez le supplément ou le prix du pneu 2, changez-les aux deux endroits : `SUPPLEMENT` et `PRIX_AUTRE` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.
+Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez le prix actuel ou la hausse testée, changez-les aux deux endroits : `PRIX_ACTUEL` et `HAUSSE` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.

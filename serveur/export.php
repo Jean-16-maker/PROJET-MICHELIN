@@ -52,7 +52,7 @@ function lire_reponses(): array
     return $lignes;
 }
 
-/* Exploitable : pas un essai, et la personne choisit elle-même ses pneus. */
+/* Exploitable : pas un essai, 18 ans ou plus, et a une voiture. */
 function exploitable(array $r): bool
 {
     return (string) ($r['test'] ?? '') === '0' && (string) ($r['cible'] ?? '') === '1';
@@ -99,9 +99,9 @@ function nb($x, int $dec = 0): string { return $x === null ? '—' : number_form
 function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 0, ',', ' ') . ' %' : '—'; }
 
 /* Paliers de la jauge pour la répartition des prix maximum. */
-const LIKERT = ['likert_vaut_supplement' => '« 10 000 km de plus valent un prix plus élevé »', 'likert_croit_duree' => '« Je crois à la durée de vie annoncée »', 'likert_confiance' => '« Confiance pour la sécurité »'];
-const CRITERES = ['prix' => 'le prix', 'securite' => 'la sécurité', 'duree_de_vie' => 'la durée de vie', 'marque' => 'la marque', 'conseil' => 'le conseil du vendeur'];
-const PALIERS = [[60, 89, 'moins de 90 €'], [90, 99, '90 à 99 €'], [100, 107, '100 à 107 €'], [108, 119, '108 à 119 €'], [120, 140, '120 € et plus']];
+const LIKERT = ['likert_justifie_prix' => '« Avec cette durée de vie, ce pneu vaut un prix plus élevé »', 'likert_croit_duree' => '« Je crois à la durée de vie annoncée »', 'likert_economie' => '« Un pneu qui dure plus me fait faire des économies »'];
+const CRITERES = ['prix' => 'le prix', 'duree_de_vie' => 'la durée de vie', 'securite' => 'la sécurité', 'marque' => 'la marque'];
+const PALIERS = [[60, 89, 'moins de 90 €'], [90, 97, '90 à 97 €'], [98, 107, '98 à 107 €'], [108, 119, '108 à 119 €'], [120, 140, '120 € et plus']];
 
 $stats = null;
 if ($connecte) {
@@ -115,8 +115,8 @@ if ($connecte) {
     $propres = array_filter($toutes, 'exploitable');
     foreach (['A', 'B'] as $v) {
         $g = array_values(array_filter($propres, fn($r) => ($r['version'] ?? '') === $v));
-        $prix = array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['prix_max_pneu1'] ?? '', $g), 'is_numeric')));
-        $oui = count(array_filter($g, fn($r) => ($r['montage_domicile_15'] ?? '') === 'oui'));
+        $prix = array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['prix_max'] ?? '', $g), 'is_numeric')));
+        $oui = count(array_filter($g, fn($r) => ($r['accepte_plus_10'] ?? '') === 'oui'));
         $repartition = [];
         foreach (PALIERS as [$min, $max, $libelle]) {
             $repartition[$libelle] = pct(count(array_filter($prix, fn($x) => $x >= $min && $x <= $max)), count($prix));
@@ -127,7 +127,7 @@ if ($connecte) {
             'oui_pct' => pct($oui, count($g)),
             'prix_moy' => moyenne($prix),
             'prix_med' => mediane($prix),
-            'prime_moy' => $prix ? moyenne($prix) - PRIX_AUTRE : null,
+            'au_moins_plus10' => pct(count(array_filter($prix, fn($x) => $x >= PRIX_ACTUEL + HAUSSE)), count($prix)),
             'repartition' => $repartition,
             'likert' => array_combine(array_keys(LIKERT), array_map(fn($col) => moyenne(array_map('floatval', array_values(array_filter(array_map(fn($r) => $r[$col] ?? '', $g), 'is_numeric')))), array_keys(LIKERT))),
             'critere' => array_combine(array_keys(CRITERES), array_map(fn($k) => pct(count(array_filter($g, fn($r) => ($r['critere_principal'] ?? '') === $k)), count($g)), array_keys(CRITERES))),
@@ -186,7 +186,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <div class="carte chiffres">
 <div><b><?= $stats['total'] ?></b><span>réponses enregistrées</span></div>
 <div><b><?= $stats['test'] ?></b><span>essais (test = 1)</span></div>
-<div><b><?= $stats['hors_cible'] ?></b><span>hors cible (ne choisit pas ses pneus, ou sans voiture)</span></div>
+<div><b><?= $stats['hors_cible'] ?></b><span>hors cible (moins de 18 ans, ou sans voiture)</span></div>
 <div><b><?= $A['n'] + $B['n'] ?></b><span>réponses exploitables</span></div>
 </div>
 
@@ -195,22 +195,22 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=exploitables">Réponses exploitables · Excel</a>
 <a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=tout">Toutes les réponses · Excel</a>
 <a class="bouton second" href="?telecharger=1&amp;format=csv&amp;quoi=tout">Toutes · CSV standard (R, Python)</a>
-<p class="note">Excel : séparateur « ; » et virgule décimale. CSV standard : séparateur « , » et point décimal. Exploitables = hors essais, et la personne choisit elle-même ses pneus.</p>
+<p class="note">Excel : séparateur « ; » et virgule décimale. CSV standard : séparateur « , » et point décimal. Exploitables = hors essais, 18 ans ou plus, avec une voiture.</p>
 </div>
 
 <h2>Premiers résultats (réponses exploitables)</h2>
 <div class="carte tableau">
 <table>
-<thead><tr><th></th><th class="n">Version A<br><span class="note">pneu 1 sans marque</span></th><th class="n">Version B<br><span class="note">pneu 1 Michelin</span></th></tr></thead>
+<thead><tr><th></th><th class="n">Version A<br><span class="note">40 000 km annoncés</span></th><th class="n">Version B<br><span class="note">50 000 km annoncés</span></th></tr></thead>
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
-<tr class="cle"><td>Jauge : prix maximum pour le pneu 1, moyenne</td><td class="n"><?= nb($A['prix_moy'], 1) ?> €</td><td class="n"><?= nb($B['prix_moy'], 1) ?> €</td></tr>
+<tr class="cle"><td>Prêts à payer <?= HAUSSE ?> € de plus (<?= number_format(PRIX_ACTUEL + HAUSSE, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
+<tr class="cle"><td>Jauge : prix maximum, moyenne</td><td class="n"><?= nb($A['prix_moy'], 1) ?> €</td><td class="n"><?= nb($B['prix_moy'], 1) ?> €</td></tr>
 <tr><td>Jauge : prix maximum, médiane</td><td class="n"><?= nb($A['prix_med']) ?> €</td><td class="n"><?= nb($B['prix_med']) ?> €</td></tr>
-<tr><td>Supplément moyen accepté par rapport au pneu 2 (<?= PRIX_AUTRE ?> €)</td><td class="n"><?= nb($A['prime_moy'], 1) ?> €</td><td class="n"><?= nb($B['prime_moy'], 1) ?> €</td></tr>
+<tr><td>Jauge à <?= number_format(PRIX_ACTUEL + HAUSSE, 2, ',', ' ') ?> € ou plus</td><td class="n"><?= $A['au_moins_plus10'] ?></td><td class="n"><?= $B['au_moins_plus10'] ?></td></tr>
 <?php foreach (array_keys($A['repartition']) as $l): ?>
 <tr><td>Jauge : <?= h($l) ?></td><td class="n"><?= $A['repartition'][$l] ?></td><td class="n"><?= $B['repartition'][$l] ?></td></tr>
 <?php endforeach; ?>
-<tr class="cle"><td>Prêts à payer <?= SUPPLEMENT ?> € de plus par pneu pour le montage à domicile</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
 <?php foreach (LIKERT as $col => $libelle): ?>
 <tr><td>Avis <?= h($libelle) ?>, moyenne sur 5</td><td class="n"><?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= nb($B['likert'][$col], 1) ?></td></tr>
 <?php endforeach; ?>
@@ -220,7 +220,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tr><td>Durée de réponse, médiane</td><td class="n"><?= nb($A['duree_med']) ?> s</td><td class="n"><?= nb($B['duree_med']) ?> s</td></tr>
 </tbody>
 </table>
-<p class="note">Lecture : la version A mesure ce que valent 10 000 km de plus pour un pneu sans marque ; la version B, pour le Michelin. L'écart entre B et A mesure ce qu'ajoute le nom Michelin. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
+<p class="note">Lecture : le même Michelin CrossClimate 3 est présenté avec 40 000 km (A) ou 50 000 km (B), tirés au sort. L'écart entre B et A mesure ce que valent, pour les répondants, 10 000 km de durée de vie en plus : sur la part prête à payer 10 € de plus, et sur le prix maximum de la jauge. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
 
 <form method="post" class="inline"><button class="second" name="deconnexion" value="1">Se déconnecter</button></form>

@@ -6,12 +6,12 @@
  */
 const COLONNES = [
     'horodatage', 'id', 'test', 'version', 'duree_s',
-    'consentement', 'filtre_decide', 'cible',
-    'prix_max_pneu1', 'montage_domicile_15',
-    'likert_vaut_supplement', 'likert_croit_duree', 'likert_confiance', 'critere_principal',
-    'age', 'km_an', 'canal_achat',
+    'consentement', 'age', 'voiture', 'cible',
+    'prix_max', 'accepte_plus_10',
+    'likert_justifie_prix', 'likert_croit_duree', 'likert_economie', 'critere_principal',
+    'km_an',
 ];
 
-/* Mêmes valeurs que dans questionnaire.html. */
-const PRIX_AUTRE = 93;   // pneu 2, 40 000 km
-const SUPPLEMENT = 15;   // montage à domicile, par pneu
+/* Mêmes valeurs que dans questionnaire.html. Version A : 40 000 km ; version B : 50 000 km. */
+const PRIX_ACTUEL = 97.90;   // prix relevé du CrossClimate 3
+const HAUSSE = 10;           // hausse testée, par pneu
