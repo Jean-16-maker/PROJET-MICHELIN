@@ -7,11 +7,13 @@
 const COLONNES = [
     'horodatage', 'id', 'test', 'version', 'duree_s',
     'consentement', 'age', 'voiture', 'cible',
-    'prix_max', 'accepte_plus_10',
+    'accepte_plus_15', 'prix_max_renforce',
     'likert_justifie_prix', 'likert_croit_duree', 'likert_economie', 'critere_principal',
     'km_an',
+    'achat_garage', 'achat_specialiste', 'achat_centre_auto', 'achat_internet', 'achat_reparateur_rapide', 'achat_grande_surface',
 ];
 
-/* Mêmes valeurs que dans questionnaire.html. Version A : 40 000 km ; version B : 50 000 km. */
-const PRIX_ACTUEL = 97.90;   // prix relevé du CrossClimate 3
-const HAUSSE = 10;           // hausse testée, par pneu
+/* Mêmes valeurs que dans questionnaire.html.
+   Version A : « 15 € de plus par pneu » ; version B : la même hausse, ramenée à 1,50 € tous les 1 000 km. */
+const PRIX_STANDARD = 97.90;   // CrossClimate 3, 40 000 km
+const HAUSSE = 15;             // hausse testée pour la version renforcée, 50 000 km

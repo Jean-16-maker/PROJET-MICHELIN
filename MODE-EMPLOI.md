@@ -11,29 +11,30 @@ Tant que l'adresse du serveur n'est pas réglée, le questionnaire tourne en **m
 
 ## Ce que mesure le questionnaire
 
-**La question : les gens sont-ils prêts à payer plus pour un pneu qui dure 10 000 km de plus ?** Michelin met en avant pour le CrossClimate 3 une durée de vie supérieure à celle de ses concurrents.
+**La question : les gens sont-ils prêts à payer plus cher pour un pneu qui dure 10 000 km de plus ?**
 
-**Test A/B**, tiré au sort à l'ouverture : le même **Michelin CrossClimate 3** (4 saisons, 205/55 R16, homologué hiver) est présenté avec une durée de vie annoncée de
-- **40 000 km** en version A ;
-- **50 000 km** en version B.
+Chaque répondant voit deux versions du même pneu, côte à côte :
+- **Michelin CrossClimate 3** : durée de vie annoncée 40 000 km, **97,90 €** le pneu ;
+- **Michelin CrossClimate 3 renforcé** : durée de vie annoncée **50 000 km**, prix à déterminer.
 
-C'est la seule différence entre les deux versions. L'écart entre B et A mesure ce que valent 10 000 km de plus.
+Les deux ont les mêmes caractéristiques : 4 saisons, 205/55 R16, étiquette européenne carburant B, pluie B, bruit 72 dB, homologation hiver 3PMSF. La version « renforcée » est un **scénario** : elle n'existe pas dans le catalogue Michelin.
 
-Le questionnaire prend environ 1 min 30 : une question par écran, un clic sur une grande case pour avancer, et un bouton « Retour » sur chaque écran.
+**Test A/B**, tiré au sort, avec une seule différence, la présentation des 15 € (effet de cadrage, CM 2) :
+- **version A** : « Soit 112,90 € au lieu de 97,90 €, ou 60 € de plus pour 4 pneus » ;
+- **version B** : « Soit 112,90 € au lieu de 97,90 € : à peine 1,50 € tous les 1 000 km parcourus en plus ».
 
 | Écran | Contenu |
 |---|---|
 | 1 | Accueil. Cliquer sur « C'est parti » vaut accord (anonymat) |
-| 2 | Âge : **moins de 18 ans → fin du questionnaire** |
+| 2 | Âge exact, en années : **moins de 18 ans → fin du questionnaire** |
 | 3 | Avez-vous une voiture ? **Non → fin du questionnaire** |
-| 4 | Le pneu : Michelin CrossClimate 3, durée de vie annoncée 40 000 km (A) ou 50 000 km (B), sans prix |
-| 5 | La jauge : au maximum, combien paieriez-vous ce pneu ? De 60 à 140 €, montage non compris |
-| 6 | « Ce pneu coûte 97,90 €. Le paieriez-vous 10 € de plus, soit 107,90 € ? » Oui / Non |
-| 7-9 | Votre avis, de 1 à 5 : cette durée de vie justifie un prix plus élevé ; je crois à la durée annoncée ; un pneu qui dure plus fait faire des économies |
-| 10 | Ce qui compte le plus : prix, durée de vie, sécurité ou marque |
-| 11 | Kilomètres par an |
-
-La jauge ne montre aucun prix tant que le curseur n'a pas bougé, et le prix de 97,90 € n'apparaît qu'après la jauge : on ne suggère pas de prix de départ.
+| 4 | Les deux pneus côte à côte |
+| 5 | « Paieriez-vous 15 € de plus par pneu pour la version renforcée, qui dure 10 000 km de plus ? » Oui / Non |
+| 6 | La jauge : au maximum, combien paieriez-vous la version renforcée ? De 80 à 150 € |
+| 7-9 | Votre avis, de 1 à 5 : 10 000 km justifient de payer plus ; je crois à la durée annoncée ; un pneu qui dure plus fait faire des économies |
+| 10 | Ce qui compte le plus (9 choix) |
+| 11 | Kilomètres par an : curseur de 0 à 50 000 km |
+| 12 | Lieux où la personne a déjà acheté des pneus : oui / non pour 6 lieux |
 
 ## 1. Héberger le dossier `serveur/` (une seule fois)
 
@@ -99,7 +100,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : part prête à payer 10 € de plus, prix moyen et médian de la jauge, répartition des prix, avis moyens, critère principal, durée de réponse ;
+- les premiers résultats par version A / B : part prête à payer 15 € de plus, prix moyen et médian de la jauge, supplément moyen accepté, avis moyens, critère principal, lieux d'achat, âge, kilomètres, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -110,17 +111,18 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 | Colonne | Contenu |
 |---|---|
 | `test` | 1 = essai, à écarter |
-| `version` | A (40 000 km annoncés) ou B (50 000 km annoncés) |
+| `version` | A (« 60 € de plus pour 4 pneus ») ou B (« 1,50 € tous les 1 000 km ») |
 | `duree_s` | temps de réponse, en secondes |
-| `age` | `<18`, `18-24`, `25-34`, `35-49`, `50-64` ou `65+` |
+| `age` | âge en années |
 | `voiture` | `oui` ou `non` |
 | `cible` | 1 = 18 ans ou plus et a une voiture ; 0 = arrêté au filtre |
-| `prix_max` | le prix maximum choisi sur la jauge, de 60 à 140 € (60 = « 60 € ou moins », 140 = « 140 € ou plus ») |
-| `accepte_plus_10` | `oui` ou `non` : paierait 107,90 € au lieu de 97,90 € |
-| `likert_…` | avis de 1 à 5 : la durée justifie un prix plus élevé, croit à la durée annoncée, économies |
-| `critere_principal` | prix, durée de vie, sécurité ou marque |
-| `km_an` | kilomètres par an |
+| `accepte_plus_15` | `oui` ou `non` : paierait 112,90 € pour la version renforcée au lieu de 97,90 € |
+| `prix_max_renforce` | le prix maximum choisi sur la jauge pour la version renforcée, de 80 à 150 € |
+| `likert_…` | avis de 1 à 5 : 10 000 km justifient de payer plus, croit à la durée annoncée, économies |
+| `critere_principal` | prix, durée de vie, freinage, hiver, marque, carburant, bruit, avis ou conseil |
+| `km_an` | kilomètres par an (curseur, par pas de 1 000 ; 50 000 = « 50 000 ou plus ») |
+| `achat_…` | `oui` ou `non` pour chaque lieu : garage, spécialiste, centre auto, Internet, réparateur rapide, grande surface |
 
 ## Si vous modifiez le questionnaire
 
-Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez le prix actuel ou la hausse testée, changez-les aux deux endroits : `PRIX_ACTUEL` et `HAUSSE` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.
+Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez le prix ou la hausse testée, changez-les aux deux endroits : `PRIX_STANDARD` et `HAUSSE` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.
