@@ -11,16 +11,28 @@ Tant que l'adresse du serveur n'est pas réglée, le questionnaire tourne en **m
 
 ## Ce que mesure le questionnaire
 
-Chaque répondant voit deux pneus 4 saisons en 205/55 R16 : le **Michelin CrossClimate 3** et le pneu d'**une autre grande marque, à 93 €** (le prix plafond relevé chez les concurrents directs).
+**La question : combien le client paierait-il en plus pour un pneu qui dure 10 000 km de plus, et le nom Michelin change-t-il ce montant ?**
 
-- **Test A/B**, tiré au sort : la version B ajoute seulement la durée de vie (Michelin environ 50 000 km, l'autre environ 40 000 km, soit 10 000 km de plus). C'est la seule différence entre A et B.
-- **Van Westendorp** : les 4 prix (trop bon marché, bon marché, cher, trop cher) du Michelin.
-- **Gabor-Granger en choix** : « le Michelin à X € ou l'autre à 93 € ? ». X descend de 119,90 € à 92,90 €, et le questionnaire s'arrête au premier choix du Michelin.
-  - `gg_prix_max_michelin` = le prix le plus élevé auquel le répondant choisit encore le Michelin.
-  - `prime_max` = ce prix moins 93 € : la prime qu'il accepte de payer pour le Michelin.
-- **Le résultat clé** : la prime en B moins la prime en A, soit ce que valent les 10 000 km de plus aux yeux des répondants.
+Chaque répondant voit deux pneus 4 saisons en 205/55 R16 :
+- **pneu 1** : durée de vie annoncée d'environ 50 000 km, prix à déterminer ;
+- **pneu 2** : une grande marque, environ 40 000 km, **93 €** (le prix plafond relevé chez les concurrents directs).
 
-La présentation du questionnaire est volontairement neutre (pas la charte Michelin du dossier), pour ne pas avantager une marque.
+Les 10 000 km de plus apparaissent dans les deux versions. **Test A/B**, tiré au sort, avec une seule différence :
+- **version A** : le pneu 1 n'a pas de nom (« un pneu 4 saisons d'une grande marque ») ;
+- **version B** : le pneu 1 est le **Michelin CrossClimate 3**.
+
+Les mesures :
+- **Le supplément** (Gabor-Granger) : « Paieriez-vous 30 € de plus par pneu pour [le pneu 1 / le Michelin CrossClimate 3], qui dure 10 000 km de plus ? ». Puis 25, 20, 15, 10 et 5 €, avec arrêt au premier « oui ».
+  - `supplement_max` = le supplément le plus élevé accepté (0 si le répondant refuse même 5 €) ;
+  - `prix_max_pneu1` = 93 € + ce supplément.
+- **Van Westendorp en tranches** : pour le pneu 1, quatre questions (trop bon marché, bon marché, cher, trop cher), avec des cases de tranches de prix : moins de 60 €, 60 à 70 €, 70 à 80 € … plus de 130 €.
+
+Ce qu'on lit :
+- la **version A** donne ce que valent 10 000 km de plus, sans la marque ;
+- la **version B** donne ce que le client paierait en plus pour le Michelin qui dure 10 000 km de plus ;
+- **B − A** donne ce qu'ajoute le nom Michelin.
+
+La présentation du questionnaire est volontairement neutre (pas la charte Michelin du dossier) : sinon, les répondants de la version A devineraient la marque.
 
 ## 1. Héberger le dossier `serveur/` (une seule fois)
 
@@ -68,7 +80,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : prix maximum et prime acceptés pour le Michelin, part qui choisit le Michelin à chaque prix, médianes Van Westendorp, taux de réussite du contrôle ;
+- les premiers résultats par version A / B : supplément moyen et médian accepté pour 10 000 km de plus, part qui accepte chaque supplément, tranches médianes de Van Westendorp, taux de réussite du contrôle ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -79,17 +91,17 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 | Colonne | Contenu |
 |---|---|
 | `test` | 1 = essai, à écarter |
-| `version` | A (sans durée de vie) ou B (avec 50 000 km contre 40 000 km) |
+| `version` | A (pneu 1 sans marque) ou B (pneu 1 = Michelin CrossClimate 3) |
 | `cible` | 0 = hors cible : pas de voiture chaque semaine (arrêt au filtre) ou quelqu'un d'autre choisit les pneus (questionnaire complet, à écarter ou à comparer) |
-| `vw_…` | les 4 prix Van Westendorp du Michelin, en euros |
-| `vw_coherent` | 0 si les 4 prix ne montent pas : à écarter, en disant combien |
-| `gg_119_90` … `gg_92_90` | `michelin` ou `autre` à chaque prix proposé (vide = prix non proposé) |
-| `gg_prix_max_michelin` | le prix le plus élevé auquel il choisit le Michelin (« aucun » s'il choisit toujours l'autre) |
-| `prime_max` | `gg_prix_max_michelin` − 93 € |
-| `controle` | a-t-il vu la durée de vie ? On attend « oui » en B et « non » en A |
-| `likert_…` | le Michelin vaut l'écart, est de meilleure qualité, inspire plus confiance (1 à 5) |
-| `pneus_actuels`, `dernier_prix`, `gamme_marque` | le marché : type de pneus actuels, dernier prix payé, gamme de marque envisagée |
+| `sup_30` … `sup_5` | `oui` ou `non` à chaque supplément proposé (vide = non proposé) |
+| `supplement_max` | le supplément le plus élevé accepté, en € par pneu (0 = refuse même 5 €) |
+| `prix_max_pneu1` | 93 € + `supplement_max` |
+| `vw_…` | les 4 tranches Van Westendorp du pneu 1 (par exemple `80-90`, `<60`, `>130`) |
+| `vw_coherent` | 0 si les 4 tranches ne montent pas : à écarter, en disant combien |
+| `controle` | a-t-il vu un nom de marque ? On attend « oui » en B et « non » en A |
+| `likert_…` | 10 000 km valent un prix plus élevé, croit à la durée annoncée, confiance pour la sécurité (1 à 5) |
+| `critere_principal`, `age`, `km_an`, `canal_achat` | critère de choix et profil |
 
 ## Si vous modifiez le questionnaire
 
-Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez les prix proposés, changez-les aux deux endroits : `PRIX_GG` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.
+Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez les suppléments ou les tranches, changez-les aux deux endroits : `SUPPLEMENTS` et `TRANCHES` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.

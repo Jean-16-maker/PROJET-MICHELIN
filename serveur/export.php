@@ -111,26 +111,37 @@ if ($connecte) {
     $propres = array_filter($toutes, 'exploitable');
     foreach (['A', 'B'] as $v) {
         $g = array_values(array_filter($propres, fn($r) => ($r['version'] ?? '') === $v));
-        $max = array_values(array_filter(array_map(fn($r) => $r['gg_prix_max_michelin'] ?? '', $g), 'is_numeric'));
-        $max = array_map('floatval', $max);
+        $sups = array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['supplement_max'] ?? '', $g), 'is_numeric')));
         $controle_ok = count(array_filter($g, fn($r) => ($r['controle'] ?? '') === ($v === 'B' ? 'oui' : 'non')));
-        $parPrix = [];
-        foreach (PRIX_GG as $p) {
-            // Arrêt au premier choix du Michelin : il l'aurait aussi choisi à tous les prix plus bas.
-            $parPrix[number_format($p, 2, ',', '')] = pct(count(array_filter($max, fn($m) => $m >= $p - 0.001)), count($g));
+        $parSup = [];
+        foreach (SUPPLEMENTS as $s) {
+            // Arrêt au premier « oui » : il aurait aussi accepté tous les suppléments plus faibles.
+            $parSup[$s] = pct(count(array_filter($sups, fn($m) => $m >= $s)), count($g));
         }
         $stats['versions'][$v] = [
             'n' => count($g),
             'controle_ok' => pct($controle_ok, count($g)),
-            'max_moy' => moyenne($max),
-            'max_med' => mediane($max),
-            'prime_moy' => moyenne(array_map(fn($m) => $m - PRIX_AUTRE, $max)),
-            'jamais' => count($g) - count($max),
-            'par_prix' => $parPrix,
-            'vw_cher_med' => mediane(array_map(fn($r) => (float) $r['vw_cher'], $g)),
-            'vw_trop_cher_med' => mediane(array_map(fn($r) => (float) $r['vw_trop_cher'], $g)),
+            'sup_moy' => moyenne($sups),
+            'sup_med' => mediane($sups),
+            'aucun' => count(array_filter($sups, fn($m) => $m == 0)),
+            'par_sup' => $parSup,
+            'vw_bon_marche' => tranche_mediane($g, 'vw_bon_marche'),
+            'vw_cher' => tranche_mediane($g, 'vw_cher'),
+            'vw_trop_cher' => tranche_mediane($g, 'vw_trop_cher'),
         ];
     }
+}
+
+/* Tranche médiane d'une question Van Westendorp (médiane basse si le nombre de réponses est pair). */
+function tranche_mediane(array $g, string $col): string
+{
+    $idx = array_values(array_filter(array_map(fn($r) => array_search($r[$col] ?? '', TRANCHES, true), $g), fn($i) => $i !== false));
+    if (!$idx) return '—';
+    sort($idx);
+    $t = TRANCHES[$idx[intdiv(count($idx) - 1, 2)]];
+    if ($t[0] === '<') return 'moins de ' . substr($t, 1) . ' €';
+    if ($t[0] === '>') return 'plus de ' . substr($t, 1) . ' €';
+    return str_replace('-', ' à ', $t) . ' €';
 }
 ?>
 <!doctype html>
@@ -195,22 +206,22 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <h2>Premiers résultats (réponses exploitables)</h2>
 <div class="carte tableau">
 <table>
-<thead><tr><th></th><th class="n">Version A<br><span class="note">sans durée de vie</span></th><th class="n">Version B<br><span class="note">+ 10 000 km annoncés</span></th></tr></thead>
+<thead><tr><th></th><th class="n">Version A<br><span class="note">pneu sans marque</span></th><th class="n">Version B<br><span class="note">pneu Michelin</span></th></tr></thead>
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $stats['versions']['A']['n'] ?></td><td class="n"><?= $stats['versions']['B']['n'] ?></td></tr>
-<tr><td>Contrôle réussi (B : a vu les km ; A : ne les a pas vus)</td><td class="n"><?= $stats['versions']['A']['controle_ok'] ?></td><td class="n"><?= $stats['versions']['B']['controle_ok'] ?></td></tr>
-<tr><td>Prix maximum accepté pour le Michelin, moyenne</td><td class="n"><?= nb($stats['versions']['A']['max_moy']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['max_moy']) ?> €</td></tr>
-<tr><td>Prix maximum accepté pour le Michelin, médiane</td><td class="n"><?= nb($stats['versions']['A']['max_med']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['max_med']) ?> €</td></tr>
-<tr><td>Prime moyenne acceptée sur l'autre pneu (<?= PRIX_AUTRE ?> €)</td><td class="n"><?= nb($stats['versions']['A']['prime_moy']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['prime_moy']) ?> €</td></tr>
-<tr><td>Choisissent l'autre pneu même avec le Michelin à 92,90 €</td><td class="n"><?= $stats['versions']['A']['jamais'] ?></td><td class="n"><?= $stats['versions']['B']['jamais'] ?></td></tr>
-<?php foreach (array_keys($stats['versions']['A']['par_prix']) as $p): ?>
-<tr><td>Choisissent le Michelin à <?= h($p) ?> €</td><td class="n"><?= $stats['versions']['A']['par_prix'][$p] ?></td><td class="n"><?= $stats['versions']['B']['par_prix'][$p] ?></td></tr>
+<tr><td>Contrôle réussi (B : a vu la marque ; A : n'en a pas vu)</td><td class="n"><?= $stats['versions']['A']['controle_ok'] ?></td><td class="n"><?= $stats['versions']['B']['controle_ok'] ?></td></tr>
+<tr><td>Supplément accepté par pneu pour 10 000 km de plus, moyenne</td><td class="n"><?= nb($stats['versions']['A']['sup_moy']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['sup_moy']) ?> €</td></tr>
+<tr><td>Supplément accepté, médiane</td><td class="n"><?= nb($stats['versions']['A']['sup_med']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['sup_med']) ?> €</td></tr>
+<tr><td>Refusent même 5 € de plus</td><td class="n"><?= $stats['versions']['A']['aucun'] ?></td><td class="n"><?= $stats['versions']['B']['aucun'] ?></td></tr>
+<?php foreach (SUPPLEMENTS as $s): ?>
+<tr><td>Acceptent <?= $s ?> € de plus (soit <?= PRIX_AUTRE + $s ?> € le pneu)</td><td class="n"><?= $stats['versions']['A']['par_sup'][$s] ?></td><td class="n"><?= $stats['versions']['B']['par_sup'][$s] ?></td></tr>
 <?php endforeach; ?>
-<tr><td>Van Westendorp, « cher » (médiane)</td><td class="n"><?= nb($stats['versions']['A']['vw_cher_med']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['vw_cher_med']) ?> €</td></tr>
-<tr><td>Van Westendorp, « trop cher » (médiane)</td><td class="n"><?= nb($stats['versions']['A']['vw_trop_cher_med']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['vw_trop_cher_med']) ?> €</td></tr>
+<tr><td>Van Westendorp, « bon marché » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_bon_marche']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_bon_marche']) ?></td></tr>
+<tr><td>Van Westendorp, « cher » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_cher']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_cher']) ?></td></tr>
+<tr><td>Van Westendorp, « trop cher » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_trop_cher']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_trop_cher']) ?></td></tr>
 </tbody>
 </table>
-<p class="note">Lecture : l'écart entre B et A sur la prime mesure ce que vaut, pour les répondants, l'argument des 10 000 km de plus. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
+<p class="note">Lecture : la version A mesure ce que valent 10 000 km de plus pour un pneu sans marque ; la version B, pour le Michelin. L'écart entre B et A mesure ce qu'ajoute le nom Michelin. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
 
 <form method="post" class="inline"><button class="second" name="deconnexion" value="1">Se déconnecter</button></form>
