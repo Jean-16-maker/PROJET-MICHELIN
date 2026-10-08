@@ -64,10 +64,11 @@ Elle compte une ligne par répondant, dans l'onglet `reponses`. Les colonnes pri
 |---|---|
 | `test` | 1 = essai, à écarter |
 | `version` | A (fiche simple) ou B (fiche + durée de vie et coût au km) |
+| `pneus_actuels`, `dernier_prix`, `gamme_marque` | le marché : type de pneus actuels, dernier prix payé, gamme de marque envisagée |
 | `cible` | 0 = hors cible : pas de voiture chaque semaine (questionnaire arrêté au filtre) ou quelqu’un d’autre choisit les pneus (questionnaire complet, à écarter ou à comparer) |
 | `vw_…` | les 4 prix Van Westendorp, en euros |
 | `vw_coherent` | 0 si les 4 prix ne montent pas : à écarter, en disant combien |
-| `gg_104_90` … `gg_74_90` | réponses oui / non à chaque prix (vide = prix non proposé) |
+| `gg_104_90` … `gg_49_90` | réponses oui / non à chaque prix (vide = prix non proposé) |
 | `gg_prix_max_accepte` | le prix le plus élevé accepté (« aucun » si tous refusés) |
 | `controle` | a-t-il vu la durée de vie ? On attend « oui » en B et « non » en A |
 | `likert_…` | valeur, qualité, confiance perçues (1 à 5) |

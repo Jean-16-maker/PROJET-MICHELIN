@@ -96,15 +96,15 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <!-- 3. L'offre (version A ou B, une seule ligne diffère) -->
 <section class="etape" data-etape="offre">
 <h1>Le pneu</h1>
-<p>Lisez attentivement la description de ce pneu. Les questions suivantes portent sur lui.</p>
+<p>Imaginez que vous devez remplacer les pneus de votre voiture. Lisez attentivement la description de ce pneu : les questions suivantes portent sur lui.</p>
 <div class="produit" id="fiche">
-<h2>Michelin CrossClimate 3</h2>
+<h2>Un pneu 4 saisons</h2>
 <p class="aide">Pneu 4 saisons pour voiture de tourisme · dimension 205/55 R16, l'une des plus courantes en France</p>
 <ul>
 <li>Utilisable toute l'année : pas besoin de changer de pneus entre l'été et l'hiver.</li>
 <li>Homologué pour l'hiver (marquage montagne à trois pics) : il répond à l'obligation d'équipement hivernal dans les zones de montagne.</li>
-<li>Freinage annoncé 4 % plus court sur sol mouillé et sur neige que le modèle précédent.</li>
-<li id="ligne-b" hidden><b>Durée de vie annoncée : environ 50 000 km, soit jusqu'à 15 % de kilomètres en plus que le modèle précédent. Plus il dure, moins il vous coûte au kilomètre.</b></li>
+<li>Bonne adhérence sur route sèche, mouillée et enneigée.</li>
+<li id="ligne-b" hidden><b>Durée de vie annoncée : environ 50 000 km. Plus il dure, moins il vous coûte au kilomètre.</b></li>
 </ul>
 </div>
 <p class="aide">Quand vous êtes prêt(e), passez à la suite. La description restera rappelée en haut des questions de prix.</p>
@@ -183,7 +183,35 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 </fieldset>
 </section>
 
-<!-- 7. Profil (le strict nécessaire) -->
+<!-- 7a. Vos pneus : questions sur le marché du pneu 4 saisons -->
+<section class="etape" data-etape="marche">
+<h1>Vous et vos pneus</h1>
+<fieldset class="choix">
+<legend>Quel type de pneus votre voiture a-t-elle actuellement ?</legend>
+<label><input type="radio" name="pneus_actuels" value="4_saisons" required> Des pneus 4 saisons</label>
+<label><input type="radio" name="pneus_actuels" value="ete"> Des pneus été, toute l'année</label>
+<label><input type="radio" name="pneus_actuels" value="ete_hiver"> Des pneus été et des pneus hiver, changés selon la saison</label>
+<label><input type="radio" name="pneus_actuels" value="ne_sait_pas"> Je ne sais pas</label>
+</fieldset>
+<fieldset class="choix">
+<legend>La dernière fois, combien avez-vous payé environ par pneu, montage non compris ?</legend>
+<label><input type="radio" name="dernier_prix" value="<60" required> Moins de 60 €</label>
+<label><input type="radio" name="dernier_prix" value="60-80"> De 60 à 80 €</label>
+<label><input type="radio" name="dernier_prix" value="80-100"> De 80 à 100 €</label>
+<label><input type="radio" name="dernier_prix" value="100-130"> De 100 à 130 €</label>
+<label><input type="radio" name="dernier_prix" value=">130"> Plus de 130 €</label>
+<label><input type="radio" name="dernier_prix" value="ne_sait_pas"> Je ne sais pas / je n'en ai jamais acheté</label>
+</fieldset>
+<fieldset class="choix">
+<legend>Pour vos prochains pneus, quelle gamme de marque choisiriez-vous ?</legend>
+<label><input type="radio" name="gamme_marque" value="premium" required> Une grande marque (Michelin, Continental, Bridgestone, Goodyear, Pirelli…)</label>
+<label><input type="radio" name="gamme_marque" value="milieu"> Une marque intermédiaire (Hankook, Kleber, Firestone, Nokian…)</label>
+<label><input type="radio" name="gamme_marque" value="budget"> Une marque à petit prix ou la marque du magasin</label>
+<label><input type="radio" name="gamme_marque" value="peu_importe"> Peu importe la marque</label>
+</fieldset>
+</section>
+
+<!-- 7b. Profil -->
 <section class="etape" data-etape="profil">
 <h1>Pour finir</h1>
 <fieldset class="choix">
@@ -234,7 +262,7 @@ var ENDPOINT = '';
 
 /* Prix soumis dans Gabor-Granger, du plus cher au moins cher : on s'arrête au premier « oui ».
    Si vous les changez, changez aussi les colonnes gg_… dans apps-script.gs. */
-var PRIX_GG = [104.90, 99.90, 97.90, 94.90, 92.90, 89.90, 84.90, 79.90, 74.90];
+var PRIX_GG = [104.90, 97.90, 94.90, 89.90, 84.90, 79.90, 69.90, 59.90, 49.90];
 
 var params = new URLSearchParams(location.search);
 var estTest = params.get('test') === '1' || !ENDPOINT;
@@ -265,8 +293,8 @@ document.querySelectorAll('[data-likert]').forEach(function(div){
 });
 
 /* Rappel de l'offre au-dessus des questions de prix (même texte, version comprise). */
-var rappel = 'Rappel : Michelin CrossClimate 3, pneu 4 saisons homologué hiver, 205/55 R16, freinage 4 % plus court sur sol mouillé et sur neige que le modèle précédent' +
-  (version === 'B' ? ', durée de vie annoncée d’environ 50 000 km (jusqu’à 15 % de plus que le modèle précédent).' : '.');
+var rappel = 'Rappel : pneu 4 saisons homologué hiver, 205/55 R16, bonne adhérence sur route sèche, mouillée et enneigée' +
+  (version === 'B' ? ', durée de vie annoncée d’environ 50 000 km.' : '.');
 document.getElementById('rappel-vw').textContent = rappel;
 document.getElementById('rappel-gg').textContent = rappel;
 
@@ -374,7 +402,8 @@ function donnees(){
     controle: valeur('controle'),
     likert_valeur: valeur('likert_valeur'), likert_qualite: valeur('likert_qualite'), likert_confiance: valeur('likert_confiance'),
     critere_principal: valeur('critere_principal'),
-    age: valeur('age'), km_an: valeur('km_an'), canal_achat: valeur('canal_achat')
+    age: valeur('age'), km_an: valeur('km_an'), canal_achat: valeur('canal_achat'),
+    pneus_actuels: valeur('pneus_actuels'), dernier_prix: valeur('dernier_prix'), gamme_marque: valeur('gamme_marque')
   };
   PRIX_GG.forEach(function(p){ d['gg_' + p.toFixed(2).replace('.', '_')] = gg.reponses[p] || ''; });
   return d;

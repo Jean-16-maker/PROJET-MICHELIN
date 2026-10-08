@@ -11,10 +11,11 @@ var COLONNES = [
   'horodatage', 'id', 'test', 'version', 'duree_s',
   'consentement', 'filtre_voiture', 'filtre_decide', 'cible',
   'vw_trop_bon_marche', 'vw_bon_marche', 'vw_cher', 'vw_trop_cher', 'vw_coherent',
-  'gg_104_90', 'gg_99_90', 'gg_97_90', 'gg_94_90', 'gg_92_90', 'gg_89_90', 'gg_84_90', 'gg_79_90', 'gg_74_90',
+  'gg_104_90', 'gg_97_90', 'gg_94_90', 'gg_89_90', 'gg_84_90', 'gg_79_90', 'gg_69_90', 'gg_59_90', 'gg_49_90',
   'gg_prix_max_accepte',
   'controle', 'likert_valeur', 'likert_qualite', 'likert_confiance', 'critere_principal',
-  'age', 'km_an', 'canal_achat'
+  'age', 'km_an', 'canal_achat',
+  'pneus_actuels', 'dernier_prix', 'gamme_marque'
 ];
 
 function doPost(e) {
