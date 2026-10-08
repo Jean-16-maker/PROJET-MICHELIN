@@ -6,73 +6,62 @@
 <title>Questionnaire pneus 4 saisons</title>
 <meta name="description" content="Questionnaire anonyme sur le prix des pneus 4 saisons — étudiants M1 Marketing, IAE Clermont Auvergne.">
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' aria-hidden='true'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23FCE500'/%3E%3Ccircle cx='20' cy='20' r='18' fill='none' stroke='%230F2A5C' stroke-width='3' stroke-dasharray='5 3.4'/%3E%3Ccircle cx='20' cy='20' r='10' fill='%2327509B'/%3E%3Ccircle cx='20' cy='20' r='3.4' fill='%23FCE500'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
 <style>
-/* Questionnaire : présentation volontairement neutre (pas la charte Michelin du dossier),
-   pour que la version A, sans marque, et la version B, Michelin, ne diffèrent que par le nom du pneu. */
-:root{
-  --accent:#2F5D62; --accent-fonce:#1E3D40; --fond:#F5F6F7; --carte:#FFFFFF; --encre:#1D2327;
-  --gris:#5C6670; --trait:#D7DCE0; --alerte:#B3261E;
-  --texte:"Helvetica Neue","Segoe UI",system-ui,-apple-system,Arial,sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ --accent:#7FB7BC; --accent-fonce:#A9D3D6; --fond:#15191C; --carte:#1F2529; --encre:#E7EAEC; --gris:#A3ADB5; --trait:#36404A; --alerte:#F2857D; }
-}
-:root[data-theme="dark"]{ --accent:#7FB7BC; --accent-fonce:#A9D3D6; --fond:#15191C; --carte:#1F2529; --encre:#E7EAEC; --gris:#A3ADB5; --trait:#36404A; --alerte:#F2857D; }
-*{box-sizing:border-box}
-body{margin:0;font:17px/1.6 var(--texte);color:var(--encre);background:var(--fond);-webkit-font-smoothing:antialiased}
-.q-haut{background:var(--carte);border-bottom:1px solid var(--trait)}
-.q-haut div{max-width:720px;margin:0 auto;padding:14px 16px}
-.q-haut b{display:block;font-size:1.05rem}
-.q-haut small{color:var(--gris);font-size:.8rem}
-.q-wrap{max-width:720px;margin:0 auto;padding:22px 16px 70px}
-.progres{height:6px;background:var(--trait);border-radius:999px;overflow:hidden;margin:0 0 6px}
-.progres i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+/* Questionnaire aux couleurs du dossier (bleu et jaune Michelin, variables de style.css).
+   Une étape visible à la fois, aucun lien vers le dossier : les répondants ne doivent voir ni nos prix ni notre hypothèse. */
+.q-haut{background:var(--bleu);color:#fff;border-bottom:4px solid var(--jaune)}
+.q-haut .wrap{display:flex;align-items:center;gap:12px;min-height:58px}
+.q-haut b{display:block;font:800 1.05rem/1.1 var(--titre);letter-spacing:.06em;text-transform:uppercase}
+.q-haut small{display:block;font:600 .72rem/1.3 var(--texte);opacity:.85;letter-spacing:.03em}
+.q-wrap{max-width:720px;margin:0 auto;padding:24px 16px 70px}
+.progres{height:8px;background:var(--trait);border-radius:999px;overflow:hidden;margin:0 0 6px}
+.progres i{display:block;height:100%;width:0;background:var(--bleu);transition:width .25s}
 .etape-n{font-size:.85rem;color:var(--gris);margin:0 0 16px}
 .etape{display:none}
 .etape.active{display:block}
-h1{font-size:clamp(1.45rem,4.5vw,1.9rem);line-height:1.2;margin:0 0 14px;color:var(--accent-fonce)}
-p{margin:0 0 14px}
+.q-wrap h1{font:800 clamp(1.6rem,5vw,2.2rem)/1.1 var(--titre);color:var(--bleu);margin:0 0 14px;text-transform:uppercase;max-width:none}
 fieldset{border:0;padding:0;margin:0 0 22px;min-width:0}
 legend{font-weight:700;margin:0 0 10px;padding:0}
-.choix label{display:flex;gap:10px;align-items:flex-start;background:var(--carte);border:1px solid var(--trait);border-radius:10px;padding:12px 14px;margin:0 0 8px;cursor:pointer}
-.choix label:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
-.choix input{margin-top:5px;flex:none;accent-color:var(--accent)}
-/* Tranches de prix : des cases compactes, sur plusieurs colonnes */
-.tranches{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:6px}
-.tranches label{margin:0;padding:10px 10px;align-items:center;font-size:.95rem}
+.choix label{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--trait);border-radius:10px;padding:12px 14px;margin:0 0 8px;cursor:pointer}
+.choix label:has(input:checked){border-color:var(--bleu);box-shadow:0 0 0 2px var(--bleu) inset;background:var(--ciel)}
+.choix input{margin-top:5px;flex:none;accent-color:var(--bleu)}
+/* Tranches de prix : cinq cases compactes */
+.tranches{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}
+.tranches label{margin:0;padding:10px;align-items:center;font-size:.95rem}
 .tranches input{margin-top:0}
 .likert{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .likert label{flex-direction:column;align-items:center;text-align:center;font-size:.76rem;line-height:1.25;padding:10px 4px;margin:0}
 .likert input{margin:0 0 4px}
 .aide{font-size:.88rem;color:var(--gris);margin:0 0 6px}
-.carte{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:16px 18px;margin:0 0 18px}
-.carte>:last-child{margin-bottom:0}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
 @media(max-width:560px){.duo{grid-template-columns:1fr}}
-.pneu{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:16px}
-.pneu h2{font-size:1.1rem;margin:0 0 2px}
+.pneu{background:#fff;border:1px solid var(--trait);border-top:6px solid var(--trait);border-radius:var(--rayon);padding:16px}
+.pneu.un{border-top-color:var(--jaune)}
+.pneu h2{font:800 1.15rem/1.2 var(--titre);text-transform:uppercase;color:var(--bleu-fonce);margin:0 0 2px;display:block}
+.pneu h2::before{display:none}
 .pneu .sous{font-size:.85rem;color:var(--gris);margin:0 0 8px}
 .pneu ul{margin:0;padding-left:18px;font-size:.95rem}
 .pneu li{margin:4px 0}
-.pneu .prix{font-size:1.2rem;font-weight:700;margin:10px 0 0}
-.ecart{background:var(--carte);border:1px dashed var(--accent);border-radius:10px;padding:10px 14px;font-weight:700;margin:0 0 16px}
-.rappel{font-size:.86rem;color:var(--gris);border-left:4px solid var(--trait);padding-left:10px;margin:0 0 16px}
-.sup-question{font-size:1.2rem;font-weight:700;margin:0 0 6px}
+.pneu .prix{font:800 1.3rem/1.2 var(--titre);color:var(--bleu);margin:10px 0 0}
+.ecart{background:#fff;border-left:6px solid var(--jaune);border-radius:8px;padding:10px 14px;font-weight:700;margin:0 0 16px}
+.rappel{font-size:.86rem;color:var(--gris);border-left:4px solid var(--jaune);padding-left:10px;margin:0 0 16px}
+.sup-question{font:800 1.35rem/1.25 var(--titre);color:var(--bleu);margin:0 0 6px}
 .boutons{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
-button{font:700 1rem/1 var(--texte);padding:14px 22px;border-radius:999px;border:0;cursor:pointer;background:var(--accent);color:#fff}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) button{color:#10181A} }
-button.second{background:transparent;color:var(--accent);border:1px solid var(--trait)}
-button:disabled{opacity:.5;cursor:default}
+.q-wrap button{font:800 1rem/1 var(--titre);letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;border-radius:999px;border:0;cursor:pointer;background:var(--jaune);color:var(--bleu-fonce)}
+.q-wrap button.second{background:#fff;color:var(--bleu);border:1px solid var(--trait)}
+.q-wrap button:disabled{opacity:.5;cursor:default}
 .erreur{color:var(--alerte);font-weight:700;margin:10px 0 0;min-height:1.2em}
-pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:var(--carte);border:1px dashed var(--trait);padding:10px;border-radius:8px}
+pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:#fff;border:1px dashed var(--trait);padding:10px;border-radius:8px}
 .bandeau-test{background:var(--alerte);color:#fff;text-align:center;font-weight:700;font-size:.85rem;padding:6px 16px}
 </style>
 </head>
 <body>
 <div class="bandeau-test" id="bandeau-test" hidden>Mode essai : ces réponses sont marquées « test » et seront écartées de l'analyse.</div>
-<header class="q-haut"><div>
-<b>Pneus 4 saisons : combien pour 10 000 km de plus ?</b>
-<small>Questionnaire anonyme · M1 Marketing, IAE Clermont Auvergne</small>
+<header class="q-haut"><div class="wrap">
+<svg viewBox="0 0 40 40" width="32" height="32" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg>
+<span><b>Pneus 4 saisons : 10 000 km de plus ?</b><small>Questionnaire anonyme · M1 Marketing, IAE Clermont Auvergne</small></span>
 </div></header>
 
 <main class="q-wrap">
@@ -84,7 +73,7 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <!-- 1. Accueil -->
 <section class="etape" data-etape="accueil">
 <h1>Bonjour !</h1>
-<p>Nous sommes étudiants en master 1 Marketing à l'IAE Clermont Auvergne (Université Clermont Auvergne). Ce questionnaire porte sur <b>le prix que vous accepteriez de payer pour un pneu qui dure plus longtemps</b>. Il dure environ <b>3 minutes</b>.</p>
+<p>Nous sommes étudiants en master 1 Marketing à l'IAE Clermont Auvergne (Université Clermont Auvergne). Ce questionnaire porte sur <b>le prix que vous accepteriez de payer pour un pneu qui dure plus longtemps</b>. Il dure environ <b>2 minutes</b>.</p>
 <div class="carte">
 <p><b>Vos réponses sont anonymes.</b> Nous ne demandons ni votre nom, ni votre adresse e-mail, et nous n'enregistrons pas votre adresse IP. Les réponses servent uniquement à un travail universitaire et seront supprimées à la fin de l'année universitaire 2026-2027.</p>
 <p>Il n'y a pas de bonne ou de mauvaise réponse : c'est votre avis qui compte.</p>
@@ -112,12 +101,12 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 </fieldset>
 </section>
 
-<!-- 3. L'offre. Les deux versions montrent les 10 000 km de plus ; seule différence : en B, le pneu qui dure plus longtemps est nommé « Michelin CrossClimate 3 ». -->
+<!-- 3. L'offre. Les deux versions montrent les 10 000 km de plus ; seule différence : en B, le pneu 1 est nommé « Michelin CrossClimate 3 ». -->
 <section class="etape" data-etape="offre">
 <h1>Deux pneus</h1>
 <p>Imaginez que vous devez remplacer les pneus de votre voiture. Deux pneus 4 saisons vous sont proposés, dans la même dimension. Lisez attentivement leur description : les questions suivantes portent sur eux.</p>
 <div class="duo">
-<div class="pneu">
+<div class="pneu un">
 <h2>Pneu 1 : <span data-nom-long></span></h2>
 <p class="sous">Pneu 4 saisons · 205/55 R16</p>
 <ul>
@@ -142,20 +131,20 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <p class="aide">Les prix s'entendent par pneu, TTC, montage non compris. La comparaison restera rappelée en haut des questions de prix.</p>
 </section>
 
-<!-- 4a. Mesure : le supplément accepté (Gabor-Granger), du plus élevé au plus faible, arrêt au premier « oui » -->
+<!-- 4a. Mesure : une seule question, 15 € de plus par pneu -->
 <section class="etape" data-etape="supplement">
-<h1>Combien de plus ?</h1>
+<h1>15 € de plus ?</h1>
 <p class="rappel" data-rappel></p>
-<p class="sup-question" id="sup-question" aria-live="polite"></p>
+<p class="sup-question" id="sup-question"></p>
 <p class="aide" id="sup-detail"></p>
 <fieldset class="choix">
 <legend>Votre réponse</legend>
-<label><input type="radio" name="sup_reponse" value="oui"> Oui</label>
-<label><input type="radio" name="sup_reponse" value="non"> Non</label>
+<label><input type="radio" name="sup_15" value="oui" required> Oui</label>
+<label><input type="radio" name="sup_15" value="non"> Non</label>
 </fieldset>
 </section>
 
-<!-- 4b. Mesure : Van Westendorp en tranches de prix, sur le pneu 1 -->
+<!-- 4b. Mesure : Van Westendorp en 5 tranches de prix, sur le pneu 1 -->
 <section class="etape" data-etape="vw">
 <h1>Le prix du pneu 1</h1>
 <p class="rappel" data-rappel></p>
@@ -264,11 +253,11 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
    Tant qu'elle est vide, le questionnaire tourne en mode essai : rien n'est envoyé. */
 var ENDPOINT = '';
 
-/* Prix du pneu 2 (40 000 km), suppléments proposés pour le pneu 1 (du plus élevé au plus faible, arrêt au premier « oui »)
-   et tranches de prix de Van Westendorp. Si vous les changez, changez aussi serveur/colonnes.php. */
+/* Prix du pneu 2 (40 000 km), supplément proposé pour le pneu 1 (50 000 km) et tranches de Van Westendorp.
+   Si vous les changez, changez aussi serveur/colonnes.php. */
 var PRIX_AUTRE = 93;
-var SUPPLEMENTS = [30, 25, 20, 15, 10, 5];
-var TRANCHES = ['<60', '60-70', '70-80', '80-90', '90-100', '100-110', '110-120', '120-130', '>130'];
+var SUPPLEMENT = 15;
+var TRANCHES = ['<80', '80-90', '90-100', '100-110', '>110'];
 
 var params = new URLSearchParams(location.search);
 var estTest = params.get('test') === '1' || !ENDPOINT;
@@ -291,14 +280,15 @@ function idAleatoire(){
   var a = new Uint8Array(6); (window.crypto || window.msCrypto).getRandomValues(a);
   return Array.prototype.map.call(a, function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
 }
-function euros(x){ return (Math.round(x * 100) / 100).toFixed(2).replace('.', ',').replace(',00', '') + ' €'; }
 function libelleTranche(t){
   if (t.charAt(0) === '<') return 'Moins de ' + t.slice(1) + ' €';
   if (t.charAt(0) === '>') return 'Plus de ' + t.slice(1) + ' €';
   return t.replace('-', ' à ') + ' €';
 }
 
-/* Cases des tranches de prix et échelles de Likert, générées pour être identiques partout. */
+/* Question du supplément, cases des tranches et échelles de Likert, générées pour être identiques partout. */
+document.getElementById('sup-question').textContent = 'Seriez-vous prêt(e) à payer ' + SUPPLEMENT + ' € de plus par pneu pour ' + NOM_QUESTION + ', qui dure 10 000 km de plus ?';
+document.getElementById('sup-detail').textContent = 'Soit ' + (PRIX_AUTRE + SUPPLEMENT) + ' € par pneu au lieu de ' + PRIX_AUTRE + ' €, ou ' + (4 * SUPPLEMENT) + ' € de plus pour 4 pneus.';
 document.querySelectorAll('[data-tranches]').forEach(function(div){
   var nom = div.getAttribute('data-tranches');
   TRANCHES.forEach(function(t){
@@ -325,7 +315,6 @@ var form = document.getElementById('q');
 var etapes = Array.prototype.slice.call(document.querySelectorAll('.etape'));
 var nomsEtapes = etapes.map(function(e){ return e.getAttribute('data-etape'); });
 var courante = 0, debut = null, vwAverti = false;
-var sup = { i: 0, reponses: {}, max: '' };
 var sansVoiture = false, horsCible = false;
 
 function el(id){ return document.getElementById(id); }
@@ -343,19 +332,12 @@ function afficher(n){
   el('barre').style.width = Math.round(100 * n / total) + '%';
   el('etape-n').textContent = nom === 'fin' ? '' : 'Étape ' + (n + 1) + ' sur ' + total;
   el('erreur').textContent = '';
-  el('retour').hidden = n === 0 || nom === 'supplement' || nom === 'vw' || nom === 'fin' || nom === 'controle';
+  /* Pas de retour vers les questions de prix une fois répondu : la réponse ne doit pas être corrigée après coup. */
+  el('retour').hidden = n === 0 || nom === 'vw' || nom === 'controle' || nom === 'fin';
   el('suivant').textContent = n === 0 ? 'Commencer' : (nom === 'profil' ? 'Envoyer mes réponses' : 'Suivant');
   el('suivant').disabled = false;
   el('boutons').hidden = nom === 'fin';
-  if (nom === 'supplement') montrerSupplement();
   window.scrollTo(0, 0);
-}
-
-function montrerSupplement(){
-  var s = SUPPLEMENTS[sup.i];
-  el('sup-question').textContent = 'Paieriez-vous ' + euros(s) + ' de plus par pneu pour ' + NOM_QUESTION + ', qui dure 10 000 km de plus ?';
-  el('sup-detail').textContent = 'Soit ' + euros(PRIX_AUTRE + s) + ' par pneu au lieu de ' + euros(PRIX_AUTRE) + ', ou ' + euros(4 * s) + ' de plus pour 4 pneus.';
-  form.querySelectorAll('input[name=sup_reponse]').forEach(function(r){ r.checked = false; });
 }
 
 /* Vérifie que chaque question de l'étape a une réponse. */
@@ -367,16 +349,6 @@ function etapeComplete(section){
 
 function suivant(){
   var section = etapes[courante], nom = nomsEtapes[courante];
-
-  if (nom === 'supplement') {
-    var r = valeur('sup_reponse');
-    if (!r) { el('erreur').textContent = 'Merci de répondre oui ou non.'; return; }
-    sup.reponses[SUPPLEMENTS[sup.i]] = r;
-    if (r === 'oui') { sup.max = SUPPLEMENTS[sup.i]; return afficher(courante + 1); }
-    if (sup.i < SUPPLEMENTS.length - 1) { sup.i++; el('erreur').textContent = ''; montrerSupplement(); return; }
-    sup.max = 0;
-    return afficher(courante + 1);
-  }
 
   if (!etapeComplete(section)) {
     el('erreur').textContent = nom === 'vw' ? 'Merci de choisir une tranche de prix pour chaque question.' : 'Merci de répondre à chaque question.';
@@ -409,7 +381,7 @@ function vwCoherent(){
 }
 
 function donnees(){
-  var d = {
+  return {
     id: idAleatoire(),
     test: estTest ? 1 : 0,
     version: version,
@@ -418,8 +390,7 @@ function donnees(){
     filtre_voiture: valeur('filtre_voiture'),
     filtre_decide: valeur('filtre_decide'),
     cible: horsCible ? 0 : 1,
-    supplement_max: sup.max,
-    prix_max_pneu1: sup.max === '' ? '' : PRIX_AUTRE + sup.max,
+    sup_15: valeur('sup_15'),
     vw_trop_bon_marche: valeur('vw_trop_bon_marche'), vw_bon_marche: valeur('vw_bon_marche'),
     vw_cher: valeur('vw_cher'), vw_trop_cher: valeur('vw_trop_cher'),
     vw_coherent: sansVoiture ? '' : (vwCoherent() ? 1 : 0),
@@ -428,8 +399,6 @@ function donnees(){
     critere_principal: valeur('critere_principal'),
     age: valeur('age'), km_an: valeur('km_an'), canal_achat: valeur('canal_achat')
   };
-  SUPPLEMENTS.forEach(function(s){ d['sup_' + s] = sup.reponses[s] || ''; });
-  return d;
 }
 
 function envoyer(){

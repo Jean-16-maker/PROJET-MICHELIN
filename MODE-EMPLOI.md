@@ -22,17 +22,15 @@ Les 10 000 km de plus apparaissent dans les deux versions. **Test A/B**, tiré a
 - **version B** : le pneu 1 est le **Michelin CrossClimate 3**.
 
 Les mesures :
-- **Le supplément** (Gabor-Granger) : « Paieriez-vous 30 € de plus par pneu pour [le pneu 1 / le Michelin CrossClimate 3], qui dure 10 000 km de plus ? ». Puis 25, 20, 15, 10 et 5 €, avec arrêt au premier « oui ».
-  - `supplement_max` = le supplément le plus élevé accepté (0 si le répondant refuse même 5 €) ;
-  - `prix_max_pneu1` = 93 € + ce supplément.
-- **Van Westendorp en tranches** : pour le pneu 1, quatre questions (trop bon marché, bon marché, cher, trop cher), avec des cases de tranches de prix : moins de 60 €, 60 à 70 €, 70 à 80 € … plus de 130 €.
+- **Le supplément**, une seule question : « Seriez-vous prêt(e) à payer 15 € de plus par pneu pour [le pneu 1 / le Michelin CrossClimate 3], qui dure 10 000 km de plus ? Soit 108 € par pneu au lieu de 93 € », avec une réponse oui ou non (colonne `sup_15`).
+- **Van Westendorp en 5 tranches**, pour le pneu 1 : quatre questions (trop bon marché, bon marché, cher, trop cher), avec les cases moins de 80 €, 80 à 90 €, 90 à 100 €, 100 à 110 € et plus de 110 €.
 
 Ce qu'on lit :
-- la **version A** donne ce que valent 10 000 km de plus, sans la marque ;
-- la **version B** donne ce que le client paierait en plus pour le Michelin qui dure 10 000 km de plus ;
+- la **version A** donne la part prête à payer 15 € de plus pour 10 000 km de plus, sans marque ;
+- la **version B** donne la même part pour le Michelin ;
 - **B − A** donne ce qu'ajoute le nom Michelin.
 
-La présentation du questionnaire est volontairement neutre (pas la charte Michelin du dossier) : sinon, les répondants de la version A devineraient la marque.
+Le questionnaire reprend la charte bleu et jaune du dossier.
 
 ## 1. Héberger le dossier `serveur/` (une seule fois)
 
@@ -80,7 +78,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : supplément moyen et médian accepté pour 10 000 km de plus, part qui accepte chaque supplément, tranches médianes de Van Westendorp, taux de réussite du contrôle ;
+- les premiers résultats par version A / B : part prête à payer 15 € de plus, tranches médianes de Van Westendorp, taux de réussite du contrôle ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -93,10 +91,8 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 | `test` | 1 = essai, à écarter |
 | `version` | A (pneu 1 sans marque) ou B (pneu 1 = Michelin CrossClimate 3) |
 | `cible` | 0 = hors cible : pas de voiture chaque semaine (arrêt au filtre) ou quelqu'un d'autre choisit les pneus (questionnaire complet, à écarter ou à comparer) |
-| `sup_30` … `sup_5` | `oui` ou `non` à chaque supplément proposé (vide = non proposé) |
-| `supplement_max` | le supplément le plus élevé accepté, en € par pneu (0 = refuse même 5 €) |
-| `prix_max_pneu1` | 93 € + `supplement_max` |
-| `vw_…` | les 4 tranches Van Westendorp du pneu 1 (par exemple `80-90`, `<60`, `>130`) |
+| `sup_15` | `oui` ou `non` : prêt à payer 15 € de plus par pneu pour 10 000 km de plus |
+| `vw_…` | les 4 tranches Van Westendorp du pneu 1 : `<80`, `80-90`, `90-100`, `100-110` ou `>110` |
 | `vw_coherent` | 0 si les 4 tranches ne montent pas : à écarter, en disant combien |
 | `controle` | a-t-il vu un nom de marque ? On attend « oui » en B et « non » en A |
 | `likert_…` | 10 000 km valent un prix plus élevé, croit à la durée annoncée, confiance pour la sécurité (1 à 5) |
@@ -104,4 +100,4 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 
 ## Si vous modifiez le questionnaire
 
-Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez les suppléments ou les tranches, changez-les aux deux endroits : `SUPPLEMENTS` et `TRANCHES` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.
+Ajoutez toute nouvelle colonne **à la fin** de `COLONNES` dans `serveur/colonnes.php`, et déposez le fichier sur l'hébergeur. Si vous changez le supplément ou les tranches, changez-les aux deux endroits : `SUPPLEMENT` et `TRANCHES` dans `questionnaire.html` et dans `serveur/colonnes.php`. Ne changez rien une fois la collecte lancée.

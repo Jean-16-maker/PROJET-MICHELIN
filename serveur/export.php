@@ -111,20 +111,13 @@ if ($connecte) {
     $propres = array_filter($toutes, 'exploitable');
     foreach (['A', 'B'] as $v) {
         $g = array_values(array_filter($propres, fn($r) => ($r['version'] ?? '') === $v));
-        $sups = array_map('floatval', array_values(array_filter(array_map(fn($r) => $r['supplement_max'] ?? '', $g), 'is_numeric')));
         $controle_ok = count(array_filter($g, fn($r) => ($r['controle'] ?? '') === ($v === 'B' ? 'oui' : 'non')));
-        $parSup = [];
-        foreach (SUPPLEMENTS as $s) {
-            // Arrêt au premier « oui » : il aurait aussi accepté tous les suppléments plus faibles.
-            $parSup[$s] = pct(count(array_filter($sups, fn($m) => $m >= $s)), count($g));
-        }
+        $oui = count(array_filter($g, fn($r) => ($r['sup_15'] ?? '') === 'oui'));
         $stats['versions'][$v] = [
             'n' => count($g),
             'controle_ok' => pct($controle_ok, count($g)),
-            'sup_moy' => moyenne($sups),
-            'sup_med' => mediane($sups),
-            'aucun' => count(array_filter($sups, fn($m) => $m == 0)),
-            'par_sup' => $parSup,
+            'oui' => $oui,
+            'oui_pct' => pct($oui, count($g)),
             'vw_bon_marche' => tranche_mediane($g, 'vw_bon_marche'),
             'vw_cher' => tranche_mediane($g, 'vw_cher'),
             'vw_trop_cher' => tranche_mediane($g, 'vw_trop_cher'),
@@ -210,18 +203,13 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $stats['versions']['A']['n'] ?></td><td class="n"><?= $stats['versions']['B']['n'] ?></td></tr>
 <tr><td>Contrôle réussi (B : a vu la marque ; A : n'en a pas vu)</td><td class="n"><?= $stats['versions']['A']['controle_ok'] ?></td><td class="n"><?= $stats['versions']['B']['controle_ok'] ?></td></tr>
-<tr><td>Supplément accepté par pneu pour 10 000 km de plus, moyenne</td><td class="n"><?= nb($stats['versions']['A']['sup_moy']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['sup_moy']) ?> €</td></tr>
-<tr><td>Supplément accepté, médiane</td><td class="n"><?= nb($stats['versions']['A']['sup_med']) ?> €</td><td class="n"><?= nb($stats['versions']['B']['sup_med']) ?> €</td></tr>
-<tr><td>Refusent même 5 € de plus</td><td class="n"><?= $stats['versions']['A']['aucun'] ?></td><td class="n"><?= $stats['versions']['B']['aucun'] ?></td></tr>
-<?php foreach (SUPPLEMENTS as $s): ?>
-<tr><td>Acceptent <?= $s ?> € de plus (soit <?= PRIX_AUTRE + $s ?> € le pneu)</td><td class="n"><?= $stats['versions']['A']['par_sup'][$s] ?></td><td class="n"><?= $stats['versions']['B']['par_sup'][$s] ?></td></tr>
-<?php endforeach; ?>
+<tr><td>Prêts à payer <?= SUPPLEMENT ?> € de plus par pneu pour 10 000 km de plus (soit <?= PRIX_AUTRE + SUPPLEMENT ?> € le pneu)</td><td class="n"><?= $stats['versions']['A']['oui_pct'] ?> <span class="note">(<?= $stats['versions']['A']['oui'] ?>)</span></td><td class="n"><?= $stats['versions']['B']['oui_pct'] ?> <span class="note">(<?= $stats['versions']['B']['oui'] ?>)</span></td></tr>
 <tr><td>Van Westendorp, « bon marché » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_bon_marche']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_bon_marche']) ?></td></tr>
 <tr><td>Van Westendorp, « cher » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_cher']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_cher']) ?></td></tr>
 <tr><td>Van Westendorp, « trop cher » (tranche médiane)</td><td class="n"><?= h($stats['versions']['A']['vw_trop_cher']) ?></td><td class="n"><?= h($stats['versions']['B']['vw_trop_cher']) ?></td></tr>
 </tbody>
 </table>
-<p class="note">Lecture : la version A mesure ce que valent 10 000 km de plus pour un pneu sans marque ; la version B, pour le Michelin. L'écart entre B et A mesure ce qu'ajoute le nom Michelin. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
+<p class="note">Lecture : la version A mesure la part prête à payer 15 € de plus pour 10 000 km de plus, sur un pneu sans marque ; la version B, sur le Michelin. L'écart entre B et A mesure ce qu'ajoute le nom Michelin. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
 
 <form method="post" class="inline"><button class="second" name="deconnexion" value="1">Se déconnecter</button></form>
