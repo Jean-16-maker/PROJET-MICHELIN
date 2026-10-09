@@ -447,7 +447,10 @@ function envoyer(){
   }
   if (!ENDPOINT) return fin();
   /* text/plain : requête « simple », sans requête préalable CORS. Le serveur répond {"ok":true}. */
-  fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(d) })
+  var envoi = fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(d) });
+  /* Mineur ou sans voiture : écran de remerciement tout de suite, sans attendre l'envoi (rien à réessayer). */
+  if (horsCible()) { envoi.catch(function(){}); return fin(); }
+  envoi
     .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
     .then(function(j){ return j && j.ok ? fin() : echec(); })
     .catch(echec);
