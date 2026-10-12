@@ -24,14 +24,13 @@ La seule différence entre A et B est la durée de vie du Michelin. Avant et apr
 
 | Écran | Contenu |
 |---|---|
-| 1 | Accueil. Cliquer sur « C'est parti » vaut accord (anonymat) |
+| 1 | Accueil : « Questionnaire en moins d'une minute », « Vos réponses sont anonymes » |
 | 2 | Âge exact : **moins de 18 ans → écran de remerciement** |
 | 3 | Avez-vous une voiture ? **Non → écran de remerciement** |
 | 4 | Kilomètres par an : curseur de 0 à 50 000 km |
-| 5 | **La question A/B** : Hankook ou Michelin ? |
-| 6 | Avis, de 1 à 5 : « 10 000 km de plus justifient de payer plus cher » |
-| 7 | Ce qui compte, chacun noté de 1 à 5 : le prix, la marque, la durée de vie, la performance |
-| 8 | Lieux où la personne a déjà acheté des pneus : oui / non pour 5 lieux |
+| 5 | **La question A/B** : Hankook ou Michelin ? Chaque carte montre la photo de la fiche du pneu |
+| 6 | Ce qui compte, chacun noté de 1 à 5 : le prix, la marque, la durée de vie, la performance |
+| 7 | Lieux où la personne a déjà acheté des pneus : oui / non pour 5 lieux |
 
 Une fois l'écran de fin atteint, on ne peut plus revenir aux questions : le bouton Retour disparaît, et recharger la page ramène à la fin. Pour refaire un essai, ouvrez un **nouvel onglet**.
 
@@ -99,7 +98,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : part qui choisit Michelin plutôt que Hankook, avis et importance moyenne de chaque critère, lieux d'achat, âge, kilomètres, durée de réponse ;
+- les premiers résultats par version A / B : part qui choisit Michelin plutôt que Hankook, importance moyenne de chaque critère, lieux d'achat, âge, kilomètres, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -116,7 +115,6 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 | `voiture` | `oui` ou `non` |
 | `cible` | 1 = 18 ans ou plus et a une voiture ; 0 = arrêté au filtre |
 | `choix_pneu` | `hankook` ou `michelin` |
-| `likert_justifie_prix` | avis de 1 à 5 : 10 000 km de plus justifient de payer plus cher |
 | `importance_…` | importance de 1 à 5 : prix, marque, durée de vie, performance |
 | `km_an` | kilomètres par an (curseur, par pas de 1 000 ; 50 000 = « 50 000 ou plus ») |
 | `achat_…` | `oui` ou `non` pour chaque lieu : garage, spécialiste, centre auto, Internet, réparateur rapide |

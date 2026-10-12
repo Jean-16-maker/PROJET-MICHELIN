@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Questionnaire pneus 4 saisons</title>
-<meta name="description" content="Questionnaire anonyme de 2 minutes sur le prix des pneus 4 saisons — étudiants M1 Marketing, IAE Clermont Auvergne.">
+<meta name="description" content="Questionnaire anonyme de moins d'une minute sur le prix des pneus 4 saisons — étudiants M1 Marketing, IAE Clermont Auvergne.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' aria-hidden='true'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23FCE500'/%3E%3Ccircle cx='20' cy='20' r='18' fill='none' stroke='%230F2A5C' stroke-width='3' stroke-dasharray='5 3.4'/%3E%3Ccircle cx='20' cy='20' r='10' fill='%2327509B'/%3E%3Ccircle cx='20' cy='20' r='3.4' fill='%23FCE500'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
@@ -50,7 +50,7 @@
 .etiquette span{display:inline-block;font:800 .8rem/1 var(--titre);letter-spacing:.04em;border-radius:4px;padding:5px 7px;color:#fff;background:var(--bleu)}
 .etiquette .carbu{background:#7CB342}.etiquette .pluie{background:#2F6FB5}.etiquette .bruit{background:#222}.etiquette .hiver{background:#fff;color:#2F86C9;border:1px solid #2F86C9}
 
-.fiche{display:block;width:100%;max-width:420px;height:auto;margin:0 auto 12px;border:1px solid var(--trait);border-radius:var(--rayon);background:#fff}
+.pneu .photo{display:block;width:100%;height:auto;margin:0 0 10px;border-radius:8px;background:#fff}
 .critere-ligne{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:12px 12px 10px;margin:0 0 10px}
 .critere-ligne p{font-weight:700;margin:0 0 8px}
 .critere-ligne .echelle .opt{padding:12px 0;font-size:1.3rem}
@@ -80,7 +80,6 @@
 
 .q-wrap button.principal{font:800 1rem/1 var(--titre);letter-spacing:.06em;text-transform:uppercase;padding:16px 26px;border-radius:999px;border:0;cursor:pointer;background:var(--jaune);color:var(--bleu-fonce);margin-top:18px;width:100%}
 .q-wrap button.principal:disabled{opacity:.45;cursor:default}
-.kicker-avis{font:800 .8rem/1 var(--titre);letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin:0 0 10px}
 .echelle{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .echelle .opt{text-align:center;font:800 1.6rem/1 var(--titre);padding:20px 0}
 .bornes-likert{display:flex;justify-content:space-between;font-size:.8rem;color:var(--gris);margin-top:8px}
@@ -96,7 +95,7 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <div class="bandeau-test" id="bandeau-test" hidden>Mode essai : ces réponses sont marquées « test » et seront écartées de l'analyse.</div>
 <header class="q-haut"><div class="wrap">
 <svg viewBox="0 0 40 40" width="32" height="32" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg>
-<span><b>Le prix d'un pneu 4 saisons</b><small>Questionnaire anonyme · 1 min 30 · M1 Marketing, IAE Clermont Auvergne</small></span>
+<span><b>Le prix d'un pneu 4 saisons</b><small>Questionnaire anonyme · moins d'une minute · M1 Marketing, IAE Clermont Auvergne</small></span>
 </div></header>
 
 <main class="q-wrap">
@@ -104,10 +103,10 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 
 <!-- 1. Accueil : cliquer sur « C'est parti » vaut accord -->
 <section class="etape" data-etape="accueil">
-<h1>1 min 30 chrono</h1>
+<h1>Questionnaire en moins d'une minute</h1>
 <p>Nous sommes étudiants en master Marketing à l'IAE Clermont Auvergne. Nous voulons savoir <b>combien vous paieriez un pneu 4 saisons</b>.</p>
 <button type="button" class="principal" data-suivant>C'est parti</button>
-<p class="mentions">Anonyme : ni nom, ni e-mail, ni adresse IP. En commençant, vous acceptez que vos réponses servent à ce travail universitaire ; elles seront supprimées à la fin de l'année 2026-2027.</p>
+<p class="mentions">Vos réponses sont anonymes.</p>
 </section>
 
 <!-- 2. Filtre : l'âge exact (moins de 18 ans : fin du questionnaire) -->
@@ -144,28 +143,21 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <section class="etape" data-etape="choix" data-champ="choix_pneu">
 <h1>Vous changez vos pneus : lequel choisissez-vous ?</h1>
 <p class="aide">Touchez le pneu que vous achèteriez.</p>
-<img class="fiche" src="images/fiche-crossclimate-3.jpg" width="856" height="692" alt="Fiche du Michelin CrossClimate 3 : pneu 4 saisons homologué hiver 3PMSF, étiquette européenne carburant B, pluie B, bruit B 72 dB">
 <div class="duo">
 <button type="button" class="opt pneu" data-v="hankook">
+<img class="photo" src="images/fiche-hankook-kinergy-4s2.jpg" width="840" height="662" alt="Fiche du Hankook Kinergy 4S² : pneu 4 saisons homologué hiver 3PMSF, étiquette européenne carburant D, pluie B, bruit B 71 dB">
 <b>Hankook Kinergy 4S 94H XL</b>
 <span class="km">40 000 km</span><span class="km-l">durée de vie annoncée</span>
 <span class="prix" data-prix-hankook></span>
 </button>
 <button type="button" class="opt pneu" data-v="michelin">
+<img class="photo" src="images/fiche-crossclimate-3.jpg" width="856" height="692" alt="Fiche du Michelin CrossClimate 3 : pneu 4 saisons homologué hiver 3PMSF, étiquette européenne carburant B, pluie B, bruit B 72 dB">
 <b>Michelin CrossClimate 3</b>
 <span class="km" data-km-michelin></span><span class="km-l">durée de vie annoncée</span>
 <span class="prix" data-prix-michelin></span>
 </button>
 </div>
 <div class="commun"><b>Pour les deux :</b> pneu 4 saisons, même dimension 205/55 R16, homologué pour l'hiver (3PMSF).</div>
-</section>
-
-<!-- 7. Avis : une phrase par écran, de 1 à 5 -->
-<section class="etape" data-etape="likert_justifie_prix" data-champ="likert_justifie_prix">
-<p class="kicker-avis">Votre avis</p>
-<h1 data-likert-texte="10 000 km de plus justifient de payer plus cher."></h1>
-<div class="echelle" data-echelle></div>
-<div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
 </section>
 
 <!-- 8. Ce qui compte : quatre critères, chacun noté de 1 à 5 ; l'écran avance quand les quatre sont notés -->
@@ -230,16 +222,6 @@ document.querySelectorAll('[data-prix-hankook]').forEach(function(e){ e.textCont
 document.querySelectorAll('[data-prix-michelin]').forEach(function(e){ e.textContent = euros(PRIX_MICHELIN) + ' le pneu'; });
 document.querySelectorAll('[data-km-michelin]').forEach(function(e){ e.textContent = version === 'B' ? '50 000 km' : '40 000 km'; });
 
-/* Écrans d'avis : la phrase et les 5 cases. */
-document.querySelectorAll('[data-likert-texte]').forEach(function(h){ h.textContent = h.getAttribute('data-likert-texte'); });
-document.querySelectorAll('[data-echelle]').forEach(function(div){
-  for (var i = 1; i <= 5; i++) {
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'opt'; b.textContent = i;
-    b.setAttribute('data-v', i); b.setAttribute('aria-label', i + ' sur 5');
-    div.appendChild(b);
-  }
-});
 /* Critères : une échelle de 1 à 5 par ligne. */
 document.querySelectorAll('[data-importance]').forEach(function(l){
   var echelle = document.createElement('div'); echelle.className = 'echelle';
@@ -389,7 +371,6 @@ function donnees(){
     cible: horsCible() ? 0 : 1,
     choix_pneu: rep.choix_pneu || '',
     km_an: (!horsCible() && kmTouche) ? +km.value : '',
-    likert_justifie_prix: rep.likert_justifie_prix || '',
     importance_prix: rep.importance_prix || '', importance_marque: rep.importance_marque || '',
     importance_duree: rep.importance_duree || '', importance_performance: rep.importance_performance || ''
   };

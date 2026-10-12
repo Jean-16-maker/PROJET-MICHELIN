@@ -99,7 +99,7 @@ function nb($x, int $dec = 0): string { return $x === null ? '—' : number_form
 function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 0, ',', ' ') . ' %' : '—'; }
 
 /* Paliers de la jauge pour la répartition des prix maximum. */
-const LIKERT = ['likert_justifie_prix' => 'Avis « 10 000 km de plus justifient de payer plus cher »', 'importance_prix' => 'Importance du prix', 'importance_marque' => 'Importance de la marque', 'importance_duree' => 'Importance de la durée de vie', 'importance_performance' => 'Importance de la performance'];
+const LIKERT = ['importance_prix' => 'Importance du prix', 'importance_marque' => 'Importance de la marque', 'importance_duree' => 'Importance de la durée de vie', 'importance_performance' => 'Importance de la performance'];
 const LIEUX = ['achat_garage' => 'garagiste ou concessionnaire', 'achat_specialiste' => 'spécialiste du pneu', 'achat_centre_auto' => 'centre auto', 'achat_internet' => 'Internet', 'achat_reparateur_rapide' => 'réparateur rapide'];
 
 function nombres(array $g, string $col): array

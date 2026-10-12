@@ -8,7 +8,6 @@ const COLONNES = [
     'horodatage', 'id', 'test', 'version', 'duree_s',
     'consentement', 'age', 'voiture', 'cible', 'km_an',
     'choix_pneu',
-    'likert_justifie_prix',
     'importance_prix', 'importance_marque', 'importance_duree', 'importance_performance',
     'achat_garage', 'achat_specialiste', 'achat_centre_auto', 'achat_internet', 'achat_reparateur_rapide',
 ];
