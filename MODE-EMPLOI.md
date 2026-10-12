@@ -15,7 +15,7 @@ Tant que l'adresse du serveur n'est pas réglée, le questionnaire tourne en **m
 
 Chaque répondant voit deux versions du même pneu, côte à côte :
 - **Michelin CrossClimate 3** : durée de vie annoncée 40 000 km, **97,90 €** le pneu ;
-- **Michelin CrossClimate 3 renforcé** : durée de vie annoncée **50 000 km**, prix à déterminer.
+- **Michelin CrossClimate 3 renforcé** : durée de vie annoncée **50 000 km**, **112,90 €** le pneu.
 
 Les deux ont les mêmes caractéristiques : 4 saisons, 205/55 R16, étiquette européenne carburant B, pluie B, bruit 72 dB, homologation hiver 3PMSF. La version « renforcée » est un **scénario** : elle n'existe pas dans le catalogue Michelin.
 
@@ -29,12 +29,11 @@ Les deux ont les mêmes caractéristiques : 4 saisons, 205/55 R16, étiquette eu
 | 2 | Âge exact, en années : **moins de 18 ans → écran de remerciement** |
 | 3 | Avez-vous une voiture ? **Non → écran de remerciement** |
 | 4 | Kilomètres par an : curseur de 0 à 50 000 km |
-| 5 | Les deux pneus côte à côte, avec l'image de la fiche du CrossClimate 3 |
+| 5 | Les deux pneus côte à côte, avec l'image de la fiche : 40 000 km à 97,90 € ; renforcé, 50 000 km à 112,90 € |
 | 6 | « Paieriez-vous 15 € de plus par pneu pour la version renforcée, qui dure 10 000 km de plus ? » Oui / Non |
-| 7 | La jauge : au maximum, combien paieriez-vous la version renforcée ? De 80 à 150 € |
-| 8 | Avis, de 1 à 5 : « 10 000 km de plus justifient de payer plus cher » |
-| 9 | Ce qui compte, chacun noté de 1 à 5 : le prix, la marque, la durée de vie, la performance |
-| 10 | Lieux où la personne a déjà acheté des pneus : oui / non pour 6 lieux |
+| 7 | Avis, de 1 à 5 : « 10 000 km de plus justifient de payer plus cher » |
+| 8 | Ce qui compte, chacun noté de 1 à 5 : le prix, la marque, la durée de vie, la performance |
+| 9 | Lieux où la personne a déjà acheté des pneus : oui / non pour 5 lieux |
 
 ## 1. Héberger le dossier `serveur/` (une seule fois)
 
@@ -100,7 +99,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : part prête à payer 15 € de plus, prix moyen et médian de la jauge, supplément moyen accepté, avis et importance moyenne de chaque critère, lieux d'achat, âge, kilomètres, durée de réponse ;
+- les premiers résultats par version A / B : part prête à payer 15 € de plus, avis et importance moyenne de chaque critère, lieux d'achat, âge, kilomètres, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -117,11 +116,10 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 | `voiture` | `oui` ou `non` |
 | `cible` | 1 = 18 ans ou plus et a une voiture ; 0 = arrêté au filtre |
 | `accepte_plus_15` | `oui` ou `non` : paierait 112,90 € pour la version renforcée au lieu de 97,90 € |
-| `prix_max_renforce` | le prix maximum choisi sur la jauge pour la version renforcée, de 80 à 150 € |
 | `likert_justifie_prix` | avis de 1 à 5 : 10 000 km de plus justifient de payer plus cher |
 | `importance_…` | importance de 1 à 5 : prix, marque, durée de vie, performance |
 | `km_an` | kilomètres par an (curseur, par pas de 1 000 ; 50 000 = « 50 000 ou plus ») |
-| `achat_…` | `oui` ou `non` pour chaque lieu : garage, spécialiste, centre auto, Internet, réparateur rapide, grande surface |
+| `achat_…` | `oui` ou `non` pour chaque lieu : garage, spécialiste, centre auto, Internet, réparateur rapide |
 
 ## Si vous modifiez le questionnaire
 

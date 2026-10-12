@@ -7,10 +7,10 @@
 const COLONNES = [
     'horodatage', 'id', 'test', 'version', 'duree_s',
     'consentement', 'age', 'voiture', 'cible', 'km_an',
-    'accepte_plus_15', 'prix_max_renforce',
+    'accepte_plus_15',
     'likert_justifie_prix',
     'importance_prix', 'importance_marque', 'importance_duree', 'importance_performance',
-    'achat_garage', 'achat_specialiste', 'achat_centre_auto', 'achat_internet', 'achat_reparateur_rapide', 'achat_grande_surface',
+    'achat_garage', 'achat_specialiste', 'achat_centre_auto', 'achat_internet', 'achat_reparateur_rapide',
 ];
 
 /* Mêmes valeurs que dans questionnaire.html.

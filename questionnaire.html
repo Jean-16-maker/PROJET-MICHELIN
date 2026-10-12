@@ -67,7 +67,7 @@
 .lieu .on{display:flex;gap:6px;flex:none}
 .lieu .opt{padding:10px 14px;font:800 .95rem/1 var(--titre);text-transform:uppercase;text-align:center;min-width:58px}
 
-/* La jauge de prix */
+/* Le curseur (kilomètres par an) */
 .jauge{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:22px 18px 16px;margin:6px 0 0}
 .jauge output{display:block;text-align:center;font:800 3rem/1 var(--titre);color:var(--bleu);margin:0 0 4px;transition:color .2s}
 .jauge output.vide{color:var(--trait)}
@@ -152,11 +152,11 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <div class="pneu renforce">
 <b>Michelin CrossClimate 3 renforcé</b>
 <span class="km">50 000 km</span><span class="km-l">durée de vie annoncée</span>
-<span class="prix">Prix : ?</span>
+<span class="prix" data-prix-renforce></span>
 </div>
 </div>
 <div class="commun"><b>Pour les deux :</b> même pneu 4 saisons, 205/55 R16, même étiquette européenne (carburant B, pluie B, bruit 72 dB) et homologation hiver 3PMSF. Seule la durée de vie change.</div>
-<p class="ecart">La version renforcée dure <em>10 000 km de plus</em>.</p>
+<p class="ecart">La version renforcée dure <em>10 000 km de plus</em>, pour 15 € de plus.</p>
 <button type="button" class="principal" data-suivant>J'ai compris</button>
 </section>
 
@@ -168,19 +168,6 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <button type="button" class="opt" data-v="oui">Oui</button>
 <button type="button" class="opt" data-v="non">Non</button>
 </div>
-</section>
-
-<!-- 6. Mesure 2 : la jauge, prix maximum pour la version renforcée -->
-<section class="etape" data-etape="jauge">
-<h1>Au maximum, combien paieriez-vous la version renforcée (50 000 km) ?</h1>
-<p class="aide">Prix par pneu, montage non compris. Faites glisser le curseur.</p>
-<div class="jauge intacte" id="jauge">
-<output id="jauge-valeur" class="vide" for="prix">— €</output>
-<p class="ecart-prix" id="jauge-ecart"></p>
-<input type="range" id="prix" min="80" max="150" step="1" value="115" aria-label="Prix maximum par pneu pour la version renforcée, en euros">
-<div class="bornes"><span>80 €</span><span>150 €</span></div>
-</div>
-<button type="button" class="principal" id="jauge-ok" data-suivant disabled>Valider</button>
 </section>
 
 <!-- 7. Avis : une phrase par écran, de 1 à 5 -->
@@ -211,7 +198,6 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <div class="lieu" data-lieu="achat_centre_auto"><span>Dans un centre auto (Norauto, Feu Vert…)</span></div>
 <div class="lieu" data-lieu="achat_internet"><span>Sur Internet (Allopneus…)</span></div>
 <div class="lieu" data-lieu="achat_reparateur_rapide"><span>Chez un réparateur rapide (Speedy, Midas…)</span></div>
-<div class="lieu" data-lieu="achat_grande_surface"><span>En grande surface (Leclerc, Carrefour…)</span></div>
 </div>
 <button type="button" class="principal" id="lieux-ok" disabled>Envoyer mes réponses</button>
 </section>
@@ -252,6 +238,7 @@ if (version !== 'A' && version !== 'B') { version = Math.random() < 0.5 ? 'A' : 
 function el(id){ return document.getElementById(id); }
 function euros(x){ return x.toFixed(2).replace('.', ',') + ' €'; }
 document.querySelectorAll('[data-prix-standard]').forEach(function(e){ e.textContent = euros(PRIX_STANDARD) + ' le pneu'; });
+document.querySelectorAll('[data-prix-renforce]').forEach(function(e){ e.textContent = euros(PRIX_STANDARD + HAUSSE) + ' le pneu'; });
 el('plus15-question').textContent = 'Paieriez-vous ' + HAUSSE + ' € de plus par pneu pour la version renforcée, qui dure 10 000 km de plus ?';
 el('plus15-detail').textContent = version === 'B'
   ? 'Soit ' + euros(PRIX_STANDARD + HAUSSE) + ' au lieu de ' + euros(PRIX_STANDARD) + ' : à peine ' + (HAUSSE / 10).toFixed(2).replace('.', ',') + ' € tous les 1 000 km parcourus en plus.'
@@ -295,7 +282,7 @@ var courante = 0, debut = null, envoye = false, verrou = false;
 var bloqueJusqua = 0;
 function bloque(){ return verrou || Date.now() < bloqueJusqua; }
 var rep = {};
-var jaugeTouchee = false, kmTouche = false;
+var kmTouche = false;
 
 function afficher(n){
   courante = n;
@@ -352,21 +339,6 @@ document.querySelectorAll('[data-champ]').forEach(function(section){
 });
 document.querySelectorAll('[data-suivant]').forEach(function(b){ b.addEventListener('click', function(){ if (b.closest('.etape') !== etapes[courante] || bloque()) return; verrou = true; suivant(); }); });
 el('retour').addEventListener('click', function(){ if (courante > 0 && !bloque()) afficher(courante - 1); });
-
-/* La jauge du prix : la valeur ne s'affiche qu'une fois le curseur déplacé, pour ne pas suggérer de prix de départ. */
-var prix = el('prix');
-function majJauge(){
-  jaugeTouchee = true;
-  var v = +prix.value;
-  el('jauge').classList.remove('intacte');
-  el('jauge-valeur').classList.remove('vide');
-  el('jauge-valeur').textContent = (v >= 150 ? '150 € ou +' : (v <= 80 ? '80 € ou −' : v + ' €'));
-  var d = Math.round((v - PRIX_STANDARD) * 100) / 100;
-  el('jauge-ecart').textContent = d > 0 ? euros(d) + ' de plus que la version 40 000 km' : (d < 0 ? euros(-d) + ' de moins que la version 40 000 km' : 'le même prix que la version 40 000 km');
-  el('jauge-ok').disabled = false;
-}
-prix.addEventListener('input', majJauge);
-prix.addEventListener('change', majJauge);
 
 /* Le curseur des kilomètres. */
 var km = el('km');
@@ -427,7 +399,6 @@ function donnees(){
     voiture: rep.voiture || '',
     cible: horsCible() ? 0 : 1,
     accepte_plus_15: rep.accepte_plus_15 || '',
-    prix_max_renforce: (!horsCible() && jaugeTouchee) ? +prix.value : '',
     km_an: (!horsCible() && kmTouche) ? +km.value : '',
     likert_justifie_prix: rep.likert_justifie_prix || '',
     importance_prix: rep.importance_prix || '', importance_marque: rep.importance_marque || '',

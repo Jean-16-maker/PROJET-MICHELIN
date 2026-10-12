@@ -100,8 +100,7 @@ function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 
 
 /* Paliers de la jauge pour la répartition des prix maximum. */
 const LIKERT = ['likert_justifie_prix' => 'Avis « 10 000 km de plus justifient de payer plus cher »', 'importance_prix' => 'Importance du prix', 'importance_marque' => 'Importance de la marque', 'importance_duree' => 'Importance de la durée de vie', 'importance_performance' => 'Importance de la performance'];
-const LIEUX = ['achat_garage' => 'garagiste ou concessionnaire', 'achat_specialiste' => 'spécialiste du pneu', 'achat_centre_auto' => 'centre auto', 'achat_internet' => 'Internet', 'achat_reparateur_rapide' => 'réparateur rapide', 'achat_grande_surface' => 'grande surface'];
-const PALIERS = [[80, 97, 'moins de 98 €'], [98, 104, '98 à 104 €'], [105, 112, '105 à 112 € (autour de +15 €)'], [113, 124, '113 à 124 €'], [125, 150, '125 € et plus']];
+const LIEUX = ['achat_garage' => 'garagiste ou concessionnaire', 'achat_specialiste' => 'spécialiste du pneu', 'achat_centre_auto' => 'centre auto', 'achat_internet' => 'Internet', 'achat_reparateur_rapide' => 'réparateur rapide'];
 
 function nombres(array $g, string $col): array
 {
@@ -120,21 +119,11 @@ if ($connecte) {
     $propres = array_filter($toutes, 'exploitable');
     foreach (['A', 'B'] as $v) {
         $g = array_values(array_filter($propres, fn($r) => ($r['version'] ?? '') === $v));
-        $prix = nombres($g, 'prix_max_renforce');
         $oui = count(array_filter($g, fn($r) => ($r['accepte_plus_15'] ?? '') === 'oui'));
-        $repartition = [];
-        foreach (PALIERS as [$min, $max, $libelle]) {
-            $repartition[$libelle] = pct(count(array_filter($prix, fn($x) => $x >= $min && $x <= $max)), count($prix));
-        }
         $stats['versions'][$v] = [
             'n' => count($g),
             'oui' => $oui,
             'oui_pct' => pct($oui, count($g)),
-            'prix_moy' => moyenne($prix),
-            'prix_med' => mediane($prix),
-            'prime_moy' => $prix ? moyenne($prix) - PRIX_STANDARD : null,
-            'au_moins_plus15' => pct(count(array_filter($prix, fn($x) => $x >= PRIX_STANDARD + HAUSSE)), count($prix)),
-            'repartition' => $repartition,
             'likert' => array_combine(array_keys(LIKERT), array_map(fn($col) => moyenne(nombres($g, $col)), array_keys(LIKERT))),
             'lieux' => array_combine(array_keys(LIEUX), array_map(fn($k) => pct(count(array_filter($g, fn($r) => ($r[$k] ?? '') === 'oui')), count($g)), array_keys(LIEUX))),
             'age_med' => mediane(nombres($g, 'age')),
@@ -213,13 +202,6 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
 <tr class="cle"><td>Paieraient <?= HAUSSE ?> € de plus pour la version renforcée (<?= number_format(PRIX_STANDARD + HAUSSE, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
-<tr class="cle"><td>Jauge : prix maximum pour la version renforcée, moyenne</td><td class="n"><?= nb($A['prix_moy'], 1) ?> €</td><td class="n"><?= nb($B['prix_moy'], 1) ?> €</td></tr>
-<tr><td>Jauge : prix maximum, médiane</td><td class="n"><?= nb($A['prix_med']) ?> €</td><td class="n"><?= nb($B['prix_med']) ?> €</td></tr>
-<tr><td>Supplément moyen accepté pour 10 000 km de plus</td><td class="n"><?= nb($A['prime_moy'], 1) ?> €</td><td class="n"><?= nb($B['prime_moy'], 1) ?> €</td></tr>
-<tr><td>Jauge à <?= number_format(PRIX_STANDARD + HAUSSE, 2, ',', ' ') ?> € ou plus</td><td class="n"><?= $A['au_moins_plus15'] ?></td><td class="n"><?= $B['au_moins_plus15'] ?></td></tr>
-<?php foreach (array_keys($A['repartition']) as $l): ?>
-<tr><td>Jauge : <?= h($l) ?></td><td class="n"><?= $A['repartition'][$l] ?></td><td class="n"><?= $B['repartition'][$l] ?></td></tr>
-<?php endforeach; ?>
 <?php foreach (LIKERT as $col => $libelle): ?>
 <tr><td><?= h($libelle) ?>, moyenne sur 5</td><td class="n"><?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= nb($B['likert'][$col], 1) ?></td></tr>
 <?php endforeach; ?>
@@ -231,7 +213,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tr><td>Durée de réponse, médiane</td><td class="n"><?= nb($A['duree_med']) ?> s</td><td class="n"><?= nb($B['duree_med']) ?> s</td></tr>
 </tbody>
 </table>
-<p class="note">Lecture : tous les répondants voient les deux versions du Michelin CrossClimate 3, à 40 000 km (97,90 €) et renforcée à 50 000 km. La part prête à payer 15 € de plus et le prix maximum de la jauge disent si 10 000 km de plus justifient de payer plus cher. Le test A/B ne change que la présentation des 15 € : l'écart entre B et A mesure l'effet de ce cadrage. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
+<p class="note">Lecture : tous les répondants voient les deux versions du Michelin CrossClimate 3, à 40 000 km (97,90 €) et renforcée à 50 000 km. La part prête à payer 15 € de plus dit si 10 000 km de plus justifient de payer plus cher. Le test A/B ne change que la présentation des 15 € : l'écart entre B et A mesure l'effet de ce cadrage. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
 
 <form method="post" class="inline"><button class="second" name="deconnexion" value="1">Se déconnecter</button></form>
