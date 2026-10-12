@@ -99,8 +99,7 @@ function nb($x, int $dec = 0): string { return $x === null ? '—' : number_form
 function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 0, ',', ' ') . ' %' : '—'; }
 
 /* Paliers de la jauge pour la répartition des prix maximum. */
-const LIKERT = ['likert_justifie_prix' => '« 10 000 km de plus justifient de payer plus cher »', 'likert_croit_duree' => '« Je crois à la durée de vie annoncée »', 'likert_economie' => '« Un pneu qui dure plus me fait faire des économies »'];
-const CRITERES = ['prix' => 'le prix', 'duree_de_vie' => 'la durée de vie', 'freinage' => 'le freinage', 'hiver' => 'la tenue en hiver', 'marque' => 'la marque', 'carburant' => 'la consommation', 'bruit' => 'le silence et le confort', 'avis' => 'les avis et les tests', 'conseil' => 'le conseil du vendeur'];
+const LIKERT = ['likert_justifie_prix' => 'Avis « 10 000 km de plus justifient de payer plus cher »', 'importance_prix' => 'Importance du prix', 'importance_marque' => 'Importance de la marque', 'importance_duree' => 'Importance de la durée de vie', 'importance_performance' => 'Importance de la performance'];
 const LIEUX = ['achat_garage' => 'garagiste ou concessionnaire', 'achat_specialiste' => 'spécialiste du pneu', 'achat_centre_auto' => 'centre auto', 'achat_internet' => 'Internet', 'achat_reparateur_rapide' => 'réparateur rapide', 'achat_grande_surface' => 'grande surface'];
 const PALIERS = [[80, 97, 'moins de 98 €'], [98, 104, '98 à 104 €'], [105, 112, '105 à 112 € (autour de +15 €)'], [113, 124, '113 à 124 €'], [125, 150, '125 € et plus']];
 
@@ -137,7 +136,6 @@ if ($connecte) {
             'au_moins_plus15' => pct(count(array_filter($prix, fn($x) => $x >= PRIX_STANDARD + HAUSSE)), count($prix)),
             'repartition' => $repartition,
             'likert' => array_combine(array_keys(LIKERT), array_map(fn($col) => moyenne(nombres($g, $col)), array_keys(LIKERT))),
-            'critere' => array_combine(array_keys(CRITERES), array_map(fn($k) => pct(count(array_filter($g, fn($r) => ($r['critere_principal'] ?? '') === $k)), count($g)), array_keys(CRITERES))),
             'lieux' => array_combine(array_keys(LIEUX), array_map(fn($k) => pct(count(array_filter($g, fn($r) => ($r[$k] ?? '') === 'oui')), count($g)), array_keys(LIEUX))),
             'age_med' => mediane(nombres($g, 'age')),
             'km_med' => mediane(nombres($g, 'km_an')),
@@ -223,10 +221,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tr><td>Jauge : <?= h($l) ?></td><td class="n"><?= $A['repartition'][$l] ?></td><td class="n"><?= $B['repartition'][$l] ?></td></tr>
 <?php endforeach; ?>
 <?php foreach (LIKERT as $col => $libelle): ?>
-<tr><td>Avis <?= h($libelle) ?>, moyenne sur 5</td><td class="n"><?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= nb($B['likert'][$col], 1) ?></td></tr>
-<?php endforeach; ?>
-<?php foreach (CRITERES as $k => $libelle): ?>
-<tr><td>Critère principal : <?= h($libelle) ?></td><td class="n"><?= $A['critere'][$k] ?></td><td class="n"><?= $B['critere'][$k] ?></td></tr>
+<tr><td><?= h($libelle) ?>, moyenne sur 5</td><td class="n"><?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= nb($B['likert'][$col], 1) ?></td></tr>
 <?php endforeach; ?>
 <?php foreach (LIEUX as $k => $libelle): ?>
 <tr><td>A déjà acheté des pneus : <?= h($libelle) ?></td><td class="n"><?= $A['lieux'][$k] ?></td><td class="n"><?= $B['lieux'][$k] ?></td></tr>

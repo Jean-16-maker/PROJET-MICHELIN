@@ -49,6 +49,11 @@
 .etiquette span{display:inline-block;font:800 .8rem/1 var(--titre);letter-spacing:.04em;border-radius:4px;padding:5px 7px;color:#fff;background:var(--bleu)}
 .etiquette .carbu{background:#7CB342}.etiquette .pluie{background:#2F6FB5}.etiquette .bruit{background:#222}.etiquette .hiver{background:#fff;color:#2F86C9;border:1px solid #2F86C9}
 
+.fiche{display:block;width:100%;max-width:420px;height:auto;margin:0 auto 12px;border:1px solid var(--trait);border-radius:var(--rayon);background:#fff}
+.critere-ligne{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:12px 12px 10px;margin:0 0 10px}
+.critere-ligne p{font-weight:700;margin:0 0 8px}
+.critere-ligne .echelle .opt{padding:12px 0;font-size:1.3rem}
+
 /* Saisie de l'âge */
 .age{display:flex;align-items:center;gap:10px;margin:6px 0 0}
 .age input{font:800 2.4rem/1 var(--titre);color:var(--bleu);width:4.2em;text-align:center;padding:12px 8px;border:2px solid var(--trait);border-radius:14px;background:#fff}
@@ -90,7 +95,7 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <div class="bandeau-test" id="bandeau-test" hidden>Mode essai : ces réponses sont marquées « test » et seront écartées de l'analyse.</div>
 <header class="q-haut"><div class="wrap">
 <svg viewBox="0 0 40 40" width="32" height="32" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg>
-<span><b>Le prix d'un pneu 4 saisons</b><small>Questionnaire anonyme · 2 minutes · M1 Marketing, IAE Clermont Auvergne</small></span>
+<span><b>Le prix d'un pneu 4 saisons</b><small>Questionnaire anonyme · 1 min 30 · M1 Marketing, IAE Clermont Auvergne</small></span>
 </div></header>
 
 <main class="q-wrap">
@@ -98,7 +103,7 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 
 <!-- 1. Accueil : cliquer sur « C'est parti » vaut accord -->
 <section class="etape" data-etape="accueil">
-<h1>2 minutes chrono</h1>
+<h1>1 min 30 chrono</h1>
 <p>Nous sommes étudiants en master Marketing à l'IAE Clermont Auvergne. Nous voulons savoir <b>combien vous paieriez un pneu 4 saisons</b>.</p>
 <button type="button" class="principal" data-suivant>C'est parti</button>
 <p class="mentions">Anonyme : ni nom, ni e-mail, ni adresse IP. En commençant, vous acceptez que vos réponses servent à ce travail universitaire ; elles seront supprimées à la fin de l'année 2026-2027.</p>
@@ -120,10 +125,24 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 </div>
 </section>
 
+<!-- 4. Kilomètres par an : curseur -->
+<section class="etape" data-etape="km">
+<h1>Combien de kilomètres faites-vous par an ?</h1>
+<p class="aide">Faites glisser le curseur.</p>
+<div class="jauge intacte" id="jauge-km">
+<output id="km-valeur" class="vide petit" for="km">— km</output>
+<p class="ecart-prix">par an, environ</p>
+<input type="range" id="km" min="0" max="50000" step="1000" value="15000" aria-label="Kilomètres parcourus par an">
+<div class="bornes"><span>0 km</span><span>50 000 km ou +</span></div>
+</div>
+<button type="button" class="principal" id="km-ok" disabled>Valider</button>
+</section>
+
 <!-- 4. Les deux pneus Michelin : 40 000 km à 97,90 € et version renforcée à 50 000 km -->
 <section class="etape" data-etape="offre">
 <h1>Vous changez vos pneus</h1>
 <p class="aide">Michelin vous propose deux versions du même pneu.</p>
+<img class="fiche" src="images/fiche-crossclimate-3.jpg" width="856" height="692" alt="Fiche du Michelin CrossClimate 3 : pneu 4 saisons homologué hiver 3PMSF, étiquette européenne carburant B, pluie B, bruit B 72 dB">
 <div class="duo">
 <div class="pneu">
 <b>Michelin CrossClimate 3</b>
@@ -136,8 +155,7 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <span class="prix">Prix : ?</span>
 </div>
 </div>
-<div class="commun"><b>Pour les deux :</b> pneu 4 saisons, 205/55 R16, utilisable toute l'année.
-<div class="etiquette"><span class="carbu">Carburant B</span><span class="pluie">Pluie B</span><span class="bruit">Bruit 72 dB</span><span class="hiver">Homologué hiver 3PMSF</span></div></div>
+<div class="commun"><b>Pour les deux :</b> même pneu 4 saisons, 205/55 R16, même étiquette européenne (carburant B, pluie B, bruit 72 dB) et homologation hiver 3PMSF. Seule la durée de vie change.</div>
 <p class="ecart">La version renforcée dure <em>10 000 km de plus</em>.</p>
 <button type="button" class="principal" data-suivant>J'ai compris</button>
 </section>
@@ -167,53 +185,20 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 
 <!-- 7. Avis : une phrase par écran, de 1 à 5 -->
 <section class="etape" data-etape="likert_justifie_prix" data-champ="likert_justifie_prix">
-<p class="kicker-avis">Votre avis · 1 sur 3</p>
+<p class="kicker-avis">Votre avis</p>
 <h1 data-likert-texte="10 000 km de plus justifient de payer plus cher."></h1>
 <div class="echelle" data-echelle></div>
 <div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
 </section>
 
-<section class="etape" data-etape="likert_croit_duree" data-champ="likert_croit_duree">
-<p class="kicker-avis">Votre avis · 2 sur 3</p>
-<h1 data-likert-texte="Je crois à la durée de vie annoncée par Michelin."></h1>
-<div class="echelle" data-echelle></div>
-<div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
-</section>
-
-<section class="etape" data-etape="likert_economie" data-champ="likert_economie">
-<p class="kicker-avis">Votre avis · 3 sur 3</p>
-<h1 data-likert-texte="Un pneu qui dure plus longtemps me fait faire des économies."></h1>
-<div class="echelle" data-echelle></div>
-<div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
-</section>
-
-<!-- 8. Ce qui compte le plus -->
-<section class="etape" data-etape="critere" data-champ="critere_principal">
-<h1>Pour choisir vos pneus, qu'est-ce qui compte le plus ?</h1>
-<div class="opts">
-<button type="button" class="opt" data-v="prix">Le prix</button>
-<button type="button" class="opt" data-v="duree_de_vie">La durée de vie</button>
-<button type="button" class="opt" data-v="freinage">Le freinage et l'adhérence</button>
-<button type="button" class="opt" data-v="hiver">La tenue sur neige et en hiver</button>
-<button type="button" class="opt" data-v="marque">La marque</button>
-<button type="button" class="opt" data-v="carburant">La consommation de carburant</button>
-<button type="button" class="opt" data-v="bruit">Le silence et le confort</button>
-<button type="button" class="opt" data-v="avis">Les avis et les tests</button>
-<button type="button" class="opt" data-v="conseil">Le conseil du garagiste ou du vendeur</button>
-</div>
-</section>
-
-<!-- 9. Kilomètres par an : curseur -->
-<section class="etape" data-etape="km">
-<h1>Combien de kilomètres faites-vous par an ?</h1>
-<p class="aide">Faites glisser le curseur.</p>
-<div class="jauge intacte" id="jauge-km">
-<output id="km-valeur" class="vide petit" for="km">— km</output>
-<p class="ecart-prix">par an, environ</p>
-<input type="range" id="km" min="0" max="50000" step="1000" value="15000" aria-label="Kilomètres parcourus par an">
-<div class="bornes"><span>0 km</span><span>50 000 km ou +</span></div>
-</div>
-<button type="button" class="principal" id="km-ok" disabled>Valider</button>
+<!-- 8. Ce qui compte : quatre critères, chacun noté de 1 à 5 ; l'écran avance quand les quatre sont notés -->
+<section class="etape" data-etape="importance">
+<h1>Pour choisir vos pneus, qu'est-ce qui compte ?</h1>
+<p class="aide">Notez chaque critère de 1 = pas important à 5 = très important.</p>
+<div class="critere-ligne" data-importance="importance_prix"><p>Le prix</p></div>
+<div class="critere-ligne" data-importance="importance_marque"><p>La marque</p></div>
+<div class="critere-ligne" data-importance="importance_duree"><p>La durée de vie</p></div>
+<div class="critere-ligne" data-importance="importance_performance"><p>La performance (freinage, adhérence, tenue en hiver)</p></div>
 </section>
 
 <!-- 10. Où achetez-vous vos pneus ? Oui / non pour chaque lieu -->
@@ -281,6 +266,19 @@ document.querySelectorAll('[data-echelle]').forEach(function(div){
     b.setAttribute('data-v', i); b.setAttribute('aria-label', i + ' sur 5');
     div.appendChild(b);
   }
+});
+/* Critères : une échelle de 1 à 5 par ligne. */
+document.querySelectorAll('[data-importance]').forEach(function(l){
+  var echelle = document.createElement('div'); echelle.className = 'echelle';
+  for (var i = 1; i <= 5; i++) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'opt'; b.textContent = i;
+    b.setAttribute('data-v', i); b.setAttribute('aria-label', i + ' sur 5');
+    echelle.appendChild(b);
+  }
+  var bornes = document.createElement('div'); bornes.className = 'bornes-likert';
+  bornes.innerHTML = '<span>Pas important</span><span>Très important</span>';
+  l.appendChild(echelle); l.appendChild(bornes);
 });
 /* Lieux d'achat : deux cases Oui / Non par ligne. */
 document.querySelectorAll('[data-lieu]').forEach(function(l){
@@ -399,6 +397,20 @@ lignesLieux.forEach(function(l){
 });
 surBouton('lieux-ok', function(){ verrou = true; envoyer(); });
 
+/* Les critères : quand les quatre lignes sont notées, on passe à l'écran suivant. */
+var lignesImportance = Array.prototype.slice.call(document.querySelectorAll('[data-importance]'));
+lignesImportance.forEach(function(l){
+  var champ = l.getAttribute('data-importance');
+  l.querySelectorAll('.opt').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (l.closest('.etape') !== etapes[courante] || bloque()) return;
+      rep[champ] = b.getAttribute('data-v');
+      l.querySelectorAll('.opt').forEach(function(o){ o.classList.toggle('choisi', o === b); });
+      if (lignesImportance.every(function(x){ return rep[x.getAttribute('data-importance')]; })) { verrou = true; setTimeout(suivant, 350); }
+    });
+  });
+});
+
 function idAleatoire(){
   var a = new Uint8Array(6); (window.crypto || window.msCrypto).getRandomValues(a);
   return Array.prototype.map.call(a, function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
@@ -416,9 +428,10 @@ function donnees(){
     cible: horsCible() ? 0 : 1,
     accepte_plus_15: rep.accepte_plus_15 || '',
     prix_max_renforce: (!horsCible() && jaugeTouchee) ? +prix.value : '',
-    likert_justifie_prix: rep.likert_justifie_prix || '', likert_croit_duree: rep.likert_croit_duree || '', likert_economie: rep.likert_economie || '',
-    critere_principal: rep.critere_principal || '',
-    km_an: (!horsCible() && kmTouche) ? +km.value : ''
+    km_an: (!horsCible() && kmTouche) ? +km.value : '',
+    likert_justifie_prix: rep.likert_justifie_prix || '',
+    importance_prix: rep.importance_prix || '', importance_marque: rep.importance_marque || '',
+    importance_duree: rep.importance_duree || '', importance_performance: rep.importance_performance || ''
   };
   lignesLieux.forEach(function(l){ var c = l.getAttribute('data-lieu'); d[c] = rep[c] || ''; });
   return d;
