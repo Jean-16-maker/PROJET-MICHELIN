@@ -7,13 +7,14 @@
 const COLONNES = [
     'horodatage', 'id', 'test', 'version', 'duree_s',
     'consentement', 'age', 'voiture', 'cible', 'km_an',
-    'accepte_plus_15',
+    'choix_pneu',
     'likert_justifie_prix',
     'importance_prix', 'importance_marque', 'importance_duree', 'importance_performance',
     'achat_garage', 'achat_specialiste', 'achat_centre_auto', 'achat_internet', 'achat_reparateur_rapide',
 ];
 
 /* Mêmes valeurs que dans questionnaire.html.
-   Version A : « 15 € de plus par pneu » ; version B : la même hausse, ramenée à 1,50 € tous les 1 000 km. */
-const PRIX_STANDARD = 97.90;   // CrossClimate 3, 40 000 km
-const HAUSSE = 15;             // hausse testée pour la version renforcée, 50 000 km
+   Variante A (notoriété) : Hankook 40 000 km contre Michelin 40 000 km.
+   Variante B (durée de vie) : Hankook 40 000 km contre Michelin 50 000 km. */
+const PRIX_HANKOOK = 81.99;
+const PRIX_MICHELIN = 97.90;

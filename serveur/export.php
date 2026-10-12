@@ -119,7 +119,7 @@ if ($connecte) {
     $propres = array_filter($toutes, 'exploitable');
     foreach (['A', 'B'] as $v) {
         $g = array_values(array_filter($propres, fn($r) => ($r['version'] ?? '') === $v));
-        $oui = count(array_filter($g, fn($r) => ($r['accepte_plus_15'] ?? '') === 'oui'));
+        $oui = count(array_filter($g, fn($r) => ($r['choix_pneu'] ?? '') === 'michelin'));
         $stats['versions'][$v] = [
             'n' => count($g),
             'oui' => $oui,
@@ -198,10 +198,10 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <h2>Premiers résultats (réponses exploitables)</h2>
 <div class="carte tableau">
 <table>
-<thead><tr><th></th><th class="n">Version A<br><span class="note">« 15 € de plus par pneu »</span></th><th class="n">Version B<br><span class="note">« 1,50 € tous les 1 000 km »</span></th></tr></thead>
+<thead><tr><th></th><th class="n">Variante A · notoriété<br><span class="note">Michelin 40 000 km</span></th><th class="n">Variante B · durée de vie<br><span class="note">Michelin 50 000 km</span></th></tr></thead>
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
-<tr class="cle"><td>Paieraient <?= HAUSSE ?> € de plus pour la version renforcée (<?= number_format(PRIX_STANDARD + HAUSSE, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
+<tr class="cle"><td>Choisissent le Michelin (<?= number_format(PRIX_MICHELIN, 2, ',', ' ') ?> €) plutôt que le Hankook (<?= number_format(PRIX_HANKOOK, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
 <?php foreach (LIKERT as $col => $libelle): ?>
 <tr><td><?= h($libelle) ?>, moyenne sur 5</td><td class="n"><?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= nb($B['likert'][$col], 1) ?></td></tr>
 <?php endforeach; ?>
@@ -213,7 +213,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tr><td>Durée de réponse, médiane</td><td class="n"><?= nb($A['duree_med']) ?> s</td><td class="n"><?= nb($B['duree_med']) ?> s</td></tr>
 </tbody>
 </table>
-<p class="note">Lecture : tous les répondants voient les deux versions du Michelin CrossClimate 3, à 40 000 km (97,90 €) et renforcée à 50 000 km. La part prête à payer 15 € de plus dit si 10 000 km de plus justifient de payer plus cher. Le test A/B ne change que la présentation des 15 € : l'écart entre B et A mesure l'effet de ce cadrage. Avec peu de répondants par version, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
+<p class="note">Lecture : la variante A oppose le Hankook (40 000 km, 81,99 €) au Michelin annoncé lui aussi à 40 000 km (97,90 €) : la part qui choisit Michelin mesure le poids de la marque. La variante B annonce le Michelin à 50 000 km : l'écart entre B et A mesure ce qu'ajoutent 10 000 km de durée de vie. Avec peu de répondants par variante, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
 
 <form method="post" class="inline"><button class="second" name="deconnexion" value="1">Se déconnecter</button></form>

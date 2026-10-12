@@ -38,7 +38,8 @@
 /* Les deux pneus Michelin, côte à côte */
 .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin:0 0 12px}
 .pneu{min-width:0;background:#fff;border:1px solid var(--trait);border-top:6px solid var(--trait);border-radius:var(--rayon);padding:12px}
-.pneu.renforce{border-top-color:var(--jaune);box-shadow:0 0 0 2px var(--jaune) inset}
+.duo .opt.pneu{display:block;width:100%;text-align:left;font:inherit;padding:12px;border-width:2px;border-top-width:6px}
+.duo .opt.pneu.choisi{background:var(--jaune);border-color:var(--bleu)}
 .pneu b{display:block;font:800 clamp(.85rem,3.6vw,1.05rem)/1.15 var(--titre);text-transform:uppercase;color:var(--bleu-fonce);min-height:3.5em;overflow-wrap:anywhere}
 .pneu .km{display:block;font:800 clamp(1.3rem,6.5vw,1.9rem)/1 var(--titre);color:var(--bleu);margin:8px 0 2px;white-space:nowrap}
 .pneu .km-l{display:block;font-size:.8rem;color:var(--gris)}
@@ -138,36 +139,25 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <button type="button" class="principal" id="km-ok" disabled>Valider</button>
 </section>
 
-<!-- 4. Les deux pneus Michelin : 40 000 km à 97,90 € et version renforcée à 50 000 km -->
-<section class="etape" data-etape="offre">
-<h1>Vous changez vos pneus</h1>
-<p class="aide">Michelin vous propose deux versions du même pneu.</p>
+<!-- 5. La question A/B, tirée au sort. Variante A (notoriété) : Hankook 40 000 km à 81,99 € contre Michelin 40 000 km à 97,90 €.
+     Variante B (durée de vie) : le même Hankook contre Michelin 50 000 km à 97,90 €. La suite est identique pour tous. -->
+<section class="etape" data-etape="choix" data-champ="choix_pneu">
+<h1>Vous changez vos pneus : lequel choisissez-vous ?</h1>
+<p class="aide">Touchez le pneu que vous achèteriez.</p>
 <img class="fiche" src="images/fiche-crossclimate-3.jpg" width="856" height="692" alt="Fiche du Michelin CrossClimate 3 : pneu 4 saisons homologué hiver 3PMSF, étiquette européenne carburant B, pluie B, bruit B 72 dB">
 <div class="duo">
-<div class="pneu">
-<b>Michelin CrossClimate 3</b>
+<button type="button" class="opt pneu" data-v="hankook">
+<b>Hankook Kinergy 4S 94H XL</b>
 <span class="km">40 000 km</span><span class="km-l">durée de vie annoncée</span>
-<span class="prix" data-prix-standard></span>
+<span class="prix" data-prix-hankook></span>
+</button>
+<button type="button" class="opt pneu" data-v="michelin">
+<b>Michelin CrossClimate 3</b>
+<span class="km" data-km-michelin></span><span class="km-l">durée de vie annoncée</span>
+<span class="prix" data-prix-michelin></span>
+</button>
 </div>
-<div class="pneu renforce">
-<b>Michelin CrossClimate 3 renforcé</b>
-<span class="km">50 000 km</span><span class="km-l">durée de vie annoncée</span>
-<span class="prix" data-prix-renforce></span>
-</div>
-</div>
-<div class="commun"><b>Pour les deux :</b> même pneu 4 saisons, 205/55 R16, même étiquette européenne (carburant B, pluie B, bruit 72 dB) et homologation hiver 3PMSF. Seule la durée de vie change.</div>
-<p class="ecart">La version renforcée dure <em>10 000 km de plus</em>, pour 15 € de plus.</p>
-<button type="button" class="principal" data-suivant>J'ai compris</button>
-</section>
-
-<!-- 5. Mesure 1 : 15 € de plus pour le renforcé. Version A / B : seule la présentation des 15 € change (cadrage). -->
-<section class="etape" data-etape="plus15" data-champ="accepte_plus_15">
-<h1 id="plus15-question"></h1>
-<p class="aide" id="plus15-detail"></p>
-<div class="opts deux">
-<button type="button" class="opt" data-v="oui">Oui</button>
-<button type="button" class="opt" data-v="non">Non</button>
-</div>
+<div class="commun"><b>Pour les deux :</b> pneu 4 saisons, même dimension 205/55 R16, homologué pour l'hiver (3PMSF).</div>
 </section>
 
 <!-- 7. Avis : une phrase par écran, de 1 à 5 -->
@@ -218,31 +208,27 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
    Vide = mode essai : rien n'est envoyé. ===== */
 var ENDPOINT = 'https://m1marketing.alwaysdata.net/serveur/enregistrer.php';
 
-/* Prix de la version 40 000 km (prix relevé du CrossClimate 3) et hausse testée pour la version renforcée.
-   Si vous les changez, changez aussi serveur/colonnes.php. */
-var PRIX_STANDARD = 97.90;
-var HAUSSE = 15;
+/* Prix et durées affichés dans la question A/B. Si vous les changez, changez aussi serveur/colonnes.php. */
+var PRIX_HANKOOK = 81.99;
+var PRIX_MICHELIN = 97.90;
 
 var params = new URLSearchParams(location.search);
 var estTest = params.get('test') === '1' || !ENDPOINT;
 if (estTest) document.getElementById('bandeau-test').hidden = false;
 
-/* Tirage au sort de la version à l'ouverture, gardé si la page est rechargée.
-   Seule différence : la présentation des 15 € (A : « 15 € de plus par pneu » ; B : la même chose, ramenée à 1 000 km). */
+/* Tirage au sort de la variante à l'ouverture, gardé si la page est rechargée.
+   A (notoriété) : Michelin annoncé à 40 000 km, comme le Hankook. B (durée de vie) : Michelin annoncé à 50 000 km. */
 function lire(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
 function ecrire(k,v){ try { sessionStorage.setItem(k,v); } catch(e){} }
-var version = lire('cc3_version_cadrage');
+var version = lire('cc3_variante');
 if (params.get('test') === '1' && /^[AB]$/.test(params.get('v') || '')) version = params.get('v');
-if (version !== 'A' && version !== 'B') { version = Math.random() < 0.5 ? 'A' : 'B'; ecrire('cc3_version_cadrage', version); }
+if (version !== 'A' && version !== 'B') { version = Math.random() < 0.5 ? 'A' : 'B'; ecrire('cc3_variante', version); }
 
 function el(id){ return document.getElementById(id); }
 function euros(x){ return x.toFixed(2).replace('.', ',') + ' €'; }
-document.querySelectorAll('[data-prix-standard]').forEach(function(e){ e.textContent = euros(PRIX_STANDARD) + ' le pneu'; });
-document.querySelectorAll('[data-prix-renforce]').forEach(function(e){ e.textContent = euros(PRIX_STANDARD + HAUSSE) + ' le pneu'; });
-el('plus15-question').textContent = 'Paieriez-vous ' + HAUSSE + ' € de plus par pneu pour la version renforcée, qui dure 10 000 km de plus ?';
-el('plus15-detail').textContent = version === 'B'
-  ? 'Soit ' + euros(PRIX_STANDARD + HAUSSE) + ' au lieu de ' + euros(PRIX_STANDARD) + ' : à peine ' + (HAUSSE / 10).toFixed(2).replace('.', ',') + ' € tous les 1 000 km parcourus en plus.'
-  : 'Soit ' + euros(PRIX_STANDARD + HAUSSE) + ' au lieu de ' + euros(PRIX_STANDARD) + ', ou ' + (4 * HAUSSE) + ' € de plus pour 4 pneus.';
+document.querySelectorAll('[data-prix-hankook]').forEach(function(e){ e.textContent = euros(PRIX_HANKOOK) + ' le pneu'; });
+document.querySelectorAll('[data-prix-michelin]').forEach(function(e){ e.textContent = euros(PRIX_MICHELIN) + ' le pneu'; });
+document.querySelectorAll('[data-km-michelin]').forEach(function(e){ e.textContent = version === 'B' ? '50 000 km' : '40 000 km'; });
 
 /* Écrans d'avis : la phrase et les 5 cases. */
 document.querySelectorAll('[data-likert-texte]').forEach(function(h){ h.textContent = h.getAttribute('data-likert-texte'); });
@@ -277,6 +263,8 @@ document.querySelectorAll('[data-lieu]').forEach(function(l){
 var etapes = Array.prototype.slice.call(document.querySelectorAll('.etape'));
 var nomsEtapes = etapes.map(function(e){ return e.getAttribute('data-etape'); });
 var courante = 0, debut = null, envoye = false, verrou = false;
+/* Une fois l'écran de fin atteint (filtre ou fin normale), on ne peut plus revenir aux questions. */
+var termine = false;
 /* Après chaque changement d'écran, les clics sont ignorés un court instant : le second clic d'un double-clic
    ne doit pas répondre à la question suivante. */
 var bloqueJusqua = 0;
@@ -285,6 +273,7 @@ var rep = {};
 var kmTouche = false;
 
 function afficher(n){
+  if (termine && nomsEtapes[n] !== 'fin') return;
   courante = n;
   verrou = false;
   bloqueJusqua = Date.now() + 400;
@@ -338,7 +327,7 @@ document.querySelectorAll('[data-champ]').forEach(function(section){
   });
 });
 document.querySelectorAll('[data-suivant]').forEach(function(b){ b.addEventListener('click', function(){ if (b.closest('.etape') !== etapes[courante] || bloque()) return; verrou = true; suivant(); }); });
-el('retour').addEventListener('click', function(){ if (courante > 0 && !bloque()) afficher(courante - 1); });
+el('retour').addEventListener('click', function(){ if (courante > 0 && !termine && !bloque()) afficher(courante - 1); });
 
 /* Le curseur des kilomètres. */
 var km = el('km');
@@ -398,7 +387,7 @@ function donnees(){
     age: rep.age === undefined ? '' : rep.age,
     voiture: rep.voiture || '',
     cible: horsCible() ? 0 : 1,
-    accepte_plus_15: rep.accepte_plus_15 || '',
+    choix_pneu: rep.choix_pneu || '',
     km_an: (!horsCible() && kmTouche) ? +km.value : '',
     likert_justifie_prix: rep.likert_justifie_prix || '',
     importance_prix: rep.importance_prix || '', importance_marque: rep.importance_marque || '',
@@ -421,8 +410,11 @@ function envoyer(){
       el('essai').innerHTML = '<pre class="essai"></pre>';
       el('essai').firstChild.textContent = JSON.stringify(d, null, 1);
     }
-    try { sessionStorage.removeItem('cc3_version_cadrage'); } catch(e){}
+    try { sessionStorage.removeItem('cc3_variante'); } catch(e){}
+    /* Mineur ou sans voiture : retenu pour l'onglet, un rechargement de la page ramène à cet écran de fin. */
+    if (horsCible()) ecrire('cc3_exclu', rep.age !== undefined && rep.age < 18 ? 'age' : 'voiture');
     afficher(nomsEtapes.indexOf('fin'));
+    termine = true;
   }
   function echec(){
     envoye = false; verrou = false;
@@ -440,7 +432,17 @@ function envoyer(){
     .catch(echec);
 }
 
-afficher(0);
+/* Déjà arrêté au filtre dans cet onglet : on revient directement à l'écran de fin. */
+var exclu = lire('cc3_exclu');
+if (exclu) {
+  el('fin-texte').textContent = exclu === 'age'
+    ? 'Ce questionnaire s\u2019adresse aux personnes de 18 ans et plus. Merci pour votre temps !'
+    : 'Ce questionnaire s\u2019adresse aux automobilistes. Merci pour votre temps !';
+  afficher(nomsEtapes.indexOf('fin'));
+  termine = true;
+} else {
+  afficher(0);
+}
 </script>
 </body>
 </html>
