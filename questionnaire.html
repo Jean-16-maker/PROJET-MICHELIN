@@ -51,9 +51,11 @@
 .etiquette .carbu{background:#7CB342}.etiquette .pluie{background:#2F6FB5}.etiquette .bruit{background:#222}.etiquette .hiver{background:#fff;color:#2F86C9;border:1px solid #2F86C9}
 
 .pneu .photo{display:block;width:100%;height:auto;margin:0 0 10px;border-radius:8px;background:#fff}
-.critere-ligne{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:12px 12px 10px;margin:0 0 10px}
-.critere-ligne p{font-weight:700;margin:0 0 8px}
-.critere-ligne .echelle .opt{padding:12px 0;font-size:1.3rem}
+.kicker-avis{font:800 .8rem/1.3 var(--titre);letter-spacing:.1em;text-transform:uppercase;color:var(--gris);margin:0 0 10px}
+.q-wrap h1 b{color:var(--bleu-fonce)}
+.likert .opt{display:flex;align-items:center;gap:14px;padding:14px 16px}
+.likert .pt{display:inline-flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border-radius:50%;background:var(--ciel);color:var(--bleu);font:800 1.1rem/1 var(--titre)}
+.likert .opt.choisi .pt{background:var(--bleu);color:#fff}
 
 /* Saisie de l'âge */
 .age{display:flex;align-items:center;gap:10px;margin:6px 0 0}
@@ -160,14 +162,53 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <div class="commun"><b>Pour les deux :</b> pneu 4 saisons, même dimension 205/55 R16, homologué pour l'hiver (3PMSF).</div>
 </section>
 
-<!-- 8. Ce qui compte : quatre critères, chacun noté de 1 à 5 ; l'écran avance quand les quatre sont notés -->
-<section class="etape" data-etape="importance">
-<h1>Pour choisir vos pneus, qu'est-ce qui compte ?</h1>
-<p class="aide">Notez chaque critère de 1 = pas important à 5 = très important.</p>
-<div class="critere-ligne" data-importance="importance_prix"><p>Le prix</p></div>
-<div class="critere-ligne" data-importance="importance_marque"><p>La marque</p></div>
-<div class="critere-ligne" data-importance="importance_duree"><p>La durée de vie</p></div>
-<div class="critere-ligne" data-importance="importance_performance"><p>La performance (freinage, adhérence, tenue en hiver)</p></div>
+<!-- 6. Ce qui compte : échelle de Likert à 5 points, une affirmation par écran (1 = pas du tout d'accord, 5 = tout à fait d'accord) -->
+<section class="etape" data-etape="importance_prix" data-champ="importance_prix">
+<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 1 sur 4</p>
+<h1>Pour choisir mes pneus, le <b>prix</b> compte beaucoup.</h1>
+<div class="opts likert">
+<button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
+<button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
+<button type="button" class="opt" data-v="3"><span class="pt">3</span>Ni d'accord, ni pas d'accord</button>
+<button type="button" class="opt" data-v="4"><span class="pt">4</span>Plutôt d'accord</button>
+<button type="button" class="opt" data-v="5"><span class="pt">5</span>Tout à fait d'accord</button>
+</div>
+</section>
+
+<section class="etape" data-etape="importance_marque" data-champ="importance_marque">
+<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 2 sur 4</p>
+<h1>Pour choisir mes pneus, la <b>marque</b> compte beaucoup.</h1>
+<div class="opts likert">
+<button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
+<button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
+<button type="button" class="opt" data-v="3"><span class="pt">3</span>Ni d'accord, ni pas d'accord</button>
+<button type="button" class="opt" data-v="4"><span class="pt">4</span>Plutôt d'accord</button>
+<button type="button" class="opt" data-v="5"><span class="pt">5</span>Tout à fait d'accord</button>
+</div>
+</section>
+
+<section class="etape" data-etape="importance_duree" data-champ="importance_duree">
+<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 3 sur 4</p>
+<h1>Pour choisir mes pneus, la <b>durée de vie</b> compte beaucoup.</h1>
+<div class="opts likert">
+<button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
+<button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
+<button type="button" class="opt" data-v="3"><span class="pt">3</span>Ni d'accord, ni pas d'accord</button>
+<button type="button" class="opt" data-v="4"><span class="pt">4</span>Plutôt d'accord</button>
+<button type="button" class="opt" data-v="5"><span class="pt">5</span>Tout à fait d'accord</button>
+</div>
+</section>
+
+<section class="etape" data-etape="importance_performance" data-champ="importance_performance">
+<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 4 sur 4</p>
+<h1>Pour choisir mes pneus, la <b>performance</b> (freinage, adhérence, tenue en hiver) compte beaucoup.</h1>
+<div class="opts likert">
+<button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
+<button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
+<button type="button" class="opt" data-v="3"><span class="pt">3</span>Ni d'accord, ni pas d'accord</button>
+<button type="button" class="opt" data-v="4"><span class="pt">4</span>Plutôt d'accord</button>
+<button type="button" class="opt" data-v="5"><span class="pt">5</span>Tout à fait d'accord</button>
+</div>
 </section>
 
 <!-- 10. Où achetez-vous vos pneus ? Oui / non pour chaque lieu -->
@@ -222,19 +263,6 @@ document.querySelectorAll('[data-prix-hankook]').forEach(function(e){ e.textCont
 document.querySelectorAll('[data-prix-michelin]').forEach(function(e){ e.textContent = euros(PRIX_MICHELIN) + ' le pneu'; });
 document.querySelectorAll('[data-km-michelin]').forEach(function(e){ e.textContent = version === 'B' ? '50 000 km' : '40 000 km'; });
 
-/* Critères : une échelle de 1 à 5 par ligne. */
-document.querySelectorAll('[data-importance]').forEach(function(l){
-  var echelle = document.createElement('div'); echelle.className = 'echelle';
-  for (var i = 1; i <= 5; i++) {
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'opt'; b.textContent = i;
-    b.setAttribute('data-v', i); b.setAttribute('aria-label', i + ' sur 5');
-    echelle.appendChild(b);
-  }
-  var bornes = document.createElement('div'); bornes.className = 'bornes-likert';
-  bornes.innerHTML = '<span>Pas important</span><span>Très important</span>';
-  l.appendChild(echelle); l.appendChild(bornes);
-});
 /* Lieux d'achat : deux cases Oui / Non par ligne. */
 document.querySelectorAll('[data-lieu]').forEach(function(l){
   var on = document.createElement('div'); on.className = 'on';
@@ -340,19 +368,7 @@ lignesLieux.forEach(function(l){
 });
 surBouton('lieux-ok', function(){ verrou = true; envoyer(); });
 
-/* Les critères : quand les quatre lignes sont notées, on passe à l'écran suivant. */
-var lignesImportance = Array.prototype.slice.call(document.querySelectorAll('[data-importance]'));
-lignesImportance.forEach(function(l){
-  var champ = l.getAttribute('data-importance');
-  l.querySelectorAll('.opt').forEach(function(b){
-    b.addEventListener('click', function(){
-      if (l.closest('.etape') !== etapes[courante] || bloque()) return;
-      rep[champ] = b.getAttribute('data-v');
-      l.querySelectorAll('.opt').forEach(function(o){ o.classList.toggle('choisi', o === b); });
-      if (lignesImportance.every(function(x){ return rep[x.getAttribute('data-importance')]; })) { verrou = true; setTimeout(suivant, 350); }
-    });
-  });
-});
+
 
 function idAleatoire(){
   var a = new Uint8Array(6); (window.crypto || window.msCrypto).getRandomValues(a);

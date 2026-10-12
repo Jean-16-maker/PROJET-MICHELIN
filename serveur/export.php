@@ -99,7 +99,7 @@ function nb($x, int $dec = 0): string { return $x === null ? '—' : number_form
 function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 0, ',', ' ') . ' %' : '—'; }
 
 /* Paliers de la jauge pour la répartition des prix maximum. */
-const LIKERT = ['importance_prix' => 'Importance du prix', 'importance_marque' => 'Importance de la marque', 'importance_duree' => 'Importance de la durée de vie', 'importance_performance' => 'Importance de la performance'];
+const LIKERT = ['importance_prix' => '« Le prix compte beaucoup »', 'importance_marque' => '« La marque compte beaucoup »', 'importance_duree' => '« La durée de vie compte beaucoup »', 'importance_performance' => '« La performance compte beaucoup »'];
 const LIEUX = ['achat_garage' => 'garagiste ou concessionnaire', 'achat_specialiste' => 'spécialiste du pneu', 'achat_centre_auto' => 'centre auto', 'achat_internet' => 'Internet', 'achat_reparateur_rapide' => 'réparateur rapide'];
 
 function nombres(array $g, string $col): array
@@ -125,6 +125,7 @@ if ($connecte) {
             'oui' => $oui,
             'oui_pct' => pct($oui, count($g)),
             'likert' => array_combine(array_keys(LIKERT), array_map(fn($col) => moyenne(nombres($g, $col)), array_keys(LIKERT))),
+            'accord' => array_combine(array_keys(LIKERT), array_map(fn($col) => pct(count(array_filter(nombres($g, $col), fn($x) => $x >= 4)), count(nombres($g, $col))), array_keys(LIKERT))),
             'lieux' => array_combine(array_keys(LIEUX), array_map(fn($k) => pct(count(array_filter($g, fn($r) => ($r[$k] ?? '') === 'oui')), count($g)), array_keys(LIEUX))),
             'age_med' => mediane(nombres($g, 'age')),
             'km_med' => mediane(nombres($g, 'km_an')),
@@ -203,7 +204,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
 <tr class="cle"><td>Choisissent le Michelin (<?= number_format(PRIX_MICHELIN, 2, ',', ' ') ?> €) plutôt que le Hankook (<?= number_format(PRIX_HANKOOK, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
 <?php foreach (LIKERT as $col => $libelle): ?>
-<tr><td><?= h($libelle) ?>, moyenne sur 5</td><td class="n"><?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= nb($B['likert'][$col], 1) ?></td></tr>
+<tr><td>Likert <?= h($libelle) ?> : d'accord ou tout à fait d'accord · moyenne sur 5</td><td class="n"><?= $A['accord'][$col] ?> · <?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= $B['accord'][$col] ?> · <?= nb($B['likert'][$col], 1) ?></td></tr>
 <?php endforeach; ?>
 <?php foreach (LIEUX as $k => $libelle): ?>
 <tr><td>A déjà acheté des pneus : <?= h($libelle) ?></td><td class="n"><?= $A['lieux'][$k] ?></td><td class="n"><?= $B['lieux'][$k] ?></td></tr>

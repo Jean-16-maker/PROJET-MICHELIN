@@ -29,8 +29,8 @@ La seule différence entre A et B est la durée de vie du Michelin. Avant et apr
 | 3 | Avez-vous une voiture ? **Non → écran de remerciement** |
 | 4 | Kilomètres par an : curseur de 0 à 50 000 km |
 | 5 | **La question A/B** : Hankook ou Michelin ? Chaque carte montre la photo de la fiche du pneu |
-| 6 | Ce qui compte, chacun noté de 1 à 5 : le prix, la marque, la durée de vie, la performance |
-| 7 | Lieux où la personne a déjà acheté des pneus : oui / non pour 5 lieux |
+| 6-9 | Échelle de Likert à 5 points, une affirmation par écran : « Pour choisir mes pneus, le prix / la marque / la durée de vie / la performance compte beaucoup » (1 = pas du tout d'accord … 5 = tout à fait d'accord) |
+| 10 | Lieux où la personne a déjà acheté des pneus : oui / non pour 5 lieux |
 
 Une fois l'écran de fin atteint, on ne peut plus revenir aux questions : le bouton Retour disparaît, et recharger la page ramène à la fin. Pour refaire un essai, ouvrez un **nouvel onglet**.
 
@@ -98,7 +98,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : part qui choisit Michelin plutôt que Hankook, importance moyenne de chaque critère, lieux d'achat, âge, kilomètres, durée de réponse ;
+- les premiers résultats par version A / B : part qui choisit Michelin plutôt que Hankook, part d'accord (4 ou 5) et moyenne sur 5 pour chaque affirmation Likert, lieux d'achat, âge, kilomètres, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -115,7 +115,7 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 | `voiture` | `oui` ou `non` |
 | `cible` | 1 = 18 ans ou plus et a une voiture ; 0 = arrêté au filtre |
 | `choix_pneu` | `hankook` ou `michelin` |
-| `importance_…` | importance de 1 à 5 : prix, marque, durée de vie, performance |
+| `importance_…` | Likert de 1 (pas du tout d'accord) à 5 (tout à fait d'accord) : « … compte beaucoup » pour le prix, la marque, la durée de vie, la performance |
 | `km_an` | kilomètres par an (curseur, par pas de 1 000 ; 50 000 = « 50 000 ou plus ») |
 | `achat_…` | `oui` ou `non` pour chaque lieu : garage, spécialiste, centre auto, Internet, réparateur rapide |
 
