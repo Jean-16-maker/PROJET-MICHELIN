@@ -105,10 +105,12 @@ const LIKERT = [
     'likert_lo3' => 'LO3 « Je n’achèterai pas d’autres marques si Michelin est disponible »',
     'likert_ql2' => 'QL2 « La qualité probable des pneus Michelin est extrêmement élevée »',
     'likert_ql3' => 'QL3 « Il est très probable que les pneus Michelin remplissent bien leur fonction »',
-    'likert_prix' => '« Pour choisir mes pneus, le prix compte beaucoup »',
+    'likert_pr1' => 'PR1 « J’achète mes pneus autant que possible en promotion »',
+    'likert_pr2' => 'PR2 « Je choisis généralement les pneus les moins chers »',
+    'likert_pr3' => 'PR3 « Je compare attentivement pour trouver le meilleur rapport qualité-prix »',
 ];
-/* Scores de Yoo et Donthu (2001) : moyenne des items de chaque dimension, par répondant. */
-const SCORES = ['fidelite' => ['likert_lo1', 'likert_lo2', 'likert_lo3'], 'qualite' => ['likert_ql2', 'likert_ql3']];
+/* Scores : moyenne des items de chaque dimension, par répondant (Yoo et Donthu 2001 ; Sproles et Kendall 1986 pour le prix). */
+const SCORES = ['fidelite' => ['likert_lo1', 'likert_lo2', 'likert_lo3'], 'qualite' => ['likert_ql2', 'likert_ql3'], 'prix' => ['likert_pr1', 'likert_pr2', 'likert_pr3']];
 
 function score(array $r, array $cols): ?float
 {
@@ -221,6 +223,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tr class="cle"><td>Choisissent le Michelin (<?= number_format(PRIX_MICHELIN, 2, ',', ' ') ?> €) plutôt que le Hankook (<?= number_format(PRIX_HANKOOK, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
 <tr class="cle"><td>Score de fidélité à Michelin (moyenne de LO1 à LO3, sur 5)</td><td class="n"><?= nb($A['scores']['fidelite'], 2) ?></td><td class="n"><?= nb($B['scores']['fidelite'], 2) ?></td></tr>
 <tr class="cle"><td>Score de qualité perçue de Michelin (moyenne de QL2 et QL3, sur 5)</td><td class="n"><?= nb($A['scores']['qualite'], 2) ?></td><td class="n"><?= nb($B['scores']['qualite'], 2) ?></td></tr>
+<tr class="cle"><td>Score de conscience du prix (moyenne de PR1 à PR3, sur 5)</td><td class="n"><?= nb($A['scores']['prix'], 2) ?></td><td class="n"><?= nb($B['scores']['prix'], 2) ?></td></tr>
 <?php foreach (LIKERT as $col => $libelle): ?>
 <tr><td>Likert <?= h($libelle) ?> : d'accord ou tout à fait d'accord · moyenne sur 5</td><td class="n"><?= $A['accord'][$col] ?> · <?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= $B['accord'][$col] ?> · <?= nb($B['likert'][$col], 1) ?></td></tr>
 <?php endforeach; ?>

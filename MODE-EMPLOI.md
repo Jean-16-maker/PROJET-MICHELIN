@@ -29,8 +29,8 @@ La seule différence entre A et B est la durée de vie du Michelin. Avant et apr
 | 3 | Avez-vous une voiture ? **Non → écran de remerciement** |
 | 4 | Kilomètres par an : curseur de 0 à 50 000 km |
 | 5 | **La question A/B** : Hankook ou Michelin ? Chaque carte montre la photo de la fiche du pneu |
-| 6-11 | Échelle de Likert à 5 points, une affirmation par écran (1 = pas du tout d'accord, 5 = tout à fait d'accord), d'après **Yoo et Donthu (2001)** : fidélité à Michelin (LO1-LO3), qualité perçue de Michelin (QL2-QL3), puis le prix (item du groupe) |
-| 12 | Lieux où la personne a déjà acheté des pneus : oui / non pour 5 lieux |
+| 6-13 | Échelle de Likert à 5 points, une affirmation par écran (1 = pas du tout d'accord, 5 = tout à fait d'accord) : fidélité à Michelin (LO1-LO3) et qualité perçue (QL2-QL3) d'après **Yoo et Donthu (2001)**, puis conscience du prix (PR1-PR3) d'après **Sproles et Kendall (1986)** |
+| 14 | Lieux où la personne a déjà acheté des pneus : oui / non pour 5 lieux |
 
 Une fois l'écran de fin atteint, on ne peut plus revenir aux questions : le bouton Retour disparaît, et recharger la page ramène à la fin. Pour refaire un essai, ouvrez un **nouvel onglet**.
 
@@ -98,7 +98,7 @@ Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et not
 
 Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe. La page affiche :
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
-- les premiers résultats par version A / B : part qui choisit Michelin plutôt que Hankook, scores de fidélité (moyenne LO1-LO3) et de qualité perçue (moyenne QL2-QL3), part d'accord (4 ou 5) et moyenne pour chaque affirmation, lieux d'achat, âge, kilomètres, durée de réponse ;
+- les premiers résultats par version A / B : part qui choisit Michelin plutôt que Hankook, scores de fidélité (moyenne LO1-LO3), de qualité perçue (moyenne QL2-QL3) et de conscience du prix (moyenne PR1-PR3), part d'accord (4 ou 5) et moyenne pour chaque affirmation, lieux d'achat, âge, kilomètres, durée de réponse ;
 - des boutons de téléchargement :
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
@@ -116,7 +116,15 @@ Elle reprend la mesure de **Yoo, B. et Donthu, N. (2001), « Developing and vali
 | QL2 | The likely quality of X is extremely high. | La qualité probable des pneus Michelin est extrêmement élevée. |
 | QL3 | The likelihood that X would be functional is very high. | Il est très probable que les pneus Michelin remplissent bien leur fonction. |
 
-L'article ne mesure pas le prix : l'affirmation « Pour choisir mes pneus, le prix compte beaucoup » est un item du groupe, dans le même format. Le score de chaque dimension est la moyenne de ses items pour chaque répondant.
+**Le prix** suit **Sproles, G. B. et Kendall, E. L. (1986), « A Methodology for Profiling Consumers' Decision-Making Styles », *The Journal of Consumer Affairs*, 20(2), p. 267-279**, facteur 5 du Consumer Styles Inventory, *Price Conscious, « Value for Money » Consumer*. On reprend sa version courte en trois items, notés de 1 = *strongly disagree* à 5 = *strongly agree* comme dans l'article, et adaptés à l'achat de pneus :
+
+| Item | Original | Traduction |
+|---|---|---|
+| PR1 | I buy as much as possible at sale prices. | J'achète mes pneus autant que possible en promotion. |
+| PR2 | The lower price products are usually my choice. | Je choisis généralement les pneus les moins chers. |
+| PR3 | I look carefully to find the best value for the money. | Je compare attentivement pour trouver les pneus au meilleur rapport qualité-prix. |
+
+Limite à connaître : l'article donne pour cette sous-échelle un alpha de Cronbach de 0,48, une fiabilité faible. Il faudra calculer l'alpha sur nos propres réponses en Analyse de données.
 
 ## Les colonnes
 
@@ -131,7 +139,7 @@ L'article ne mesure pas le prix : l'affirmation « Pour choisir mes pneus, le pr
 | `choix_pneu` | `hankook` ou `michelin` |
 | `likert_lo1` … `likert_lo3` | fidélité à la marque, de 1 à 5 : « Je me considère comme fidèle à Michelin », « Michelin serait mon premier choix », « Je n'achèterai pas d'autres marques si Michelin est disponible en magasin » |
 | `likert_ql2`, `likert_ql3` | qualité perçue, de 1 à 5 : « La qualité probable des pneus Michelin est extrêmement élevée », « Il est très probable que les pneus Michelin remplissent bien leur fonction » |
-| `likert_prix` | « Pour choisir mes pneus, le prix compte beaucoup » (item du groupe, pas dans l'article) |
+| `likert_pr1` … `likert_pr3` | conscience du prix, de 1 à 5 : « J'achète mes pneus autant que possible en promotion », « Je choisis généralement les pneus les moins chers », « Je compare attentivement pour trouver les pneus au meilleur rapport qualité-prix » |
 | `km_an` | kilomètres par an (curseur, par pas de 1 000 ; 50 000 = « 50 000 ou plus ») |
 | `achat_…` | `oui` ou `non` pour chaque lieu : garage, spécialiste, centre auto, Internet, réparateur rapide |
 
