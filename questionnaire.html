@@ -162,10 +162,13 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <div class="commun"><b>Pour les deux :</b> pneu 4 saisons, même dimension 205/55 R16, homologué pour l'hiver (3PMSF).</div>
 </section>
 
-<!-- 6. Ce qui compte : échelle de Likert à 5 points, une affirmation par écran (1 = pas du tout d'accord, 5 = tout à fait d'accord) -->
-<section class="etape" data-etape="importance_prix" data-champ="importance_prix">
-<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 1 sur 4</p>
-<h1>Pour choisir mes pneus, le <b>prix</b> compte beaucoup.</h1>
+<!-- 6. Échelle de Likert à 5 points (1 = pas du tout d'accord, 5 = tout à fait d'accord), d'après Yoo et Donthu (2001),
+     Journal of Business Research 52, p. 1-14 : fidélité à la marque (LO1-LO3) et qualité perçue (QL2-QL3), X = Michelin.
+     Une affirmation par écran ; la dernière, sur le prix, est un item du groupe. -->
+<section class="etape" data-etape="likert_lo1" data-champ="likert_lo1">
+<!-- Yoo et Donthu (2001), fidélité à la marque, LO1 -->
+<p class="kicker-avis">Votre avis · 1 sur 6</p>
+<h1>Je me considère comme fidèle à Michelin.</h1>
 <div class="opts likert">
 <button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
 <button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
@@ -175,9 +178,10 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 </div>
 </section>
 
-<section class="etape" data-etape="importance_marque" data-champ="importance_marque">
-<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 2 sur 4</p>
-<h1>Pour choisir mes pneus, la <b>marque</b> compte beaucoup.</h1>
+<section class="etape" data-etape="likert_lo2" data-champ="likert_lo2">
+<!-- LO2 -->
+<p class="kicker-avis">Votre avis · 2 sur 6</p>
+<h1>Michelin serait mon premier choix.</h1>
 <div class="opts likert">
 <button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
 <button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
@@ -187,9 +191,10 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 </div>
 </section>
 
-<section class="etape" data-etape="importance_duree" data-champ="importance_duree">
-<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 3 sur 4</p>
-<h1>Pour choisir mes pneus, la <b>durée de vie</b> compte beaucoup.</h1>
+<section class="etape" data-etape="likert_lo3" data-champ="likert_lo3">
+<!-- LO3 -->
+<p class="kicker-avis">Votre avis · 3 sur 6</p>
+<h1>Je n'achèterai pas d'autres marques si Michelin est disponible en magasin.</h1>
 <div class="opts likert">
 <button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
 <button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
@@ -199,9 +204,36 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 </div>
 </section>
 
-<section class="etape" data-etape="importance_performance" data-champ="importance_performance">
-<p class="kicker-avis">Pour choisir vos pneus, qu'est-ce qui compte ? · 4 sur 4</p>
-<h1>Pour choisir mes pneus, la <b>performance</b> (freinage, adhérence, tenue en hiver) compte beaucoup.</h1>
+<section class="etape" data-etape="likert_ql2" data-champ="likert_ql2">
+<!-- Yoo et Donthu (2001), qualité perçue, QL2 -->
+<p class="kicker-avis">Votre avis · 4 sur 6</p>
+<h1>La qualité probable des pneus Michelin est extrêmement élevée.</h1>
+<div class="opts likert">
+<button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
+<button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
+<button type="button" class="opt" data-v="3"><span class="pt">3</span>Ni d'accord, ni pas d'accord</button>
+<button type="button" class="opt" data-v="4"><span class="pt">4</span>Plutôt d'accord</button>
+<button type="button" class="opt" data-v="5"><span class="pt">5</span>Tout à fait d'accord</button>
+</div>
+</section>
+
+<section class="etape" data-etape="likert_ql3" data-champ="likert_ql3">
+<!-- QL3 -->
+<p class="kicker-avis">Votre avis · 5 sur 6</p>
+<h1>Il est très probable que les pneus Michelin remplissent bien leur fonction.</h1>
+<div class="opts likert">
+<button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
+<button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
+<button type="button" class="opt" data-v="3"><span class="pt">3</span>Ni d'accord, ni pas d'accord</button>
+<button type="button" class="opt" data-v="4"><span class="pt">4</span>Plutôt d'accord</button>
+<button type="button" class="opt" data-v="5"><span class="pt">5</span>Tout à fait d'accord</button>
+</div>
+</section>
+
+<section class="etape" data-etape="likert_prix" data-champ="likert_prix">
+<!-- item du groupe, même format (pas dans Yoo et Donthu) -->
+<p class="kicker-avis">Votre avis · 6 sur 6</p>
+<h1>Pour choisir mes pneus, le prix compte beaucoup.</h1>
 <div class="opts likert">
 <button type="button" class="opt" data-v="1"><span class="pt">1</span>Pas du tout d'accord</button>
 <button type="button" class="opt" data-v="2"><span class="pt">2</span>Plutôt pas d'accord</button>
@@ -387,8 +419,9 @@ function donnees(){
     cible: horsCible() ? 0 : 1,
     choix_pneu: rep.choix_pneu || '',
     km_an: (!horsCible() && kmTouche) ? +km.value : '',
-    importance_prix: rep.importance_prix || '', importance_marque: rep.importance_marque || '',
-    importance_duree: rep.importance_duree || '', importance_performance: rep.importance_performance || ''
+    likert_lo1: rep.likert_lo1 || '', likert_lo2: rep.likert_lo2 || '', likert_lo3: rep.likert_lo3 || '',
+    likert_ql2: rep.likert_ql2 || '', likert_ql3: rep.likert_ql3 || '',
+    likert_prix: rep.likert_prix || ''
   };
   lignesLieux.forEach(function(l){ var c = l.getAttribute('data-lieu'); d[c] = rep[c] || ''; });
   return d;

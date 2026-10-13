@@ -8,7 +8,8 @@ const COLONNES = [
     'horodatage', 'id', 'test', 'version', 'duree_s',
     'consentement', 'age', 'voiture', 'cible', 'km_an',
     'choix_pneu',
-    'importance_prix', 'importance_marque', 'importance_duree', 'importance_performance',
+    // Likert 1 à 5, Yoo et Donthu (2001) : fidélité à la marque (LO1-LO3), qualité perçue (QL2-QL3) ; prix = item du groupe
+    'likert_lo1', 'likert_lo2', 'likert_lo3', 'likert_ql2', 'likert_ql3', 'likert_prix',
     'achat_garage', 'achat_specialiste', 'achat_centre_auto', 'achat_internet', 'achat_reparateur_rapide',
 ];
 

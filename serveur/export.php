@@ -99,7 +99,22 @@ function nb($x, int $dec = 0): string { return $x === null ? '—' : number_form
 function pct(int $a, int $b): string { return $b ? number_format(100 * $a / $b, 0, ',', ' ') . ' %' : '—'; }
 
 /* Paliers de la jauge pour la répartition des prix maximum. */
-const LIKERT = ['importance_prix' => '« Le prix compte beaucoup »', 'importance_marque' => '« La marque compte beaucoup »', 'importance_duree' => '« La durée de vie compte beaucoup »', 'importance_performance' => '« La performance compte beaucoup »'];
+const LIKERT = [
+    'likert_lo1' => 'LO1 « Je me considère comme fidèle à Michelin »',
+    'likert_lo2' => 'LO2 « Michelin serait mon premier choix »',
+    'likert_lo3' => 'LO3 « Je n’achèterai pas d’autres marques si Michelin est disponible »',
+    'likert_ql2' => 'QL2 « La qualité probable des pneus Michelin est extrêmement élevée »',
+    'likert_ql3' => 'QL3 « Il est très probable que les pneus Michelin remplissent bien leur fonction »',
+    'likert_prix' => '« Pour choisir mes pneus, le prix compte beaucoup »',
+];
+/* Scores de Yoo et Donthu (2001) : moyenne des items de chaque dimension, par répondant. */
+const SCORES = ['fidelite' => ['likert_lo1', 'likert_lo2', 'likert_lo3'], 'qualite' => ['likert_ql2', 'likert_ql3']];
+
+function score(array $r, array $cols): ?float
+{
+    $x = array_map('floatval', array_values(array_filter(array_map(fn($c) => $r[$c] ?? '', $cols), 'is_numeric')));
+    return count($x) === count($cols) ? array_sum($x) / count($x) : null;
+}
 const LIEUX = ['achat_garage' => 'garagiste ou concessionnaire', 'achat_specialiste' => 'spécialiste du pneu', 'achat_centre_auto' => 'centre auto', 'achat_internet' => 'Internet', 'achat_reparateur_rapide' => 'réparateur rapide'];
 
 function nombres(array $g, string $col): array
@@ -125,6 +140,7 @@ if ($connecte) {
             'oui' => $oui,
             'oui_pct' => pct($oui, count($g)),
             'likert' => array_combine(array_keys(LIKERT), array_map(fn($col) => moyenne(nombres($g, $col)), array_keys(LIKERT))),
+            'scores' => array_map(fn($cols) => moyenne(array_values(array_filter(array_map(fn($r) => score($r, $cols), $g), fn($s) => $s !== null))), SCORES),
             'accord' => array_combine(array_keys(LIKERT), array_map(fn($col) => pct(count(array_filter(nombres($g, $col), fn($x) => $x >= 4)), count(nombres($g, $col))), array_keys(LIKERT))),
             'lieux' => array_combine(array_keys(LIEUX), array_map(fn($k) => pct(count(array_filter($g, fn($r) => ($r[$k] ?? '') === 'oui')), count($g)), array_keys(LIEUX))),
             'age_med' => mediane(nombres($g, 'age')),
@@ -203,6 +219,8 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
 <tr class="cle"><td>Choisissent le Michelin (<?= number_format(PRIX_MICHELIN, 2, ',', ' ') ?> €) plutôt que le Hankook (<?= number_format(PRIX_HANKOOK, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
+<tr class="cle"><td>Score de fidélité à Michelin (moyenne de LO1 à LO3, sur 5)</td><td class="n"><?= nb($A['scores']['fidelite'], 2) ?></td><td class="n"><?= nb($B['scores']['fidelite'], 2) ?></td></tr>
+<tr class="cle"><td>Score de qualité perçue de Michelin (moyenne de QL2 et QL3, sur 5)</td><td class="n"><?= nb($A['scores']['qualite'], 2) ?></td><td class="n"><?= nb($B['scores']['qualite'], 2) ?></td></tr>
 <?php foreach (LIKERT as $col => $libelle): ?>
 <tr><td>Likert <?= h($libelle) ?> : d'accord ou tout à fait d'accord · moyenne sur 5</td><td class="n"><?= $A['accord'][$col] ?> · <?= nb($A['likert'][$col], 1) ?></td><td class="n"><?= $B['accord'][$col] ?> · <?= nb($B['likert'][$col], 1) ?></td></tr>
 <?php endforeach; ?>
