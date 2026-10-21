@@ -11,7 +11,7 @@
 <body>
 <header class="haut"><div class="wrap">
 <a class="marque" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg><span>Michelin<small>CrossClimate 3 · dossier de prix</small></span></a>
-<nav aria-label="Navigation principale"><a href="index.html">1 · Le marché</a><a href="comptes.html">2 · Comptes</a><a href="prix-psychologique.html">3 · Prix psychologique</a><a href="proposition.html" aria-current="page">4 · Proposition</a><a href="synthese.html">Synthèse</a><a href="sources.html">Sources</a></nav>
+<nav aria-label="Navigation principale"><a href="index.html">1 · Le marché</a><a href="comptes.html">2 · Comptes</a><a href="prix-psychologique.html">3 · Prix psychologique</a><a href="client.html">3 bis · Test A/B</a><a href="proposition.html" aria-current="page">4 · Proposition</a><a href="synthese.html">Synthèse</a><a href="sources.html">Sources</a></nav>
 </div></header>
 <section class="hero"><div class="wrap">
 <span class="kicker">Partie 4 · Ce que rapporte chaque prix</span>
@@ -94,6 +94,34 @@
 <div class="bars"><h4>Coût de l'erreur (€)</h4><div class="bar alerte"><span class="lab">Promotion pour écouler le stock</span><span class="track"><i style="width:93.8%"></i></span><b>1 500 000 €</b></div><div class="bar "><span class="lab">Stockage pendant 3 mois</span><span class="track"><i style="width:5.5%"></i></span><b>87 500 €</b></div></div>
 <p class="lecture"><b>Lecture.</b> si les ventes tombent 30 % sous l'objectif, l'erreur coûte 1 587 500 €, dont plus de 94 % pour la seule promotion nécessaire à vider le stock.</p>
 <p>L'erreur coûterait donc <b>0,64 fois le budget de la campagne</b>. Le stockage pèse peu : c'est la promotion nécessaire pour vider le stock qui coûte cher. Dans le pire des cas, si le stock ne trouvait jamais preneur, la perte atteindrait le coût de production des pneus, soit 60 000 × 51,57 € = <b>3 094 145 €</b>.</p>
+
+<h2 id="stress">Le stress test : à quel moment notre scénario lâche</h2>
+<p>Notre proposition repose sur trois hypothèses : la campagne de 2,5 M€ fait vendre 200 000 pneus de plus, le coût de revient est de 51,57 € par pneu, et le prix reste à 97,90 €. On les malmène une par une, puis ensemble, en suivant la méthode du TD 3. Le résultat est le gain net de la campagne : la marge brute des pneus vendus en plus, moins les 2,5 M€.</p>
+<div class="tableau"><table><thead><tr><th>Ce qui tourne mal</th><th class="n">Marge brute par pneu</th><th class="n">Pneus en plus</th><th class="n">Gain net de la campagne</th></tr></thead><tbody>
+<tr><td>Rien : le scénario prévu</td><td class="n">20,22 €</td><td class="n">200 000</td><td class="n">+1 544 667 €</td></tr>
+<tr><td>Continental riposte, Michelin descend à 94,90 €</td><td class="n">18,02 €</td><td class="n">200 000</td><td class="n">+1 104 667 €</td></tr>
+<tr><td>Les ventes sont 30 % sous l'objectif</td><td class="n">20,22 €</td><td class="n">140 000</td><td class="n">+331 267 €</td></tr>
+<tr><td>Le coût de revient augmente de 15 % (matières, énergie)</td><td class="n">12,49 €</td><td class="n">200 000</td><td class="n">−2 433 €</td></tr>
+<tr><td>Les coûts +15 % et les ventes −30 %, en même temps</td><td class="n">12,49 €</td><td class="n">140 000</td><td class="n neg">−751 703 €</td></tr>
+<tr class="total"><td>Une campagne sur la durée de vie, qui ne fait rien vendre de plus (notre test A/B)</td><td class="n">20,22 €</td><td class="n">0</td><td class="n neg">−2 500 000 €</td></tr>
+</tbody></table></div>
+<p class="note">Calculs du groupe <span class='statut estime'>estimé</span> : prix net de 71,79 € par pneu (TVA de 20 % et marge du distributeur de 12 % retirées), coût de revient de 51,57 € (71,8 % du prix net, <a href="https://dgaddcosprod.blob.core.windows.net/cxf-corporate/attachments/e1z4ruaxuxrl2gvprjlz7cfg-2025-first-half-financial-report.pdf" target="_blank" rel="noopener">rapport semestriel Michelin 2025, p. 17</a>) ; avec 15 % de plus, 59,30 €. Gain net = pneus en plus × marge brute − 2 500 000 €. La dernière ligne s'appuie sur notre <a href="client.html">test A/B</a> : annoncer 10 000 km de plus n'a pas fait choisir Michelin davantage (56 % contre 54 %, p = 0,825).</p>
+<div class="bars"><h4>Gain net de la campagne selon le scénario (k€) · barre pleine = 2 500 k€</h4>
+<div class="bar vedette"><span class="lab">Scénario prévu</span><span class="track"><i style="width:61.8%"></i></span><b>+1 545</b></div>
+<div class="bar"><span class="lab">Riposte, prix à 94,90 €</span><span class="track"><i style="width:44.2%"></i></span><b>+1 105</b></div>
+<div class="bar"><span class="lab">Ventes −30 %</span><span class="track"><i style="width:13.2%"></i></span><b>+331</b></div>
+<div class="bar alerte"><span class="lab">Coûts +15 %</span><span class="track"><i style="width:0.4%"></i></span><b>−2</b></div>
+<div class="bar alerte"><span class="lab">Coûts +15 % et ventes −30 %</span><span class="track"><i style="width:30.1%"></i></span><b>−752</b></div>
+<div class="bar alerte"><span class="lab">Message durée de vie sans effet</span><span class="track"><i style="width:100%"></i></span><b>−2 500</b></div>
+</div>
+<p class="lecture"><b>Lecture.</b> en rouge, les scénarios où la campagne perd de l'argent ; gains et pertes sont sur la même échelle, la barre pleine valant 2,5 M€. Un seul coup dur ne met pas la campagne en perte, sauf une hausse de 15 % des coûts, qui l'amène tout juste à l'équilibre ; deux coups durs à la fois la font perdre 752 k€.</p>
+<h3>Les points de rupture</h3>
+<div class="chiffres">
+<div class="chiffre alerte"><b>123 614</b><span>pneus vendus en plus, au minimum, pour rembourser la campagne : 38 % sous l'objectif de 200 000</span></div>
+<div class="chiffre alerte"><b>+15 %</b><span>de coût de revient (59,29 € au lieu de 51,57 €) suffisent à annuler le gain de la campagne</span></div>
+<div class="chiffre alerte"><b>87,37 €</b><span>prix public sous lequel la campagne ne se rembourse plus, même avec 200 000 pneus : 10,8 % sous 97,90 €</span></div>
+</div>
+<div class="encart"><b>L'hypothèse qui lâche en premier : le volume vendu grâce à la campagne.</b> C'est la moins sourcée de nos hypothèses (200 000 pneus de plus, un objectif du groupe), et notre test A/B la fragilise : l'argument de la durée de vie ne fait pas choisir Michelin davantage. Ce qui fait choisir Michelin, c'est la fidélité à la marque (un point de fidélité en plus multiplie par 2,5 les chances de le choisir). Une campagne a donc plus de chances de se rembourser si elle parle à l'attachement à la marque et à la sécurité que si elle met en avant les kilomètres.</div>
 
 <h2 id="conclusion">Conclusion : notre recommandation</h2>
 <div class="verdict"><strong>Décision</strong><p>Nous recommandons de maintenir le prix de 97,90 € TTC.</p></div>
