@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 ter · Simulation (données fictives) — Michelin CrossClimate 3</title>
+<meta name="description" content="Données fictives : ce qu'aurait donné un test A/B réussi sur la durée de vie du Michelin CrossClimate 3, avec 240 répondants simulés et une question de contrôle.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' aria-hidden='true'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23FCE500'/%3E%3Ccircle cx='20' cy='20' r='18' fill='none' stroke='%230F2A5C' stroke-width='3' stroke-dasharray='5 3.4'/%3E%3Ccircle cx='20' cy='20' r='10' fill='%2327509B'/%3E%3Ccircle cx='20' cy='20' r='3.4' fill='%23FCE500'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<style>
+.fictif{background:#fff;border:3px solid var(--alerte);border-radius:var(--rayon);padding:16px 20px;margin:0 0 22px}
+.fictif b{display:block;font:800 1.25rem/1.2 var(--titre);text-transform:uppercase;letter-spacing:.04em;color:var(--alerte);margin:0 0 4px}
+.tampon{display:inline-block;font:800 .72rem/1 var(--titre);letter-spacing:.12em;text-transform:uppercase;color:var(--alerte);border:2px solid var(--alerte);border-radius:4px;padding:4px 7px;vertical-align:middle;margin-left:8px}
+</style>
+</head>
+<body>
+<header class="haut"><div class="wrap">
+<a class="marque" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg><span>Michelin<small>CrossClimate 3 · dossier de prix</small></span></a>
+<nav aria-label="Navigation principale"><a href="index.html">1 · Le marché</a><a href="comptes.html">2 · Comptes</a><a href="prix-psychologique.html">3 · Prix psychologique</a><a href="client.html">3 bis · Test A/B</a><a href="simulation.html" aria-current="page">3 ter · Simulation</a><a href="proposition.html">4 · Proposition</a><a href="synthese.html">Synthèse</a><a href="sources.html">Sources</a></nav>
+</div></header>
+<section class="hero"><div class="wrap">
+<span class="kicker">Partie 3 ter · Données fictives</span>
+<h1>Ce qu'aurait donné un test <em>réussi</em></h1>
+<p class="chapo">Notre vrai test n'a pas montré d'effet des 10 000 km. Avec le professeur, nous présentons aussi le résultat que nous cherchions, sur 240 réponses inventées : un test mieux conçu, et ce qu'il aurait permis de conclure.</p>
+</div></section>
+<main><div class="wrap">
+
+<div class="fictif"><b>Attention : toutes les données de cette page sont fictives</b>
+Elles ont été fabriquées par un programme, avec des réglages choisis par le groupe, pour illustrer le résultat souhaité. Elles ne disent rien des vrais automobilistes : nos vraies réponses sont sur la page <a href="client.html">3 bis · Test A/B</a>. Chaque réponse simulée porte un identifiant « FICTIF- ».</div>
+
+<h2>Pourquoi une simulation</h2>
+<p>Notre vrai test n'a pas confirmé que les 10 000 km font choisir Michelin (<a href="client.html#echec">les raisons</a>). Le professeur nous a proposé deux voies : expliquer cet échec, ou présenter, à partir de données fictives, le résultat que nous aurions souhaité. Nous faisons les deux. Cette page montre à quoi ressemble un test réussi, et l'analyse suit exactement les mêmes étapes que pour nos vraies données (squelette du cours d'Analyse de données).</p>
+
+<h2>Le test que nous aurions dû mener</h2>
+<div class="tableau"><table><thead><tr><th>Ce qui change</th><th>Notre vrai test</th><th>La simulation <span class="tampon">fictif</span></th></tr></thead><tbody>
+<tr><td>Répondants</td><td>108 (46 en A, 62 en B)</td><td>240 (120 en A, 120 en B), assez pour détecter un effet de 15 à 20 points</td></tr>
+<tr><td>Qui répond</td><td>surtout des étudiants (âge médian 23 ans)</td><td>des automobilistes plus proches des acheteurs de pneus (âge médian 42 ans)</td></tr>
+<tr><td>Contrôle de manipulation</td><td>aucun</td><td>« Le Michelin m'a semblé durer plus longtemps que le Hankook », de 1 à 7, posé après le choix</td></tr>
+<tr><td>Les deux versions</td><td colspan="2">identiques : Hankook 40 000 km à 81,99 € contre Michelin à 97,90 €, annoncé à 40 000 km (A) ou à 50 000 km (B)</td></tr>
+</tbody></table></div>
+<p class="note"><span class='statut hypo'>Hypothèse</span> Réglages de la simulation : la version B augmente les chances de choisir Michelin, la fidélité à la marque aussi, la conscience du prix pousse vers le Hankook, comme dans nos vraies données. Le programme et ses réglages sont en annexe (<a href="annexes/fabriquer_fictif.py">fabriquer_fictif.py</a>), comme les <a href="annexes/reponses-FICTIVES.csv">240 réponses fictives</a> qu'il produit : relancé, il redonne toujours les mêmes données.</p>
+
+<h2>Étape 1 : la manipulation a fonctionné <span class="tampon">fictif</span></h2>
+<div class="bars"><h4>« Le Michelin m'a semblé durer plus longtemps que le Hankook » (moyenne sur 7)</h4>
+<div class="bar"><span class="lab">Version A · Michelin 40 000 km</span><span class="track"><i style="width:51.1%"></i></span><b>3,58</b></div>
+<div class="bar vedette"><span class="lab">Version B · Michelin 50 000 km</span><span class="track"><i style="width:76.6%"></i></span><b>5,36</b></div>
+</div>
+<p class="lecture"><b>Lecture.</b> ceux qui ont vu la version à 50 000 km jugent le Michelin plus durable que les autres : 5,36 contre 3,58 sur 7 ; t de Welch = 10,93, p &lt; 0,001, d de Cohen = 1,41, un effet fort. La différence entre les versions a été perçue : on peut lire le test A/B comme l'effet de la durée de vie.</p>
+
+<h2>Étape 2 : le tirage au sort a rendu les groupes comparables <span class="tampon">fictif</span></h2>
+<p>Âge moyen de 43,5 ans en A et de 43,2 ans en B (Welch, p = 0,873) : les deux groupes se ressemblent, une différence de choix ne peut venir que de la version vue.</p>
+
+<h2>Étape 3 : les 10 000 km font choisir Michelin <span class="tampon">fictif</span></h2>
+<div class="bars"><h4>Part qui choisit le Michelin à 97,90 € plutôt que le Hankook à 81,99 €</h4>
+<div class="bar"><span class="lab">Version A · Michelin 40 000 km</span><span class="track"><i style="width:46.7%"></i></span><b>47 %</b></div>
+<div class="bar vedette"><span class="lab">Version B · Michelin 50 000 km</span><span class="track"><i style="width:63.3%"></i></span><b>63 %</b></div>
+</div>
+<p class="lecture"><b>Lecture.</b> 56 répondants fictifs sur 120 choisissent Michelin quand il dure autant que le Hankook, 76 sur 120 quand il dure 10 000 km de plus : 17 points de plus.</p>
+<div class="carte">
+<p><b>Le test.</b> Chi² = 6,73 (1 ddl), p = 0,009, V de Cramer = 0,17, un effet petit mais significatif. Avec 120 répondants par version, le test détecte un effet moyen 97 fois sur 100.</p>
+<p><b>La régression logistique</b>, avec la fidélité, la qualité perçue, la conscience du prix et l'âge : à profil égal, voir la version à 50 000 km multiplie par <b>2,5</b> les chances de choisir Michelin (odds ratio 2,50, de 1,40 à 4,45, p = 0,002). La fidélité joue aussi (×1,77, p &lt; 0,001), la conscience du prix joue contre Michelin (×0,52, p &lt; 0,001), la qualité perçue et l'âge ne jouent pas.</p>
+</div>
+
+<h2>Étape 4 : les échelles tiennent <span class="tampon">fictif</span></h2>
+<div class="tableau"><table><thead><tr><th>Échelle</th><th class="n">Alpha</th><th class="n">CR</th><th class="n">AVE</th><th>Verdict</th></tr></thead><tbody>
+<tr><td>Fidélité (Yoo et Donthu, 2001)</td><td class="n">0,85</td><td class="n">0,86</td><td class="n">0,67</td><td>fiable et valide</td></tr>
+<tr><td>Qualité perçue (Yoo et Donthu, 2001)</td><td class="n">0,78</td><td class="n">0,78</td><td class="n">0,64</td><td>fiable et valide</td></tr>
+<tr><td>Conscience du prix (Sproles et Kendall, 1986)</td><td class="n">0,83</td><td class="n">0,83</td><td class="n">0,61</td><td>fiable et valide</td></tr>
+</tbody></table></div>
+<p class="note">Analyse factorielle confirmatoire : CFI = 1,00, RMSEA = 0,00, SRMR = 0,03 ; HTMT maximal = 0,37. Les échelles se comportent bien parce que la simulation a été réglée ainsi : dans nos vraies données, l'échelle du prix ne tenait pas.</p>
+
+<h2>Le vrai test et la simulation, côte à côte</h2>
+<div class="tableau"><table><thead><tr><th></th><th class="n">Vraies données</th><th class="n">Simulation <span class="tampon">fictif</span></th></tr></thead><tbody>
+<tr><td>Répondants analysés</td><td class="n">108</td><td class="n">240</td></tr>
+<tr><td>Contrôle de manipulation</td><td class="n">absent</td><td class="n">réussi (d = 1,41)</td></tr>
+<tr><td>Michelin choisi, version A (40 000 km)</td><td class="n">57 %</td><td class="n">47 %</td></tr>
+<tr><td>Michelin choisi, version B (50 000 km)</td><td class="n">63 %</td><td class="n">63 %</td></tr>
+<tr class="total"><td>Effet des 10 000 km</td><td class="n">+6 points, p = 0,503</td><td class="n">+17 points, p = 0,009</td></tr>
+<tr><td>Ce qui fait choisir Michelin</td><td class="n">la fidélité seule</td><td class="n">la durée de vie et la fidélité</td></tr>
+</tbody></table></div>
+
+<h2>Ce que ce résultat aurait permis de recommander</h2>
+<div class="verdict"><strong>Si le test avait réussi</strong><p>Maintenir 97,90 € et communiquer sur les 10 000 km.</p><span>Un argument qui fait passer la part de Michelin de 47 % à 63 % sans baisser le prix justifierait la campagne « Sécurité 4 Saisons » centrée sur la durée de vie, et le prix au-dessus du plafond des concurrents.</span></div>
+<p>Nos vraies données ne permettent pas cette recommandation : elles montrent que la marque compte plus que la durée de vie annoncée. C'est la recommandation que nous défendons, avec ses limites ; la simulation montre seulement ce qu'il faudrait mesurer, et comment, pour trancher.</p>
+
+<div class="suivant"><a href="client.html">← 3 bis · Notre test A/B</a><a class="jaune" href="proposition.html">4 · Ce que rapporte chaque prix →</a></div>
+</div></main>
+<footer><div class="wrap">
+<p><strong>Prix et budgets marketing</strong> — M1 Marketing · IAE Clermont Auvergne · UCA · 2026-2027 · Groupe : [noms des membres]</p>
+<p>Projet étudiant sans lien avec Michelin : la charte (bleu, jaune) s'inspire de la marque à titre d'illustration. <b>Données de cette page : fictives</b>, fabriquées le 21 octobre 2026 et analysées avec le squelette du cours d'Analyse de données.
+Site statique, sans cookie ; seul le questionnaire enregistre des réponses, anonymes. <a href="sources.html">Sources, méthode et usage de l'IA</a>.</p>
+</div></footer>
+</body>
+</html>
