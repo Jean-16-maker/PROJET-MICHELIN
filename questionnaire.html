@@ -50,7 +50,20 @@
 .etiquette span{display:inline-block;font:800 .8rem/1 var(--titre);letter-spacing:.04em;border-radius:4px;padding:5px 7px;color:#fff;background:var(--bleu)}
 .etiquette .carbu{background:#7CB342}.etiquette .pluie{background:#2F6FB5}.etiquette .bruit{background:#222}.etiquette .hiver{background:#fff;color:#2F86C9;border:1px solid #2F86C9}
 
-.pneu .photo{display:block;width:100%;height:auto;margin:0 0 10px;border-radius:8px;background:#fff}
+/* Ce qui rend la durée de vie visible : une jauge sur 50 000 km, le coût pour 10 000 km et, si le Michelin dure plus, un badge et un bandeau. */
+.pneu .jauge-km{display:block;height:12px;background:var(--ciel);border-radius:999px;overflow:hidden;margin:7px 0 2px}
+.pneu .jauge-km i{display:block;height:100%;width:0;background:var(--bleu);border-radius:999px;transition:width .7s ease-out}
+.duo .opt.pneu{position:relative}
+.pneu .badge-km{position:absolute;top:8px;left:50%;transform:translateX(-50%) rotate(-3deg);white-space:nowrap;font:800 clamp(.9rem,4vw,1.1rem)/1 var(--titre);letter-spacing:.03em;text-transform:uppercase;background:var(--jaune);color:var(--bleu-fonce);border:2px solid var(--bleu);border-radius:999px;padding:6px 10px;box-shadow:0 2px 6px rgba(15,42,92,.25)}
+.pneu .badge-km[hidden]{display:none}
+.pneu .cout-km{display:block;font-size:.82rem;color:var(--gris);margin:4px 0 0}
+.pneu .cout-km strong{color:var(--bleu-fonce)}
+.resume-km{background:var(--bleu);color:#fff;border-radius:12px;padding:12px 14px;font-weight:700;margin:0 0 10px}
+.resume-km em{font-style:normal;color:var(--jaune)}
+.echelle.sept{grid-template-columns:repeat(7,1fr);gap:4px}
+.echelle.sept .opt{font-size:1.3rem;padding:18px 0}
+@media (prefers-reduced-motion: reduce){.pneu .jauge-km i{transition:none}}
+.pneu .photo{display:block;width:100%;height:auto;aspect-ratio:5/4;object-fit:contain;margin:0 0 10px;border-radius:8px;background:#fff}
 .kicker-avis{font:800 .8rem/1.3 var(--titre);letter-spacing:.1em;text-transform:uppercase;color:var(--gris);margin:0 0 10px}
 .q-wrap h1 b{color:var(--bleu-fonce)}
 .likert .opt{display:flex;align-items:center;gap:14px;padding:14px 16px}
@@ -149,17 +162,40 @@ pre.essai{white-space:pre-wrap;word-break:break-all;font-size:.75rem;background:
 <button type="button" class="opt pneu" data-v="hankook">
 <img class="photo" src="images/fiche-hankook-kinergy-4s2.jpg" width="840" height="662" alt="Fiche du Hankook Kinergy 4S² : pneu 4 saisons homologué hiver 3PMSF, étiquette européenne carburant D, pluie B, bruit B 71 dB">
 <b>Hankook Kinergy 4S 94H XL</b>
-<span class="km">40 000 km</span><span class="km-l">durée de vie annoncée</span>
+<span class="km" data-km="hankook"></span><span class="km-l">durée de vie annoncée</span>
+<span class="jauge-km" aria-hidden="true"><i data-barre="hankook"></i></span>
 <span class="prix" data-prix-hankook></span>
+<span class="cout-km" data-cout="hankook"></span>
 </button>
 <button type="button" class="opt pneu" data-v="michelin">
 <img class="photo" src="images/fiche-crossclimate-3.jpg" width="856" height="692" alt="Fiche du Michelin CrossClimate 3 : pneu 4 saisons homologué hiver 3PMSF, étiquette européenne carburant B, pluie B, bruit B 72 dB">
 <b>Michelin CrossClimate 3</b>
-<span class="km" data-km-michelin></span><span class="km-l">durée de vie annoncée</span>
+<span class="km" data-km="michelin"></span><span class="km-l">durée de vie annoncée</span>
+<span class="jauge-km" aria-hidden="true"><i data-barre="michelin"></i></span>
+<span class="badge-km" data-badge hidden></span>
 <span class="prix" data-prix-michelin></span>
+<span class="cout-km" data-cout="michelin"></span>
 </button>
 </div>
+<p class="resume-km" data-resume></p>
 <div class="commun"><b>Pour les deux :</b> pneu 4 saisons, même dimension 205/55 R16, homologué pour l'hiver (3PMSF).</div>
+</section>
+
+<!-- 5 bis. Contrôle de manipulation (CM 3 d'Analyse de données) : posé juste après le choix, à tous, avec la même phrase.
+     Vérifie que la version B a bien été perçue comme plus durable. Échelle de 1 à 7. -->
+<section class="etape" data-etape="manip_km" data-champ="manip_km">
+<p class="kicker-avis">Une impression</p>
+<h1>Le Michelin m'a semblé durer plus longtemps que le Hankook.</h1>
+<div class="echelle sept">
+<button type="button" class="opt" data-v="1" aria-label="1 sur 7">1</button>
+<button type="button" class="opt" data-v="2" aria-label="2 sur 7">2</button>
+<button type="button" class="opt" data-v="3" aria-label="3 sur 7">3</button>
+<button type="button" class="opt" data-v="4" aria-label="4 sur 7">4</button>
+<button type="button" class="opt" data-v="5" aria-label="5 sur 7">5</button>
+<button type="button" class="opt" data-v="6" aria-label="6 sur 7">6</button>
+<button type="button" class="opt" data-v="7" aria-label="7 sur 7">7</button>
+</div>
+<div class="bornes-likert"><span>Pas du tout d'accord</span><span>Tout à fait d'accord</span></div>
 </section>
 
 <!-- 6. Échelle de Likert à 5 points (1 = pas du tout d'accord, 5 = tout à fait d'accord), d'après Yoo et Donthu (2001),
@@ -320,7 +356,25 @@ function el(id){ return document.getElementById(id); }
 function euros(x){ return x.toFixed(2).replace('.', ',') + ' €'; }
 document.querySelectorAll('[data-prix-hankook]').forEach(function(e){ e.textContent = euros(PRIX_HANKOOK) + ' le pneu'; });
 document.querySelectorAll('[data-prix-michelin]').forEach(function(e){ e.textContent = euros(PRIX_MICHELIN) + ' le pneu'; });
-document.querySelectorAll('[data-km-michelin]').forEach(function(e){ e.textContent = version === 'B' ? '50 000 km' : '40 000 km'; });
+/* Tout l'écran de choix se déduit des kilomètres annoncés, avec le même calcul pour les deux pneus :
+   seul le kilométrage du Michelin change entre A et B. */
+var KM = { hankook: 40000, michelin: version === 'B' ? 50000 : 40000 };
+var PRIX = { hankook: PRIX_HANKOOK, michelin: PRIX_MICHELIN };
+var KM_MAX = 50000;
+function kms(x){ return x.toLocaleString('fr-FR').replace(/\s/g, ' ') + ' km'; }
+function cout10000(p){ return PRIX[p] / (KM[p] / 10000); }
+['hankook', 'michelin'].forEach(function(p){
+  document.querySelectorAll('[data-km="' + p + '"]').forEach(function(e){ e.textContent = kms(KM[p]); });
+  document.querySelectorAll('[data-barre="' + p + '"]').forEach(function(e){ e.setAttribute('data-largeur', (100 * KM[p] / KM_MAX) + '%'); });
+  document.querySelectorAll('[data-cout="' + p + '"]').forEach(function(e){ e.innerHTML = 'soit <strong>' + euros(cout10000(p)) + '</strong> pour 10&nbsp;000&nbsp;km'; });
+});
+var ECART_KM = KM.michelin - KM.hankook;
+document.querySelectorAll('[data-badge]').forEach(function(e){ e.hidden = ECART_KM <= 0; e.textContent = '+' + kms(ECART_KM); });
+document.querySelectorAll('[data-resume]').forEach(function(e){
+  e.innerHTML = ECART_KM > 0
+    ? 'Le Michelin dure <em>' + kms(ECART_KM) + ' de plus</em> : au kilomètre, il revient <em>moins cher</em> que le Hankook (' + euros(cout10000('michelin')) + ' contre ' + euros(cout10000('hankook')) + ' pour 10&nbsp;000&nbsp;km).'
+    : 'Les deux pneus durent <em>' + kms(KM.michelin) + '</em> : pour 10 000 km, le Michelin revient à ' + euros(cout10000('michelin')) + ' et le Hankook à ' + euros(cout10000('hankook')) + '.';
+});
 
 /* Lieux d'achat : deux cases Oui / Non par ligne. */
 document.querySelectorAll('[data-lieu]').forEach(function(l){
@@ -353,6 +407,8 @@ function afficher(n){
   el('retour').hidden = nom === 'accueil' || nom === 'fin';
   window.scrollTo(0, 0);
   if (nom === 'age') setTimeout(function(){ el('age').focus(); }, 50);
+  /* Les jauges de durée de vie se remplissent à l'arrivée sur l'écran de choix. */
+  if (nom === 'choix') setTimeout(function(){ document.querySelectorAll('[data-barre]').forEach(function(b){ b.style.width = b.getAttribute('data-largeur'); }); }, 150);
 }
 function suivant(){
   if (nomsEtapes[courante] === 'accueil' && debut === null) debut = Date.now();
@@ -445,6 +501,9 @@ function donnees(){
     voiture: rep.voiture || '',
     cible: horsCible() ? 0 : 1,
     choix_pneu: rep.choix_pneu || '',
+    manip_km: rep.manip_km || '',
+    /* 2 = collecte avec contrôle de manipulation et nouvel écran de choix (à partir du 22 octobre 2026). */
+    vague: 2,
     km_an: (!horsCible() && kmTouche) ? +km.value : '',
     likert_lo1: rep.likert_lo1 || '', likert_lo2: rep.likert_lo2 || '', likert_lo3: rep.likert_lo3 || '',
     likert_ql2: rep.likert_ql2 || '', likert_ql3: rep.likert_ql3 || '',

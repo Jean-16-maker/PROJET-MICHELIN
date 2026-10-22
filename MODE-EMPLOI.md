@@ -142,6 +142,8 @@ Limite à connaître : l'article donne pour cette sous-échelle un alpha de Cron
 | `likert_pr1` … `likert_pr3` | conscience du prix, de 1 à 5 : « J'achète mes pneus autant que possible en promotion », « Je choisis généralement les pneus les moins chers », « Je compare attentivement pour trouver les pneus au meilleur rapport qualité-prix » |
 | `km_an` | kilomètres par an (curseur, par pas de 1 000 ; 50 000 = « 50 000 ou plus ») |
 | `achat_…` | `oui` ou `non` pour chaque lieu : garage, spécialiste, centre auto, Internet, réparateur rapide |
+| `manip_km` | contrôle de manipulation, de 1 à 7, posé juste après le choix : « Le Michelin m'a semblé durer plus longtemps que le Hankook » (vide avant le 22 octobre 2026) |
+| `vague` | 1 = réponses d'avant le 22 octobre 2026 ; 2 = nouvel écran de choix (jauge de durée de vie, coût pour 10 000 km) et contrôle de manipulation. N'analysez pas les deux vagues ensemble : l'écran de choix n'est plus le même |
 
 ## Si vous modifiez le questionnaire
 

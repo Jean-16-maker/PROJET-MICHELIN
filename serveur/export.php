@@ -76,6 +76,7 @@ if ($connecte && isset($_GET['telecharger'])) {
         $ligne = [];
         foreach (COLONNES as $c) {
             $v = $r[$c] ?? '';
+            if ($c === 'vague' && $v === '') $v = 1; // réponses enregistrées avant le 22 octobre 2026
             if ($excel && (is_float($v) || is_int($v))) $v = str_replace('.', ',', (string) $v);
             if (is_string($v) && preg_match('/^[=+\-@]/', $v)) $v = "'" . $v; // pas de formule dans Excel
             $ligne[] = $v;
@@ -124,9 +125,15 @@ function nombres(array $g, string $col): array
     return array_map('floatval', array_values(array_filter(array_map(fn($r) => $r[$col] ?? '', $g), 'is_numeric')));
 }
 
+/* Vague de collecte : 1 = avant le 22 octobre 2026 (sans contrôle de manipulation), 2 = nouvel écran de choix et contrôle. */
+function vague(array $r): string { return (string) ($r['vague'] ?? '') === '' ? '1' : (string) $r['vague']; }
+$vague = in_array($_GET['vague'] ?? '', ['1', '2'], true) ? $_GET['vague'] : '';
+
 $stats = null;
 if ($connecte) {
     $toutes = lire_reponses();
+    $par_vague = ['1' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '1')), '2' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '2'))];
+    if ($vague !== '') $toutes = array_values(array_filter($toutes, fn($r) => vague($r) === $vague));
     $stats = [
         'total' => count($toutes),
         'test' => count(array_filter($toutes, fn($r) => (string) ($r['test'] ?? '') === '1')),
@@ -141,6 +148,8 @@ if ($connecte) {
             'n' => count($g),
             'oui' => $oui,
             'oui_pct' => pct($oui, count($g)),
+            'manip' => moyenne(nombres($g, 'manip_km')),
+            'manip_n' => count(nombres($g, 'manip_km')),
             'likert' => array_combine(array_keys(LIKERT), array_map(fn($col) => moyenne(nombres($g, $col)), array_keys(LIKERT))),
             'scores' => array_map(fn($cols) => moyenne(array_values(array_filter(array_map(fn($r) => score($r, $cols), $g), fn($s) => $s !== null))), SCORES),
             'accord' => array_combine(array_keys(LIKERT), array_map(fn($col) => pct(count(array_filter(nombres($g, $col), fn($x) => $x >= 4)), count(nombres($g, $col))), array_keys(LIKERT))),
@@ -215,12 +224,18 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 </div>
 
 <h2>Premiers résultats (réponses exploitables)</h2>
+<p>
+<a class="bouton<?= $vague === '' ? '' : ' second' ?>" href="?">Toutes les vagues (<?= $par_vague['1'] + $par_vague['2'] ?>)</a>
+<a class="bouton<?= $vague === '1' ? '' : ' second' ?>" href="?vague=1">Vague 1 · avant le 22/10 (<?= $par_vague['1'] ?>)</a>
+<a class="bouton<?= $vague === '2' ? '' : ' second' ?>" href="?vague=2">Vague 2 · avec contrôle (<?= $par_vague['2'] ?>)</a>
+</p>
 <div class="carte tableau">
 <table>
 <thead><tr><th></th><th class="n">Variante A · notoriété<br><span class="note">Michelin 40 000 km</span></th><th class="n">Variante B · durée de vie<br><span class="note">Michelin 50 000 km</span></th></tr></thead>
 <tbody>
 <tr><td>Répondants</td><td class="n"><?= $A['n'] ?></td><td class="n"><?= $B['n'] ?></td></tr>
 <tr class="cle"><td>Choisissent le Michelin (<?= number_format(PRIX_MICHELIN, 2, ',', ' ') ?> €) plutôt que le Hankook (<?= number_format(PRIX_HANKOOK, 2, ',', ' ') ?> €)</td><td class="n"><?= $A['oui_pct'] ?> <span class="note">(<?= $A['oui'] ?>)</span></td><td class="n"><?= $B['oui_pct'] ?> <span class="note">(<?= $B['oui'] ?>)</span></td></tr>
+<tr class="cle"><td>Contrôle de manipulation : « Le Michelin m'a semblé durer plus longtemps que le Hankook » (moyenne sur 7, vague 2 seulement ; B doit être nettement au-dessus de A)</td><td class="n"><?= nb($A['manip'], 2) ?> <span class="note">(<?= $A['manip_n'] ?>)</span></td><td class="n"><?= nb($B['manip'], 2) ?> <span class="note">(<?= $B['manip_n'] ?>)</span></td></tr>
 <tr class="cle"><td>Score de fidélité à Michelin (moyenne de LO1 à LO3, sur 5)</td><td class="n"><?= nb($A['scores']['fidelite'], 2) ?></td><td class="n"><?= nb($B['scores']['fidelite'], 2) ?></td></tr>
 <tr class="cle"><td>Score de qualité perçue de Michelin (moyenne de QL2 et QL3, sur 5)</td><td class="n"><?= nb($A['scores']['qualite'], 2) ?></td><td class="n"><?= nb($B['scores']['qualite'], 2) ?></td></tr>
 <tr class="cle"><td>Score de conscience du prix (moyenne de PR1 à PR3, sur 5)</td><td class="n"><?= nb($A['scores']['prix'], 2) ?></td><td class="n"><?= nb($B['scores']['prix'], 2) ?></td></tr>

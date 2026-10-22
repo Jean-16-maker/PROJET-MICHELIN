@@ -12,6 +12,9 @@ const COLONNES = [
     // Sproles et Kendall (1986), conscience du prix « value for money » (PR1-PR3)
     'likert_lo1', 'likert_lo2', 'likert_lo3', 'likert_ql2', 'likert_ql3', 'likert_pr1', 'likert_pr2', 'likert_pr3',
     'achat_garage', 'achat_specialiste', 'achat_centre_auto', 'achat_internet', 'achat_reparateur_rapide',
+    // Ajouté le 22 octobre 2026 : contrôle de manipulation, de 1 à 7, « Le Michelin m'a semblé durer plus longtemps
+    // que le Hankook » ; vague = 2 pour la nouvelle collecte (vide dans les réponses d'avant, exportées avec vague = 1)
+    'manip_km', 'vague',
 ];
 
 /* Mêmes valeurs que dans questionnaire.html.
