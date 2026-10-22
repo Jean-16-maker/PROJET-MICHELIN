@@ -38,6 +38,30 @@ if (isset($_POST['mot_de_passe'])) {
         : 'Aucun mot de passe n’est réglé : mettez son empreinte SHA-256 dans config.php.';
 }
 $connecte = !empty($_SESSION['export_ok']);
+if ($connecte && empty($_SESSION['jeton'])) $_SESSION['jeton'] = bin2hex(random_bytes(16));
+
+/* ---------- Remise à zéro : les réponses ne sont pas effacées, elles sont mises de côté dans
+   donnees/reponses-archive-AAAAMMJJ-HHMMSS.jsonl (fichier protégé, récupérable par le gestionnaire de fichiers). ---------- */
+$message = '';
+if ($connecte && isset($_POST['remise_a_zero'])) {
+    $fichier = DOSSIER_DONNEES . '/reponses.jsonl';
+    if (!hash_equals($_SESSION['jeton'], (string) ($_POST['jeton'] ?? ''))) {
+        $message = 'Remise à zéro refusée : rechargez la page et recommencez.';
+    } elseif (trim((string) ($_POST['confirmation'] ?? '')) !== 'ZERO') {
+        $message = 'Remise à zéro annulée : tapez ZERO, en majuscules, pour confirmer.';
+    } elseif (!is_file($fichier)) {
+        $message = 'Il n’y a aucune réponse à remettre à zéro.';
+    } else {
+        $archive = DOSSIER_DONNEES . '/reponses-archive-' . date('Ymd-His') . '.jsonl';
+        $message = rename($fichier, $archive)
+            ? 'Compteur remis à zéro. Les anciennes réponses sont gardées dans donnees/' . basename($archive) . '.'
+            : 'La remise à zéro a échoué (droits sur le dossier donnees/).';
+    }
+    $_SESSION['message'] = $message;
+    header('Location: export.php');
+    exit;
+}
+if (isset($_SESSION['message'])) { $message = $_SESSION['message']; unset($_SESSION['message']); }
 
 /* ---------- Lecture des réponses ---------- */
 function lire_reponses(): array
@@ -207,6 +231,7 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <?php else: ?>
 <h1>Réponses du questionnaire</h1>
 <p class="note">Mis à jour à chaque ouverture de la page · <?= h(date('d/m/Y H:i')) ?></p>
+<?php if ($message): ?><p class="carte"><b><?= h($message) ?></b></p><?php endif; ?>
 
 <div class="carte chiffres">
 <div><b><?= $stats['total'] ?></b><span>réponses enregistrées</span></div>
@@ -252,6 +277,14 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 </table>
 <p class="note">Lecture : la variante A oppose le Hankook (40 000 km, 81,99 €) au Michelin annoncé lui aussi à 40 000 km (97,90 €) : la part qui choisit Michelin mesure le poids de la marque. La variante B annonce le Michelin à 50 000 km : l'écart entre B et A mesure ce qu'ajoutent 10 000 km de durée de vie. Avec peu de répondants par variante, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
+
+<h2>Remettre le compteur à zéro</h2>
+<form method="post" class="carte" onsubmit="return confirm('Remettre toutes les réponses à zéro ? Elles seront mises de côté dans une archive, pas effacées.');">
+<p class="note">Téléchargez d'abord « Toutes les réponses ». Les réponses actuelles ne sont pas effacées : elles sont déplacées dans une archive du dossier <code>donnees/</code>, récupérable par le gestionnaire de fichiers d'alwaysdata. Le tableau de bord et les téléchargements repartent de 0.</p>
+<p><label for="confirmation">Tapez <b>ZERO</b> pour confirmer :</label><br><input id="confirmation" name="confirmation" autocomplete="off" style="font:inherit;padding:10px 12px;border:1px solid var(--trait);border-radius:10px;max-width:200px"></p>
+<input type="hidden" name="jeton" value="<?= h($_SESSION['jeton']) ?>">
+<button name="remise_a_zero" value="1" style="background:var(--alerte);color:#fff">Remettre à zéro</button>
+</form>
 
 <form method="post" class="inline"><button class="second" name="deconnexion" value="1">Se déconnecter</button></form>
 <?php endif; ?>
