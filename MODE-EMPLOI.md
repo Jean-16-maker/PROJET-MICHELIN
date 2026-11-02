@@ -103,7 +103,7 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
   - toutes les réponses, ou seulement les **exploitables** (hors essais, 18 ans ou plus, avec une voiture) ;
-- un bouton **Supprimer les réponses test** : il retire seulement les réponses envoyées avec `?test=1`, toutes vagues confondues, et les met de côté dans `donnees/reponses-tests-AAAAMMJJ-HHMMSS.jsonl`. Les vraies réponses ne sont pas touchées.
+- un bouton **Supprimer les réponses test**, en bas de page : il efface définitivement, sans archive, les réponses envoyées avec `?test=1`, toutes vagues confondues. Les vraies réponses ne sont pas touchées.
 
 ## L'échelle de Likert
 
