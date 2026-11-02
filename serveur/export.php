@@ -64,9 +64,13 @@ if ($connecte && isset($_POST['remise_a_zero'])) {
 if (isset($_SESSION['message'])) { $message = $_SESSION['message']; unset($_SESSION['message']); }
 
 /* ---------- Lecture des réponses ---------- */
-function lire_reponses(): array
+/* Onglet à part : 100 réponses FICTIVES de vague 2, fabriquées par analyse-fictive/fabriquer_vague2_fictive.py.
+   Jamais mélangées aux vraies réponses (fichier distinct, identifiants « FICTIF-V2- », colonne source = fictif). */
+const FICHIER_FICTIF = __DIR__ . '/fictif/reponses-FICTIVES-vague2.jsonl';
+
+function lire_reponses(string $fichier = ''): array
 {
-    $fichier = DOSSIER_DONNEES . '/reponses.jsonl';
+    if ($fichier === '') $fichier = DOSSIER_DONNEES . '/reponses.jsonl';
     if (!is_file($fichier)) return [];
     $lignes = [];
     foreach (file($fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $l) {
@@ -86,19 +90,21 @@ function exploitable(array $r): bool
 if ($connecte && isset($_GET['telecharger'])) {
     $excel = ($_GET['format'] ?? 'excel') === 'excel';
     $propres = ($_GET['quoi'] ?? 'tout') === 'exploitables';
-    $reponses = lire_reponses();
+    $fictif = ($_GET['quoi'] ?? '') === 'fictif';
+    $reponses = $fictif ? lire_reponses(FICHIER_FICTIF) : lire_reponses();
     if ($propres) $reponses = array_values(array_filter($reponses, 'exploitable'));
+    $colonnes = $fictif ? array_merge(COLONNES, ['source', 'profil']) : COLONNES;
 
     $sep = $excel ? ';' : ',';
-    $nom = 'reponses-questionnaire-' . ($propres ? 'exploitables-' : '') . date('Y-m-d') . '.csv';
+    $nom = $fictif ? 'reponses-FICTIVES-vague2.csv' : 'reponses-questionnaire-' . ($propres ? 'exploitables-' : '') . date('Y-m-d') . '.csv';
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $nom . '"');
     $out = fopen('php://output', 'wb');
     if ($excel) fwrite($out, "\xEF\xBB\xBF"); // BOM : Excel lit l'UTF-8 et les accents
-    fputcsv($out, COLONNES, $sep, '"', '');
+    fputcsv($out, $colonnes, $sep, '"', '');
     foreach ($reponses as $r) {
         $ligne = [];
-        foreach (COLONNES as $c) {
+        foreach ($colonnes as $c) {
             $v = $r[$c] ?? '';
             if ($c === 'vague' && $v === '') $v = 1; // réponses enregistrées avant le 22 octobre 2026
             if ($excel && (is_float($v) || is_int($v))) $v = str_replace('.', ',', (string) $v);
@@ -151,13 +157,14 @@ function nombres(array $g, string $col): array
 
 /* Vague de collecte : 1 = avant le 22 octobre 2026 (sans contrôle de manipulation), 2 = nouvel écran de choix et contrôle. */
 function vague(array $r): string { return (string) ($r['vague'] ?? '') === '' ? '1' : (string) $r['vague']; }
-$vague = in_array($_GET['vague'] ?? '', ['1', '2'], true) ? $_GET['vague'] : '';
+$vague = in_array($_GET['vague'] ?? '', ['1', '2', 'fictif'], true) ? $_GET['vague'] : '';
 
 $stats = null;
 if ($connecte) {
     $toutes = lire_reponses();
-    $par_vague = ['1' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '1')), '2' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '2'))];
-    if ($vague !== '') $toutes = array_values(array_filter($toutes, fn($r) => vague($r) === $vague));
+    $par_vague = ['1' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '1')), '2' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '2')), 'fictif' => count(lire_reponses(FICHIER_FICTIF))];
+    if ($vague === 'fictif') $toutes = lire_reponses(FICHIER_FICTIF);
+    elseif ($vague !== '') $toutes = array_values(array_filter($toutes, fn($r) => vague($r) === $vague));
     $stats = [
         'total' => count($toutes),
         'test' => count(array_filter($toutes, fn($r) => (string) ($r['test'] ?? '') === '1')),
@@ -253,7 +260,15 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <a class="bouton<?= $vague === '' ? '' : ' second' ?>" href="?">Toutes les vagues (<?= $par_vague['1'] + $par_vague['2'] ?>)</a>
 <a class="bouton<?= $vague === '1' ? '' : ' second' ?>" href="?vague=1">Vague 1 · avant le 22/10 (<?= $par_vague['1'] ?>)</a>
 <a class="bouton<?= $vague === '2' ? '' : ' second' ?>" href="?vague=2">Vague 2 · avec contrôle (<?= $par_vague['2'] ?>)</a>
+<a class="bouton<?= $vague === 'fictif' ? '' : ' second' ?>" href="?vague=fictif" style="<?= $vague === 'fictif' ? 'background:var(--alerte);color:#fff' : 'color:var(--alerte);border-color:var(--alerte)' ?>">Vague 2 FICTIVE (<?= $par_vague['fictif'] ?>)</a>
 </p>
+<?php if ($vague === 'fictif'): ?>
+<div class="carte" style="border:3px solid var(--alerte)">
+<p><b style="color:var(--alerte);text-transform:uppercase">Données fictives</b> : ces <?= $par_vague['fictif'] ?> réponses ont été fabriquées par un programme (analyse-fictive/fabriquer_vague2_fictive.py), avec trois profils : étudiants, actifs, retraités. Elles ne viennent pas du questionnaire et ne sont jamais mélangées aux vraies réponses. À présenter comme une simulation.</p>
+<a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=fictif" style="background:var(--alerte);color:#fff">Réponses FICTIVES · Excel</a>
+<a class="bouton second" href="?telecharger=1&amp;format=csv&amp;quoi=fictif">FICTIVES · CSV standard</a>
+</div>
+<?php endif; ?>
 <div class="carte tableau">
 <table>
 <thead><tr><th></th><th class="n">Variante A · notoriété<br><span class="note">Michelin 40 000 km</span></th><th class="n">Variante B · durée de vie<br><span class="note">Michelin 50 000 km</span></th></tr></thead>
