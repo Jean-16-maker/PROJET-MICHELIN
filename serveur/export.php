@@ -280,13 +280,6 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <div><b><?= $stats['hors_cible'] ?></b><span>hors cible (moins de 18 ans, ou sans voiture)</span></div>
 <div><b><?= $A['n'] + $B['n'] ?></b><span>réponses exploitables</span></div>
 </div>
-<?php if ($vague !== 'fictif'): ?>
-<form method="post" class="carte" onsubmit="return confirm('Supprimer les <?= $tests_total ?> réponse(s) test (test = 1), toutes vagues confondues ? Les vraies réponses ne sont pas touchées.');">
-<button name="supprimer_tests" value="1" style="background:var(--alerte);color:#fff"<?= $tests_total ? '' : ' disabled' ?>>Supprimer les réponses test (<?= $tests_total ?>)</button>
-<input type="hidden" name="jeton" value="<?= h($_SESSION['jeton']) ?>">
-<p class="note">Retire uniquement les réponses envoyées avec <code>?test=1</code>, toutes vagues confondues. Les vraies réponses restent en place. Les essais retirés sont mis de côté dans <code>donnees/reponses-tests-…jsonl</code>, récupérables par le gestionnaire de fichiers d'alwaysdata.</p>
-</form>
-<?php endif; ?>
 
 <h2>Télécharger</h2>
 <div class="carte">
@@ -333,6 +326,13 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 </table>
 <p class="note">Lecture : la variante A oppose le Hankook (40 000 km, 81,99 €) au Michelin annoncé lui aussi à 40 000 km (97,90 €) : la part qui choisit Michelin mesure le poids de la marque. La variante B annonce le Michelin à 50 000 km : l'écart entre B et A mesure ce qu'ajoutent 10 000 km de durée de vie. Avec peu de répondants par variante, un petit écart peut être dû au hasard : les tests statistiques se feront en Analyse de données.</p>
 </div>
+
+<h2>Supprimer les réponses test</h2>
+<form method="post" class="carte" onsubmit="return confirm('Supprimer les <?= $tests_total ?> réponse(s) test (test = 1), toutes vagues confondues ? Les vraies réponses ne sont pas touchées.');">
+<p class="note">Retire uniquement les réponses envoyées avec <code>?test=1</code>, toutes vagues confondues. Les vraies réponses restent en place. Les essais retirés sont mis de côté dans <code>donnees/reponses-tests-…jsonl</code>, récupérables par le gestionnaire de fichiers d'alwaysdata.</p>
+<input type="hidden" name="jeton" value="<?= h($_SESSION['jeton']) ?>">
+<button name="supprimer_tests" value="1" style="background:var(--alerte);color:#fff"<?= $tests_total ? '' : ' disabled' ?>>Supprimer les réponses test (<?= $tests_total ?>)</button>
+</form>
 
 <h2>Remettre le compteur à zéro</h2>
 <form method="post" class="carte" onsubmit="return confirm('Remettre toutes les réponses à zéro ? Elles seront mises de côté dans une archive, pas effacées.');">
