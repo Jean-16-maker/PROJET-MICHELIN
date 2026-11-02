@@ -61,6 +61,39 @@ if ($connecte && isset($_POST['remise_a_zero'])) {
     header('Location: export.php');
     exit;
 }
+/* ---------- Retrait des essais : seules les lignes test = 1 quittent reponses.jsonl ; elles sont gardées dans
+   donnees/reponses-tests-AAAAMMJJ-HHMMSS.jsonl. Le fichier est verrouillé comme dans enregistrer.php :
+   une réponse qui arrive pendant le retrait attend, elle n'est pas perdue. ---------- */
+if ($connecte && isset($_POST['supprimer_tests'])) {
+    $fichier = DOSSIER_DONNEES . '/reponses.jsonl';
+    if (!hash_equals($_SESSION['jeton'], (string) ($_POST['jeton'] ?? ''))) {
+        $message = 'Suppression refusée : rechargez la page et recommencez.';
+    } elseif (!is_file($fichier) || ($f = fopen($fichier, 'c+b')) === false || !flock($f, LOCK_EX)) {
+        $message = 'Il n’y a aucune réponse, ou le fichier est inaccessible.';
+    } else {
+        $garder = $tests = [];
+        foreach (preg_split('/\R/', stream_get_contents($f), -1, PREG_SPLIT_NO_EMPTY) as $l) {
+            $r = json_decode($l, true);
+            if (is_array($r) && (string) ($r['test'] ?? '') === '1') $tests[] = $l; else $garder[] = $l;
+        }
+        if (!$tests) {
+            $message = 'Aucune réponse test à supprimer.';
+        } elseif (file_put_contents(DOSSIER_DONNEES . '/reponses-tests-' . date('Ymd-His') . '.jsonl', implode("\n", $tests) . "\n") === false) {
+            $message = 'Suppression annulée : l’archive des essais n’a pas pu être écrite (droits sur le dossier donnees/).';
+        } else {
+            ftruncate($f, 0);
+            rewind($f);
+            fwrite($f, $garder ? implode("\n", $garder) . "\n" : '');
+            fflush($f);
+            $message = count($tests) . ' réponse(s) test supprimée(s) ; ' . count($garder) . ' réponse(s) gardée(s).';
+        }
+        flock($f, LOCK_UN);
+        fclose($f);
+    }
+    $_SESSION['message'] = $message;
+    header('Location: export.php' . (isset($_GET['vague']) ? '?vague=' . rawurlencode((string) $_GET['vague']) : ''));
+    exit;
+}
 if (isset($_SESSION['message'])) { $message = $_SESSION['message']; unset($_SESSION['message']); }
 
 /* ---------- Lecture des réponses ---------- */
@@ -162,6 +195,7 @@ $vague = in_array($_GET['vague'] ?? '', ['1', '2', 'fictif'], true) ? $_GET['vag
 $stats = null;
 if ($connecte) {
     $toutes = lire_reponses();
+    $tests_total = count(array_filter($toutes, fn($r) => (string) ($r['test'] ?? '') === '1'));
     $par_vague = ['1' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '1')), '2' => count(array_filter($toutes, fn($r) => exploitable($r) && vague($r) === '2')), 'fictif' => count(lire_reponses(FICHIER_FICTIF))];
     if ($vague === 'fictif') $toutes = lire_reponses(FICHIER_FICTIF);
     elseif ($vague !== '') $toutes = array_values(array_filter($toutes, fn($r) => vague($r) === $vague));
@@ -246,6 +280,13 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 <div><b><?= $stats['hors_cible'] ?></b><span>hors cible (moins de 18 ans, ou sans voiture)</span></div>
 <div><b><?= $A['n'] + $B['n'] ?></b><span>réponses exploitables</span></div>
 </div>
+<?php if ($vague !== 'fictif'): ?>
+<form method="post" class="carte" onsubmit="return confirm('Supprimer les <?= $tests_total ?> réponse(s) test (test = 1), toutes vagues confondues ? Les vraies réponses ne sont pas touchées.');">
+<button name="supprimer_tests" value="1" style="background:var(--alerte);color:#fff"<?= $tests_total ? '' : ' disabled' ?>>Supprimer les réponses test (<?= $tests_total ?>)</button>
+<input type="hidden" name="jeton" value="<?= h($_SESSION['jeton']) ?>">
+<p class="note">Retire uniquement les réponses envoyées avec <code>?test=1</code>, toutes vagues confondues. Les vraies réponses restent en place. Les essais retirés sont mis de côté dans <code>donnees/reponses-tests-…jsonl</code>, récupérables par le gestionnaire de fichiers d'alwaysdata.</p>
+</form>
+<?php endif; ?>
 
 <h2>Télécharger</h2>
 <div class="carte">
