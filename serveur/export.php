@@ -113,16 +113,24 @@ function exploitable(array $r): bool
     return (string) ($r['test'] ?? '') === '0' && (string) ($r['cible'] ?? '') === '1';
 }
 
+/* Vague de collecte : 1 = avant le 22 octobre 2026 (sans contrôle de manipulation), 2 = nouvel écran de choix et contrôle. */
+function vague(array $r): string { return (string) ($r['vague'] ?? '') === '' ? '1' : (string) $r['vague']; }
+
 /* ---------- Téléchargement CSV ---------- */
 if ($connecte && isset($_GET['telecharger'])) {
     $excel = ($_GET['format'] ?? 'excel') === 'excel';
     $propres = ($_GET['quoi'] ?? 'tout') === 'exploitables';
+    $seule = in_array($_GET['vague'] ?? '', ['1', '2'], true) ? $_GET['vague'] : '';
     $reponses = lire_reponses();
     if ($propres) $reponses = array_values(array_filter($reponses, 'exploitable'));
+    if ($seule !== '') $reponses = array_values(array_filter($reponses, fn($r) => vague($r) === $seule));
     $colonnes = COLONNES;
 
     $sep = $excel ? ';' : ',';
-    $nom = 'reponses-questionnaire-' . ($propres ? 'exploitables-' : '') . date('Y-m-d') . '.csv';
+    /* Une seule vague : nom fixe, celui qu'attend analyse-projet-prix/config.py (FICHIER) */
+    $nom = $seule !== ''
+        ? 'reponses-questionnaire-vague' . $seule . ($propres ? '-exploitables' : '') . '.csv'
+        : 'reponses-questionnaire-' . ($propres ? 'exploitables-' : '') . date('Y-m-d') . '.csv';
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $nom . '"');
     $out = fopen('php://output', 'wb');
@@ -181,8 +189,6 @@ function nombres(array $g, string $col): array
     return array_map('floatval', array_values(array_filter(array_map(fn($r) => $r[$col] ?? '', $g), 'is_numeric')));
 }
 
-/* Vague de collecte : 1 = avant le 22 octobre 2026 (sans contrôle de manipulation), 2 = nouvel écran de choix et contrôle. */
-function vague(array $r): string { return (string) ($r['vague'] ?? '') === '' ? '1' : (string) $r['vague']; }
 $vague = in_array($_GET['vague'] ?? '', ['1', '2'], true) ? $_GET['vague'] : '';
 
 $stats = null;
@@ -275,6 +281,8 @@ input[type=password]{font:inherit;padding:10px 12px;border:1px solid var(--trait
 
 <h2>Télécharger</h2>
 <div class="carte">
+<p><a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=exploitables&amp;vague=2">Vague 2 seule · réponses exploitables · Excel (<?= $par_vague['2'] ?>)</a></p>
+<p class="note">Uniquement les réponses du 22 octobre 2026 et après (avec le contrôle de manipulation), hors essais et hors cible. Le fichier s'appelle <code>reponses-questionnaire-vague2-exploitables.csv</code> : déposez-le tel quel dans <code>analyse-projet-prix/donnees/</code>.</p>
 <a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=exploitables">Réponses exploitables · Excel</a>
 <a class="bouton" href="?telecharger=1&amp;format=excel&amp;quoi=tout">Toutes les réponses · Excel</a>
 <a class="bouton second" href="?telecharger=1&amp;format=csv&amp;quoi=tout">Toutes · CSV standard (R, Python)</a>

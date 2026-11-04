@@ -100,6 +100,7 @@ Ouvrez `https://VOTRE-HEBERGEMENT/serveur/export.php` et entrez le mot de passe.
 - le nombre de réponses : essais, hors cible, incohérentes, exploitables ;
 - les premiers résultats par version A / B : part qui choisit Michelin plutôt que Hankook, scores de fidélité (moyenne LO1-LO3), de qualité perçue (moyenne QL2-QL3) et de conscience du prix (moyenne PR1-PR3), part d'accord (4 ou 5) et moyenne pour chaque affirmation, lieux d'achat, âge, kilomètres, durée de réponse ;
 - des boutons de téléchargement :
+  - **Vague 2 seule · réponses exploitables · Excel** : uniquement les réponses du 22 octobre 2026 et après, hors essais et hors cible, dans `reponses-questionnaire-vague2-exploitables.csv`, le nom qu'attend `analyse-projet-prix/config.py` ;
   - **Excel** : séparateur `;`, virgule décimale, accents corrects ;
   - **CSV standard** : séparateur `,`, point décimal, pour R ou Python ;
   - toutes les réponses, ou seulement les **exploitables** (hors essais, 18 ans ou plus, avec une voiture) ;
