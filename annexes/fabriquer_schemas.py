@@ -664,7 +664,7 @@ def decision(nom):
     c.append(boite(170, 10, 280, 54, ["Notre question de prix", "97,90 € ou 94,90 € ?"], fond=BLEU_FONCE, bord=BLEU_FONCE, texte="#fff"))
     c.append(boite(20, 110, 260, 70, ["Baisser à 94,90 € ?", "il faudrait +12,2 % de ventes ;", "l'enquête en prévoit +11,6 %"]))
     c.append(boite(340, 110, 260, 70, ["Garder 97,90 € : avec quel argument ?", "test A/B, 108 répondants"]))
-    c.append(boite(20, 230, 260, 56, ["Non : la baisse", "ne se paie pas (partie 4)"], fond="#F1F3F6", bord=NEUTRE))
+    c.append(boite(20, 230, 260, 56, ["Non : la baisse", "ne se paie pas (partie 5)"], fond="#F1F3F6", bord=NEUTRE))
     c.append(boite(320, 230, 135, 72, ["La marque seule", "45 % en version A", "rejetée"], fond="#F1F3F6", bord=NEUTRE, taille=11.5))
     c.append(boite(465, 230, 135, 72, ["La durée de vie", "67 % en version B", "validée"], fond="#E6F3EC", bord=OK, taille=11.5))
     c.append(boite(170, 350, 430, 70, ["Recommandation : maintenir 97,90 €", "et vendre la durée de vie, chiffrée (km, coût pour 10 000 km)",
@@ -684,8 +684,71 @@ def decision(nom):
 SCHEMAS["decision"] = figure(1, "l'arbre de décision du dossier", decision("dec"), large=True)
 
 
+
 # =================================================================================================================
-# 4. Placer les schémas dans les pages
+# 4. Sous chaque graphique, un bandeau qui montre le code qui l'a dessiné
+# =================================================================================================================
+import inspect
+
+BRIQUES = [T, L, barre_v, barre_h, point, boite, fleche, defs_fleches, svg, pastille, fr, pc, pval]
+CODE = {"modele": [modele], "modele-apres": [modele], "tirage": [groupes], "moderation": [groupes], "controle": [divergentes],
+        "jauge-d": [jauge], "jauge-v": [jauge], "choix": [colonnes_ic], "robustesse": [robustesse], "precision": [precision],
+        "puissance": [courbe_puissance], "logit": [foret], "mediation": [mediation], "echelles": [poids],
+        "rentabilite": [rentabilite], "decision": [decision]}
+
+
+def bandeau(intro, code):
+    return (f'<details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">{intro}</p>'
+            f'<pre class="code"><code>{escape(code)}</code></pre></details>')
+
+
+def code_python(fonctions):
+    """La fonction qui dessine le graphique, puis les briques qu'elle utilise (et celles qu'utilisent ces briques)."""
+    src = "\n\n".join(inspect.getsource(f) for f in fonctions)
+    vues = list(fonctions)
+    while True:
+        nouvelles = [b for b in BRIQUES if b not in vues and re.search(rf"\b{b.__name__}\(", src)]
+        if not nouvelles:
+            break
+        vues += nouvelles
+        src += "\n\n" + "\n\n".join(inspect.getsource(b) for b in nouvelles)
+    return src
+
+
+INTRO_PY = ("Python, fichier <a href=\"annexes/fabriquer_schemas.py\">annexes/fabriquer_schemas.py</a> : la fonction qui dessine ce graphique, "
+            "puis les briques de dessin qu'elle utilise. Les chiffres (parts, tests, intervalles) sont calculés au début du script, "
+            "à partir des réponses du questionnaire.")
+for k, fonctions in CODE.items():
+    assert SCHEMAS[k].endswith("</figure>"), k
+    SCHEMAS[k] = SCHEMAS[k][:-len("</figure>")] + bandeau(INTRO_PY, code_python(fonctions)) + "</figure>"
+
+
+def blocs(html, classe):
+    """Les <div class="classe"> ... </div> de la page, avec leurs div imbriquées."""
+    out, i, ouvre = [], 0, f'<div class="{classe}">'
+    while (a := html.find(ouvre, i)) >= 0:
+        prof = 0
+        for m in re.finditer(r"<div\b|</div>", html[a:]):
+            prof += 1 if m.group().startswith("<div") else -1
+            if prof == 0:
+                fin = a + m.end()
+                break
+        out.append((a, fin))
+        i = fin
+    return out
+
+
+CSS_BARRES = "\n".join(l for l in (SITE / "style.css").read_text(encoding="utf-8").splitlines()
+                       if l.startswith((".bars", ".bar", "@media(max-width:560px){.bar")))
+INTRO_BARRES = ("Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur "
+                "(<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> "
+                "dessine la piste, la couleur et l'alignement des étiquettes.")
+INTRO_TD2 = ("Dessin SVG écrit directement dans la page : chaque segment est un rectangle &lt;rect&gt; dont la hauteur vaut 3 pixels "
+             "par euro (0 € en y = 340, 100 € en y = 40) ; la seconde colonne réutilise la première avec &lt;use&gt;.")
+
+
+# =================================================================================================================
+# 5. Placer les schémas dans les pages
 # =================================================================================================================
 PAGES = {"client.html": [k for k in SCHEMAS if k != "decision"], "synthese.html": ["decision"]}
 for page, noms in PAGES.items():
@@ -698,4 +761,25 @@ for page, noms in PAGES.items():
         html = motif.sub(lambda m: m.group(1) + "\n" + SCHEMAS[n] + "\n" + m.group(3), html)
     chemin.write_text(html, encoding="utf-8")
     print(f"{page} : {len(noms)} schéma(s) placé(s)")
+# les graphiques écrits à la main dans les pages (barres HTML, graphique du TD 2) reçoivent le même bandeau
+for chemin in sorted(SITE.glob("*.html")):
+    html = chemin.read_text(encoding="utf-8")
+    propre = re.sub(r"<!-- code:auto -->.*?<!-- /code:auto -->\n?", "", html, flags=re.S)
+    ajouts = []
+    for classe in ("bars", "td2"):
+        for a, b in blocs(propre, classe):
+            bloc = propre[a:b]
+            if classe == "bars":
+                code = bloc.replace('<div class="bar', '\n<div class="bar').replace("</div></div>", "</div>\n</div>")
+                code += "\n\n/* style.css : la mise en forme commune des graphiques en barres */\n" + CSS_BARRES
+                intro = INTRO_BARRES
+            else:
+                style = re.search(r"<style>(.*?)</style>", propre, re.S).group(1).strip()
+                code, intro = bloc + "\n\n<style>\n" + style + "\n</style>", INTRO_TD2
+            ajouts.append((b, "\n<!-- code:auto -->" + bandeau(intro, code) + "<!-- /code:auto -->"))
+    for b, texte_ in sorted(ajouts, reverse=True):
+        propre = propre[:b] + texte_ + propre[b:]
+    if propre != html:
+        chemin.write_text(propre, encoding="utf-8")
+        print(f"{chemin.name} : {len(ajouts)} graphique(s) HTML avec leur code")
 print(f"Test A/B : {pc(pA)} contre {pc(pB)}, {pval(p_chi2)} ; puissance {pc(puissance)} ; point mort de l'effet {fr(SEUIL_EFFET, 1)} points")

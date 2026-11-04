@@ -193,3 +193,12 @@ pre.code code{background:none;padding:0;color:inherit;font:inherit}
 @media(max-width:600px){.fig svg{min-width:540px}.fig.large svg{min-width:580px}.fig figcaption::after{content:" · faites glisser le schéma →";font:600 .72rem/1 var(--texte);letter-spacing:0;text-transform:none;color:var(--gris)}}
 ol.flux li b{display:block;font:800 .95rem/1.2 var(--titre);text-transform:uppercase;letter-spacing:.04em;color:var(--bleu);margin-bottom:2px}
 h2 .hyp{font-size:.72rem}
+/* Sous chaque graphique, le bandeau qui montre son code */
+details.code-fig{margin:12px 0 4px;border:1px solid var(--trait);border-radius:10px;background:var(--ciel)}
+details.code-fig>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;padding:9px 12px;font:800 .8rem/1.2 var(--titre);letter-spacing:.08em;text-transform:uppercase;color:var(--bleu-fonce)}
+details.code-fig>summary::-webkit-details-marker{display:none}
+details.code-fig>summary::before{content:"</>";display:inline-grid;place-items:center;min-width:34px;height:24px;border-radius:6px;background:var(--bleu-fonce);color:var(--jaune);font:700 .75rem/1 ui-monospace,Menlo,monospace;letter-spacing:0}
+details.code-fig>summary::after{content:"Afficher";margin-left:auto;background:var(--bleu);color:#fff;padding:6px 12px;border-radius:999px;font-size:.72rem}
+details.code-fig[open]>summary::after{content:"Masquer"}
+details.code-fig .note{margin:0 12px 8px}
+details.code-fig pre.code{margin:0 10px 10px;max-height:460px;overflow:auto;font-size:12px}
