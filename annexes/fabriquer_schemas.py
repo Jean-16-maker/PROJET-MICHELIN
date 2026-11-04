@@ -743,6 +743,10 @@ CSS_BARRES = "\n".join(l for l in (SITE / "style.css").read_text(encoding="utf-8
 INTRO_BARRES = ("Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur "
                 "(<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> "
                 "dessine la piste, la couleur et l'alignement des étiquettes.")
+CSS_GRAPH = "\n".join(l for l in (SITE / "style.css").read_text(encoding="utf-8").splitlines() if l.startswith("svg.graph"))
+INTRO_GRAPH = ("Graphique SVG écrit directement dans la page : la grille et les axes sont des &lt;line&gt;, chaque courbe est un "
+               "&lt;path&gt; dont les points (un prix, une part de répondants) sont convertis en pixels, les points marqués sont des "
+               "&lt;circle&gt; et la zone du prix retenu un &lt;rect&gt; ; la feuille de style <code>style.css</code> lui donne son cadre.")
 INTRO_TD2 = ("Dessin SVG écrit directement dans la page : chaque segment est un rectangle &lt;rect&gt; dont la hauteur vaut 3 pixels "
              "par euro (0 € en y = 340, 100 € en y = 40) ; la seconde colonne réutilise la première avec &lt;use&gt;.")
 
@@ -766,13 +770,18 @@ for chemin in sorted(SITE.glob("*.html")):
     html = chemin.read_text(encoding="utf-8")
     propre = re.sub(r"<!-- code:auto -->.*?<!-- /code:auto -->\n?", "", html, flags=re.S)
     ajouts = []
-    for classe in ("bars", "td2"):
-        for a, b in blocs(propre, classe):
+    for classe in ("bars", "td2", "graph"):
+        for a, b in (blocs(propre, classe) if classe != "graph" else
+                     [(m.start(), propre.index("</svg>", m.start()) + 6) for m in re.finditer(r'<svg class="graph"', propre)]):
             bloc = propre[a:b]
             if classe == "bars":
                 code = bloc.replace('<div class="bar', '\n<div class="bar').replace("</div></div>", "</div>\n</div>")
                 code += "\n\n/* style.css : la mise en forme commune des graphiques en barres */\n" + CSS_BARRES
                 intro = INTRO_BARRES
+            elif classe == "graph":
+                code = re.sub(r"(<(?:line|text|rect|path|circle|g|polyline)\b)", r"\n\1", bloc).replace("</svg>", "\n</svg>")
+                code += "\n\n/* style.css */\n" + CSS_GRAPH
+                intro = INTRO_GRAPH
             else:
                 style = re.search(r"<style>(.*?)</style>", propre, re.S).group(1).strip()
                 code, intro = bloc + "\n\n<style>\n" + style + "\n</style>", INTRO_TD2
