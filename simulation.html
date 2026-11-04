@@ -21,7 +21,7 @@
 <section class="hero"><div class="wrap">
 <span class="kicker">Partie 3 ter · Données fictives</span>
 <h1>Ce qu'aurait donné un test <em>réussi</em></h1>
-<p class="chapo">Notre vrai test n'a pas montré d'effet des 10 000 km. Avec le professeur, nous présentons aussi le résultat que nous cherchions, sur 240 réponses inventées : un test mieux conçu, et ce qu'il aurait permis de conclure.</p>
+<p class="chapo">La vague 1 de notre test n'avait pas montré d'effet des 10 000 km. Avant de relancer le questionnaire, nous avons simulé, sur 240 réponses inventées, ce qu'aurait donné un test mieux conçu. La vague 2, avec de vraies réponses, a depuis montré un effet du même ordre.</p>
 </div></section>
 <main><div class="wrap">
 
@@ -29,18 +29,18 @@
 Elles ont été fabriquées par un programme, avec des réglages choisis par le groupe, pour illustrer le résultat souhaité. Elles ne disent rien des vrais automobilistes : nos vraies réponses sont sur la page <a href="client.html">3 bis · Test A/B</a>. Chaque réponse simulée porte un identifiant « FICTIF- ».</div>
 
 <h2>Pourquoi une simulation</h2>
-<p>Notre vrai test n'a pas confirmé que les 10 000 km font choisir Michelin (<a href="client.html#echec">les raisons</a>). Le professeur nous a proposé deux voies : expliquer cet échec, ou présenter, à partir de données fictives, le résultat que nous aurions souhaité. Nous faisons les deux. Cette page montre à quoi ressemble un test réussi, et l'analyse suit exactement les mêmes étapes que pour nos vraies données (squelette du cours d'Analyse de données).</p>
+<p>La vague 1 de notre test n'a pas confirmé que les 10 000 km font choisir Michelin (<a href="client.html#echec">les raisons</a>). Le professeur nous a proposé deux voies : expliquer cet échec, ou présenter, à partir de données fictives, le résultat que nous aurions souhaité. Nous avons fait les deux, puis relancé le vrai questionnaire, corrigé (vague 2). Cette page montre à quoi ressemble un test réussi, et l'analyse suit exactement les mêmes étapes que pour nos vraies données (squelette du cours d'Analyse de données).</p>
 
 <h2>Le test que nous aurions dû mener</h2>
 <div class="tableau"><table><thead><tr><th>Ce qui change</th><th>Notre vrai test</th><th>La simulation <span class="tampon">fictif</span></th></tr></thead><tbody>
-<tr><td>Répondants</td><td>108 (46 en A, 62 en B)</td><td>240 (120 en A, 120 en B), assez pour détecter un effet de 15 à 20 points</td></tr>
-<tr><td>Qui répond</td><td>surtout des étudiants (âge médian 23 ans)</td><td>des automobilistes plus proches des acheteurs de pneus (âge médian 42 ans)</td></tr>
-<tr><td>Contrôle de manipulation</td><td>aucun</td><td>« Le Michelin m'a semblé durer plus longtemps que le Hankook », de 1 à 7, posé après le choix</td></tr>
+<tr><td>Répondants</td><td>vague 1 : 108 (46 en A, 62 en B)</td><td>240 (120 en A, 120 en B), assez pour détecter un effet de 15 à 20 points</td></tr>
+<tr><td>Qui répond</td><td>vague 1 : surtout des étudiants (âge médian 23 ans)</td><td>des automobilistes plus proches des acheteurs de pneus (âge médian 42 ans)</td></tr>
+<tr><td>Contrôle de manipulation</td><td>vague 1 : aucun</td><td>« Le Michelin m'a semblé durer plus longtemps que le Hankook », de 1 à 7, posé après le choix</td></tr>
 <tr><td>Les deux versions</td><td colspan="2">identiques : Hankook 40 000 km à 81,99 € contre Michelin à 97,90 €, annoncé à 40 000 km (A) ou à 50 000 km (B)</td></tr>
 </tbody></table></div>
-<p class="note"><span class='statut hypo'>Hypothèse</span> Réglages de la simulation : la version B augmente les chances de choisir Michelin, la fidélité à la marque aussi, la conscience du prix pousse vers le Hankook, comme dans nos vraies données. Le programme et ses réglages sont en annexe (<a href="annexes/fabriquer_fictif.py">fabriquer_fictif.py</a>), comme les <a href="annexes/reponses-FICTIVES.csv">240 réponses fictives</a> qu'il produit : relancé, il redonne toujours les mêmes données.</p>
+<p class="note"><span class='statut hypo'>Hypothèse</span> Réglages de la simulation : la version B augmente les chances de choisir Michelin, la fidélité à la marque aussi, la conscience du prix pousse vers le Hankook, comme dans la vague 1. Le programme et ses réglages sont en annexe (<a href="annexes/fabriquer_fictif.py">fabriquer_fictif.py</a>), comme les <a href="annexes/reponses-FICTIVES.csv">240 réponses fictives</a> qu'il produit : relancé, il redonne toujours les mêmes données.</p>
 
-<p><b>Ce que nous avons changé dans le vrai questionnaire.</b> Depuis le 22 octobre 2026, le questionnaire en ligne pose cette question de contrôle juste après le choix et rend la durée de vie bien plus visible : une jauge de durée de vie sous chaque pneu, le coût pour 10 000 km calculé de la même façon pour les deux (à 50 000 km, le Michelin revient moins cher au kilomètre que le Hankook : 19,58 € contre 20,50 €) et, en version B seulement, un badge « +10 000 km ». Les réponses de cette nouvelle collecte sont marquées « vague 2 » et seront analysées à part.</p>
+<p><b>Ce que nous avons changé dans le vrai questionnaire.</b> Depuis le 22 octobre 2026, le questionnaire en ligne pose cette question de contrôle juste après le choix et rend la durée de vie bien plus visible : une jauge de durée de vie sous chaque pneu, le coût pour 10 000 km calculé de la même façon pour les deux (à 50 000 km, le Michelin revient moins cher au kilomètre que le Hankook : 19,58 € contre 20,50 €) et, en version B seulement, un badge « +10 000 km ». Les réponses de cette nouvelle collecte sont marquées « vague 2 » et analysées à part : <a href="client.html">voir les résultats</a>.</p>
 
 <h2>Étape 1 : la manipulation a fonctionné <span class="tampon">fictif</span></h2>
 <div class="bars"><h4>« Le Michelin m'a semblé durer plus longtemps que le Hankook » (moyenne sur 7)</h4>
@@ -69,21 +69,22 @@ Elles ont été fabriquées par un programme, avec des réglages choisis par le 
 <tr><td>Qualité perçue (Yoo et Donthu, 2001)</td><td class="n">0,78</td><td class="n">0,78</td><td class="n">0,64</td><td>fiable et valide</td></tr>
 <tr><td>Conscience du prix (Sproles et Kendall, 1986)</td><td class="n">0,83</td><td class="n">0,83</td><td class="n">0,61</td><td>fiable et valide</td></tr>
 </tbody></table></div>
-<p class="note">Analyse factorielle confirmatoire : CFI = 1,00, RMSEA = 0,00, SRMR = 0,03 ; HTMT maximal = 0,37. Les échelles se comportent bien parce que la simulation a été réglée ainsi : dans nos vraies données, l'échelle du prix ne tenait pas.</p>
+<p class="note">Analyse factorielle confirmatoire : CFI = 1,00, RMSEA = 0,00, SRMR = 0,03 ; HTMT maximal = 0,37. Les échelles se comportent bien parce que la simulation a été réglée ainsi : dans la vague 1, l'échelle du prix ne tenait pas ; dans la vague 2, elle tient sans l'item PR2, et la qualité perçue est juste sous le seuil.</p>
 
-<h2>Le vrai test et la simulation, côte à côte</h2>
-<div class="tableau"><table><thead><tr><th></th><th class="n">Vraies données</th><th class="n">Simulation <span class="tampon">fictif</span></th></tr></thead><tbody>
-<tr><td>Répondants analysés</td><td class="n">108</td><td class="n">240</td></tr>
-<tr><td>Contrôle de manipulation</td><td class="n">absent</td><td class="n">réussi (d = 1,41)</td></tr>
-<tr><td>Michelin choisi, version A (40 000 km)</td><td class="n">57 %</td><td class="n">47 %</td></tr>
-<tr><td>Michelin choisi, version B (50 000 km)</td><td class="n">63 %</td><td class="n">63 %</td></tr>
-<tr class="total"><td>Effet des 10 000 km</td><td class="n">+6 points, p = 0,503</td><td class="n">+17 points, p = 0,009</td></tr>
-<tr><td>Ce qui fait choisir Michelin</td><td class="n">la fidélité seule</td><td class="n">la durée de vie et la fidélité</td></tr>
+<h2>Les deux vagues et la simulation, côte à côte</h2>
+<div class="tableau"><table><thead><tr><th></th><th class="n">Vague 1 (vraies données)</th><th class="n">Vague 2 (vraies données)</th><th class="n">Simulation <span class="tampon">fictif</span></th></tr></thead><tbody>
+<tr><td>Répondants analysés</td><td class="n">108</td><td class="n">108</td><td class="n">240</td></tr>
+<tr><td>Contrôle de manipulation</td><td class="n">absent</td><td class="n">réussi (d = 1,04)</td><td class="n">réussi (d = 1,41)</td></tr>
+<tr><td>Michelin choisi, version A (40 000 km)</td><td class="n">57 %</td><td class="n">45 %</td><td class="n">47 %</td></tr>
+<tr><td>Michelin choisi, version B (50 000 km)</td><td class="n">63 %</td><td class="n">67 %</td><td class="n">63 %</td></tr>
+<tr class="total"><td>Effet des 10 000 km</td><td class="n">+6 points, p = 0,503</td><td class="n">+22 points, p = 0,024</td><td class="n">+17 points, p = 0,009</td></tr>
+<tr><td>Ce qui fait choisir Michelin</td><td class="n">la fidélité seule</td><td class="n">la durée de vie et la fidélité</td><td class="n">la durée de vie et la fidélité</td></tr>
 </tbody></table></div>
+<p>La vague 2 retrouve ce que la simulation annonçait : avec la question de contrôle et une durée de vie visible, l'effet des 10 000 km apparaît. Mais elle le trouve avec deux fois moins de répondants que la simulation : son estimation est moins précise (intervalle de 3 à 40 points).</p>
 
-<h2>Ce que ce résultat aurait permis de recommander</h2>
+<h2>Ce que ce résultat permet de recommander</h2>
 <div class="verdict"><strong>Si le test avait réussi</strong><p>Maintenir 97,90 € et communiquer sur les 10 000 km.</p><span>Un argument qui fait passer la part de Michelin de 47 % à 63 % sans baisser le prix justifierait la campagne « Sécurité 4 Saisons » centrée sur la durée de vie, et le prix au-dessus du plafond des concurrents.</span></div>
-<p>Nos vraies données ne permettent pas cette recommandation : elles montrent que la marque compte plus que la durée de vie annoncée. C'est la recommandation que nous défendons, avec ses limites ; la simulation montre seulement ce qu'il faudrait mesurer, et comment, pour trancher.</p>
+<p>La vague 1 ne permettait pas cette recommandation ; la vague 2, avec de vraies réponses, la soutient : c'est celle que nous défendons, avec ses limites (<a href="client.html">partie 3 bis</a>). La simulation reste ce qu'elle était : une illustration, fabriquée, de ce qu'il fallait mesurer et comment.</p>
 
 <div class="suivant"><a href="client.html">← 3 bis · Notre test A/B</a><a class="jaune" href="proposition.html">4 · Ce que rapporte chaque prix →</a></div>
 </div></main>
