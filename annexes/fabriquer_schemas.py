@@ -105,7 +105,6 @@ ROBUSTESSE = [
     ("Régression logistique, avec le profil", complet.pvalues["B"]),
     ("Idem, avec les km et l'achat chez un garagiste", logit("m ~ B + fid + qual + prix + age10 + km_an + garage").pvalues["B"]),
     ("Sans les 4 réponses en double", p_chi(d[~repetee])),
-    ("Sans la réponse donnée en moins de 20 s", p_chi(d[d.duree_s >= 20])),
 ]
 ci = complet.conf_int()
 FOREST = [(lib, float(np.exp(complet.params[k])), float(np.exp(ci.loc[k, 0])), float(np.exp(ci.loc[k, 1])), float(complet.pvalues[k]))
@@ -439,10 +438,10 @@ def robustesse(nom):
         c.append(point(x(p), y, B_ if p < 0.05 else NEUTRE, f"{lib} : {pval(p)}"))
         c.append(T(larg - 6, y + 4, f"p = {fr(p, 3)}", 11, ENCRE, "end", gras=True))
     return svg(nom, larg, H, "La p-value du test A/B selon la façon de le faire",
-               "Huit variantes du test, toutes à gauche du seuil de 5 % : le résultat ne dépend pas du test choisi.", "".join(c))
+               "Sept variantes du test, toutes à gauche du seuil de 5 % : le résultat ne dépend pas du test choisi.", "".join(c))
 
 
-SCHEMAS["robustesse"] = figure(7, "huit façons de faire le test, huit fois le même verdict (p-value, échelle logarithmique)", robustesse("rob"),
+SCHEMAS["robustesse"] = figure(7, "sept façons de faire le test, sept fois le même verdict (p-value, échelle logarithmique)", robustesse("rob"),
                                table=tableau(["Variante", "p"], [(l, fr(p, 4)) for l, p in ROBUSTESSE]), large=True)
 
 

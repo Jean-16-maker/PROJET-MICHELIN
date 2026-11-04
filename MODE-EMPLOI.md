@@ -81,7 +81,7 @@ var ENDPOINT = 'https://VOTRE-HEBERGEMENT/serveur/enregistrer.php';
 
 Vous pouvez aussi donner l'adresse à Claude, qui fera la modification. Faites ensuite un commit, puis **Push origin** dans GitHub Desktop.
 
-## 3. Tester avant de diffuser (avant le 12 octobre)
+## 3. Tester avant de diffuser
 
 - `questionnaire.html?test=1` : les réponses sont enregistrées avec `test = 1` et écartées de l'analyse.
 - `?test=1&v=A` ou `?test=1&v=B` : force une version, pour vérifier les deux.
@@ -89,7 +89,7 @@ Vous pouvez aussi donner l'adresse à Claude, qui fera la modification. Faites e
 - Le cours demande un essai auprès de **quelques personnes extérieures au groupe**.
 - Après un Push, attendez 2 minutes et rechargez avec **Cmd + Maj + R** : sinon le navigateur peut afficher l'ancienne version.
 
-## 4. Diffuser (du 12 au 21 octobre)
+## 4. Diffuser (du 22 octobre au 3 novembre 2026)
 
 Diffusez **uniquement** `https://jean-16-maker.github.io/PROJET-MICHELIN/questionnaire.html`, sans `?test=1`.
 Ne diffusez pas le lien du dossier : les répondants y verraient nos prix et notre hypothèse.
