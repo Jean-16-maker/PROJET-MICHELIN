@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comment les schémas sont faits — Michelin CrossClimate 3</title>
+<meta name="description" content="Comment les schémas du dossier Michelin sont fabriqués : un programme Python calcule chaque chiffre à partir des réponses et dessine des schémas SVG, sans aucun chiffre tapé à la main.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' aria-hidden='true'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23FCE500'/%3E%3Ccircle cx='20' cy='20' r='18' fill='none' stroke='%230F2A5C' stroke-width='3' stroke-dasharray='5 3.4'/%3E%3Ccircle cx='20' cy='20' r='10' fill='%2327509B'/%3E%3Ccircle cx='20' cy='20' r='3.4' fill='%23FCE500'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="haut"><div class="wrap">
+<a class="marque" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg><span>Michelin<small>CrossClimate 3 · dossier de prix</small></span></a>
+<nav aria-label="Navigation principale"><a href="index.html">1 · Le marché</a><a href="comptes.html">2 · Comptes</a><a href="prix-psychologique.html">3 · Prix psychologique</a><a href="client.html">3 bis · Test A/B</a><a href="simulation.html">3 ter · Simulation</a><a href="proposition.html">4 · Proposition</a><a href="synthese.html">Synthèse</a><a href="sources.html">Sources</a></nav>
+</div></header>
+<section class="hero"><div class="wrap">
+<span class="kicker">Annexe · Méthode</span>
+<h1>Comment les schémas <em>sont faits</em></h1>
+<p class="chapo">Les seize schémas du dossier sont dessinés par un programme, à partir des réponses du questionnaire. Aucun chiffre n'y est tapé à la main : si une réponse change, une commande redessine tout.</p>
+</div></section>
+<main><div class="wrap">
+
+<h2>Le principe, en une chaîne</h2>
+<ol class="flux">
+<li><b>Les réponses</b><span>l'export du questionnaire, nettoyé par le squelette du cours ; il reste sur l'ordinateur du groupe</span></li>
+<li><b>Les calculs</b><span>un script Python recalcule chaque chiffre : parts, tests, intervalles, régressions</span></li>
+<li class="cle"><b>Le dessin</b><span>chaque schéma est une fonction Python qui écrit un dessin SVG, du texte</span></li>
+<li><b>La page</b><span>le script place chaque dessin dans la page HTML, entre deux balises</span></li>
+<li><b>Le site</b><span>GitHub Pages publie les pages ; aucune bibliothèque à charger</span></li>
+</ol>
+<p>Le programme tient dans un seul fichier, <a href="annexes/fabriquer_schemas.py"><code>annexes/fabriquer_schemas.py</code></a>, d'environ 700 lignes. Il ne contient aucune réponse individuelle : il les lit sur l'ordinateur du groupe, et seules des moyennes et des parts arrivent dans les pages.</p>
+
+<h2>Pourquoi un dessin SVG plutôt qu'une image ou une bibliothèque</h2>
+<div class="grille">
+<div class="carte"><h3 style="margin-top:0">Un SVG, c'est du texte</h3><p>Un schéma SVG est une suite d'instructions lisibles : « un rectangle ici, de cette hauteur, de cette couleur ». Un programme peut donc l'écrire, comme il écrirait une phrase. Il reste net à toutes les tailles, sur un écran comme à l'impression.</p></div>
+<div class="carte"><h3 style="margin-top:0">Aucune dépendance</h3><p>Le site n'appelle aucune ressource externe, ni police, ni bibliothèque de graphiques. Les schémas sont écrits dans la page elle-même : ils s'affichent même sans connexion, et le site reste léger.</p></div>
+<div class="carte"><h3 style="margin-top:0">Des chiffres traçables</h3><p>Chaque hauteur de barre est calculée à partir des réponses, au moment où le script tourne. Un chiffre du schéma ne peut donc pas contredire un chiffre du tableau : ils sortent du même calcul.</p></div>
+<div class="carte"><h3 style="margin-top:0">Accessible</h3><p>Chaque schéma a un titre et une description lus par les lecteurs d'écran, chaque barre et chaque point une info-bulle, et chaque graphique son tableau de chiffres, « Voir les chiffres du schéma ».</p></div>
+</div>
+
+<h2>Le code, pas à pas</h2>
+<h3>1. Une échelle : passer d'une valeur à un pixel</h3>
+<p>Tout graphique repose sur une règle de trois. Pour une part de 0 à 100 % dessinée entre le bas du cadre (y = 250) et 210 pixels plus haut, la position d'une valeur v est :</p>
+<pre class="code"><code>y = lambda v: base - plot * v        <span class="c"># 0 % en bas (y = 250), 100 % en haut (y = 40)</span>
+y(0.45)   <span class="c"># → 155,5 : le haut de la barre de la version A</span></code></pre>
+
+<h3>2. Une brique : la barre</h3>
+<p>Chaque barre est un chemin SVG : on part de la ligne de base, on monte, on arrondit les deux coins du haut de 4 pixels, on redescend. Le texte entre <code>&lt;title&gt;</code> devient l'info-bulle au survol.</p>
+<pre class="code"><code>def barre_v(x, y_base, hauteur, largeur, couleur, info):
+    <span class="c">"""Une colonne posée sur la ligne de base, bout arrondi de 4 px en haut, carré en bas."""</span>
+    r = min(4, hauteur / 2, largeur / 2)
+    y = y_base - hauteur
+    chemin = (f"M{x},{y_base} V{y + r} Q{x},{y} {x + r},{y} H{x + largeur - r} "
+              f"Q{x + largeur},{y} {x + largeur},{y + r} V{y_base} Z")
+    return f'&lt;path d="{chemin}" fill="{couleur}"&gt;&lt;title&gt;{info}&lt;/title&gt;&lt;/path&gt;'</code></pre>
+
+<h3>3. Un schéma : des briques et des chiffres calculés</h3>
+<p>Le schéma 5 (la part qui choisit Michelin) assemble deux barres, deux intervalles de confiance et une ligne à 50 %. Les chiffres ne sont pas écrits : ils viennent du calcul fait juste avant, sur les réponses.</p>
+<pre class="code"><code>kA, nA = int(A.m.sum()), len(A)                              <span class="c"># 23 Michelin sur 51 en version A</span>
+icA = proportion_confint(kA, nA, method="wilson")            <span class="c"># intervalle de confiance à 95 %</span>
+c.append(barre_v(cx - 14, base, plot * kA / nA, 28, "#A86B00", "Version A : 45 %"))
+c.append(L(cx, y(icA[0]), cx, y(icA[1]), ENCRE, 1.5))        <span class="c"># le trait de l'intervalle</span></code></pre>
+
+<h3>4. La page : deux balises, et le script remplit l'entre-deux</h3>
+<p>Dans la page HTML, le texte écrit par le groupe entoure deux balises invisibles. Le script remplace ce qu'il y a entre elles par le schéma ; le texte autour ne bouge pas.</p>
+<pre class="code"><code><span class="c">&lt;!-- dans client.html --&gt;</span>
+&lt;!-- schema:choix --&gt;
+   ... le script écrit ici le schéma 5 ...
+&lt;!-- /schema:choix --&gt;
+
+<span class="c"># dans le script</span>
+motif = re.compile(r"(&lt;!-- schema:choix --&gt;)(.*?)(&lt;!-- /schema:choix --&gt;)", re.S)
+html = motif.sub(lambda m: m.group(1) + schema + m.group(3), html)</code></pre>
+
+<h3>5. Refaire tous les schémas</h3>
+<p>Depuis le dossier <code>site/</code>, avec l'environnement Python de l'analyse (pandas, scipy, statsmodels), une commande suffit :</p>
+<pre class="code"><code>../analyse-projet-prix/.venv/bin/python annexes/fabriquer_schemas.py
+<span class="c"># client.html : 16 schéma(s) placé(s)</span>
+<span class="c"># synthese.html : 1 schéma(s) placé(s)</span>
+<span class="c"># Test A/B : 45 % contre 67 %, p = 0,024 ; puissance 62 % ; point mort de l'effet 13,3 points</span></code></pre>
+
+<h2>Les règles de dessin suivies</h2>
+<div class="tableau"><table><thead><tr><th>Règle</th><th>Pourquoi</th><th>Où on la voit</th></tr></thead><tbody>
+<tr><td>Les barres partent de zéro</td><td>une barre coupée exagère l'écart (TD 1)</td><td>schémas 2, 5, 12, 13</td></tr>
+<tr><td>Un intervalle de confiance avec chaque part</td><td>une part sans sa marge d'incertitude fait croire à une précision qui n'existe pas</td><td>schémas 5 et 8</td></tr>
+<tr><td>Une échelle logarithmique pour les p-values et les odds ratios</td><td>0,001 et 0,05, ou ×0,5 et ×2, doivent être aussi loin de leur repère</td><td>schémas 7 et 10</td></tr>
+<tr><td>Un seuil tracé en pointillés, la grille en trait fin</td><td>le pointillé signale une limite à lire (5 %, 0,70, 80 %, point mort) ; la grille reste discrète</td><td>schémas 7, 9, 13, 15</td></tr>
+<tr><td>Deux couleurs seulement pour A et B, toujours les mêmes</td><td>A en ocre, B en bleu Michelin, sur toute la page : on n'apprend la légende qu'une fois</td><td>schémas 2, 3, 5, 12</td></tr>
+<tr><td>Des barres divergentes pour une échelle d'accord</td><td>le « pas d'accord » part à gauche, le « d'accord » à droite, autour de la réponse neutre</td><td>schéma 3</td></tr>
+<tr><td>Une phrase de lecture sous chaque schéma</td><td>un graphique se lit avec un chiffre (TD 1) ; ici, trois cases : ce qu'on voit, ce que cela veut dire, ce que cela ne dit pas</td><td>tous</td></tr>
+</tbody></table></div>
+<p><b>Les couleurs ont été vérifiées, pas choisies à l'œil.</b> L'ocre (#A86B00) et le bleu (#27509B) ont passé un validateur de palette : un contraste suffisant sur fond blanc, et un écart de couleur assez grand pour qu'une personne daltonienne les distingue, quel que soit le type de daltonisme. Le bleu clair essayé d'abord échouait au contraste : il a été écarté.</p>
+
+<h2>Comment ils ont été faits si vite</h2>
+<p>Le programme a été écrit avec <b>Claude Code</b>, l'IA qui code présentée au cours d'Analyse de données (CM 1) : on décrit ce qu'on veut, l'agent écrit le code, le lance, regarde le résultat et corrige. La méthode a tenu en quatre temps :</p>
+<ol class="flux">
+<li><b>Décrire</b><span>pour chaque étape de l'analyse, le schéma qui répond le mieux à la question, et la phrase qu'il doit permettre d'écrire</span></li>
+<li><b>Factoriser</b><span>une dizaine de briques réutilisables (barre, point, flèche, boîte, axe, échelle) plutôt que seize dessins écrits à la main</span></li>
+<li class="cle"><b>Regarder</b><span>chaque schéma est ouvert dans le navigateur, sur ordinateur et sur téléphone ; les étiquettes qui se chevauchent sont déplacées</span></li>
+<li><b>Recompter</b><span>les chiffres des schémas sont comparés à ceux du classeur Excel de l'analyse, calculés par un autre chemin</span></li>
+</ol>
+<p>Le gain de temps vient de la factorisation : une fois la brique « barre » écrite, un nouveau graphique en barres coûte quelques lignes. Et comme tout est recalculé à chaque fois, corriger une erreur dans les données ne demande pas de redessiner à la main.</p>
+<div class="encart"><b>Ce que l'IA n'a pas fait.</b> Elle n'a choisi ni les hypothèses ni la conclusion, et n'a inventé aucun chiffre : chaque valeur vient des réponses du questionnaire ou du dossier du groupe, et peut se retrouver dans le classeur d'analyse. Le groupe doit pouvoir expliquer chaque schéma à l'oral.</div>
+
+<div class="suivant"><a href="client.html">← 3 bis · L'analyse du test A/B</a><a class="jaune" href="sources.html">Sources et méthode →</a></div>
+</div></main>
+<footer><div class="wrap">
+<p><strong>Prix et budgets marketing</strong> — M1 Marketing · IAE Clermont Auvergne · UCA · 2026-2027 · Groupe : [noms des membres]</p>
+<p>Projet étudiant sans lien avec Michelin : la charte (bleu, jaune) s'inspire de la marque à titre d'illustration.
+Site statique, sans cookie ; seul le questionnaire enregistre des réponses, anonymes. <a href="sources.html">Sources, méthode et usage de l'IA</a>.</p>
+</div></footer>
+</body>
+</html>
