@@ -662,9 +662,9 @@ SCHEMAS["rentabilite"] = figure(15, "ce que vaut l'effet en euros : le gain net 
 def decision(nom):
     c = [defs_fleches(nom, [BLEU_FONCE, OK, NEUTRE])]
     c.append(boite(170, 10, 280, 54, ["Notre question de prix", "97,90 € ou 94,90 € ?"], fond=BLEU_FONCE, bord=BLEU_FONCE, texte="#fff"))
-    c.append(boite(20, 110, 260, 70, ["Baisser à 94,90 € ?", "il faudrait +12,2 % de ventes ;", "l'enquête en prévoit +11,6 %"]))
+    c.append(boite(20, 110, 260, 70, ["Baisser à 94,90 € ?", "il faudrait +12,2 % de ventes ;", "prix non testé par le questionnaire"]))
     c.append(boite(340, 110, 260, 70, ["Garder 97,90 € : avec quel argument ?", "test A/B, 108 répondants"]))
-    c.append(boite(20, 230, 260, 56, ["Non : la baisse", "ne se paie pas (partie 5)"], fond="#F1F3F6", bord=NEUTRE))
+    c.append(boite(20, 230, 260, 56, ["Non : la baisse", "ne se paie pas (partie 4)"], fond="#F1F3F6", bord=NEUTRE))
     c.append(boite(320, 230, 135, 72, ["La marque seule", "45 % en version A", "rejetée"], fond="#F1F3F6", bord=NEUTRE, taille=11.5))
     c.append(boite(465, 230, 135, 72, ["La durée de vie", "67 % en version B", "validée"], fond="#E6F3EC", bord=OK, taille=11.5))
     c.append(boite(170, 350, 430, 70, ["Recommandation : maintenir 97,90 €", "et vendre la durée de vie, chiffrée (km, coût pour 10 000 km)",
@@ -683,6 +683,74 @@ def decision(nom):
 
 SCHEMAS["decision"] = figure(1, "l'arbre de décision du dossier", decision("dec"), large=True)
 
+
+
+# ---- Les trois prix : par les coûts, par la concurrence, par la valeur ---------------------------------------------
+# Chaque terme vient d'une source du dossier ; la construction détaillée est écrite dans la partie 4 (proposition.html).
+PRIX_ACTUEL, TVA, MARGE_DISTRIBUTEUR = 97.90, 0.20, 0.12          # Allopneus ; TVA ; Bsness (12 % du prix HT)
+VENTES_S1, COUT_REVIENT_S1, RD_S1, COMMERCIAUX_S1, GENERAUX_S1 = 13028, 9358, 396, 577, 1215   # M€, rapport semestriel 2025, p. 17
+MARGE_CIBLE = 0.117                                               # marge Automobile 2025 de Michelin (communiqué annuel)
+PLAFOND, HANKOOK_MARCHE = 93.20, 80.99                            # Continental et Hankook chez Allopneus, 1er octobre 2026
+HANKOOK_TEST, KM_HANKOOK, KM_MICHELIN = 81.99, 40000, 50000       # le scénario de notre test A/B (partie 3)
+
+net_actuel = PRIX_ACTUEL / (1 + TVA) * (1 - MARGE_DISTRIBUTEUR)      # ce que Michelin touche par pneu
+cout_complet = net_actuel * (COUT_REVIENT_S1 + RD_S1 + COMMERCIAUX_S1 + GENERAUX_S1) / VENTES_S1
+cout_revient = net_actuel * COUT_REVIENT_S1 / VENTES_S1
+TROIS = {
+    "plancher_revient": cout_revient / (1 - MARGE_DISTRIBUTEUR) * (1 + TVA),       # ne couvre que la fabrication
+    "plancher_complet": cout_complet / (1 - MARGE_DISTRIBUTEUR) * (1 + TVA),       # couvre tout, marge nulle
+    "couts": cout_complet / (1 - MARGE_CIBLE) / (1 - MARGE_DISTRIBUTEUR) * (1 + TVA),  # coût complet + marge cible
+    "concurrence": PLAFOND,
+    "valeur_usage": HANKOOK_TEST / KM_HANKOOK * KM_MICHELIN,                      # même coût pour 10 000 km que le Hankook
+}
+
+
+def trois_prix(nom):
+    """Les trois logiques sur une même échelle en euros, et le prix que nous défendons."""
+    larg, gauche, droite, haut, bas = 620, 150, 600, 44, 236
+    x = lambda v: gauche + (v - 65) / 40 * (droite - gauche)
+    c = []
+    for v in range(65, 110, 5):
+        c.append(L(x(v), haut, x(v), bas))
+        c.append(T(x(v), bas + 16, f"{v} €", 10.5, GRIS, "middle"))
+    lignes = [("Par les coûts", 82), ("Par la concurrence", 142), ("Par la valeur", 202)]
+    for lib, y in lignes:
+        c.append(T(8, y + 4, lib, 12.5, BLEU_FONCE, gras=True))
+    # les fourchettes, en bandeau clair, décrites sous la bande (texte calé à droite sur la fin de la bande)
+    for a, b, y, texte_ in [(TROIS["plancher_revient"], TROIS["plancher_complet"], 82,
+                             f"planchers : {fr(TROIS['plancher_revient'])} € (fabrication) à {fr(TROIS['plancher_complet'])} € (tous les coûts)"),
+                            (HANKOOK_MARCHE, PLAFOND, 142, f"concurrents : {fr(HANKOOK_MARCHE)} € (Hankook) à {fr(PLAFOND)} € (Continental)")]:
+        c.append(f'<rect x="{x(a):.1f}" y="{y - 6}" width="{x(b) - x(a):.1f}" height="12" rx="6" fill="{CIEL}"/>')
+        if texte_:
+            c.append(T(x(b), y + 22, texte_, 10.5, GRIS, "end"))
+    # le prix défendu, en trait vertical
+    xd = x(PRIX_ACTUEL)
+    c.append(L(xd, haut - 8, xd, bas, BLEU_FONCE, 2))
+    c.append(T(xd - 6, haut - 14, f"{fr(PRIX_ACTUEL)} € : le prix que nous défendons", 12, BLEU_FONCE, "end", gras=True))
+    # les points, chacun avec sa pastille (au-dessus ou au-dessous, décalée si besoin pour rester dans le cadre)
+    for cle in ("plancher_revient", "plancher_complet"):
+        c.append(point(x(TROIS[cle]), 82, NEUTRE, f"plancher : {fr(TROIS[cle])} €", r=4))
+    for cle, y, texte_, dy, dx in [("couts", 82, f"{fr(TROIS['couts'])} € · coûts + marge cible", -20, -40),
+                                   ("concurrence", 142, f"{fr(PLAFOND)} € · plafond", -20, -30),
+                                   ("valeur_usage", 202, f"{fr(TROIS['valeur_usage'])} € · valeur d'usage", -20, -52)]:
+        v = TROIS[cle]
+        c.append(point(x(v), y, B_, texte_, r=6))
+        c.append(pastille(x(v) + dx, y + dy, texte_, ENCRE))
+    return svg(nom, larg, 262, "Trois logiques de prix sur une même échelle",
+               f"Par les coûts : {fr(TROIS['couts'])} € (planchers {fr(TROIS['plancher_revient'])} et {fr(TROIS['plancher_complet'])} €) ; "
+               f"par la concurrence : plafond {fr(PLAFOND)} € ; par la valeur : {fr(TROIS['valeur_usage'])} € d'usage ; "
+               f"prix défendu {fr(PRIX_ACTUEL)} €.", "".join(c))
+
+
+SCHEMAS["trois-prix"] = figure(1, "trois logiques, trois prix, sur une même échelle (prix public TTC du pneu)", trois_prix("tro"),
+                               leg=[("prix retenu par chaque logique", B_), ("plancher", NEUTRE)],
+                               table=tableau(["Logique", "Prix TTC", "Ce qu'il dit"],
+                                             [("Coûts : fabrication seule", f"{fr(TROIS['plancher_revient'])} €", "en dessous, chaque pneu ne paie même pas sa fabrication"),
+                                              ("Coûts : coût complet", f"{fr(TROIS['plancher_complet'])} €", "en dessous, Michelin perd de l'argent sur chaque pneu"),
+                                              ("Coûts : coût complet + marge cible de 11,7 %", f"{fr(TROIS['couts'])} €", "le prix qui garde la marge du groupe"),
+                                              ("Concurrence : plafond", f"{fr(PLAFOND)} €", "le plus cher des concurrents premium (Continental)"),
+                                              ("Valeur d'usage", f"{fr(TROIS['valeur_usage'])} €", "même coût pour 10 000 km que le Hankook"),
+                                              ("Prix défendu", f"{fr(PRIX_ACTUEL)} €", "le prix actuel, maintenu")]), large=True)
 
 
 # ---- les versions courtes du code, montrées dans les bandeaux ----------------------------------------------------
@@ -858,7 +926,7 @@ valeur_usage = 81.99 / 40_000 * 50_000                              # {fr(TROIS[
 
 # 2. Le dessin : une même échelle, de 65 € à gauche à 105 € à droite
 x = lambda prix: 150 + (prix - 65) / 40 * 450
-for prix in [prix_couts, prix_concurrence, 94.90, valeur_usage]:
+for prix in [prix_couts, prix_concurrence, valeur_usage]:
     point(x(prix))
 trait_vertical(x(97.90))                                            # le prix que nous défendons"""
     raise KeyError(k)
@@ -905,7 +973,7 @@ BRIQUES = [T, L, barre_v, barre_h, point, boite, fleche, defs_fleches, svg, past
 CODE = {"modele": [modele], "modele-apres": [modele], "tirage": [groupes], "moderation": [groupes], "controle": [divergentes],
         "jauge-d": [jauge], "jauge-v": [jauge], "choix": [colonnes_ic], "robustesse": [robustesse], "precision": [precision],
         "puissance": [courbe_puissance], "logit": [foret], "mediation": [mediation], "echelles": [poids],
-        "rentabilite": [rentabilite], "decision": [decision]}
+        "rentabilite": [rentabilite], "decision": [decision], "trois-prix": [trois_prix]}
 
 
 def bandeau(intro, code):
@@ -965,15 +1033,20 @@ INTRO_TD2 = ("Dessin SVG écrit directement dans la page : chaque segment est un
 # =================================================================================================================
 # 5. Placer les schémas dans les pages
 # =================================================================================================================
-PAGES = {"client.html": [k for k in SCHEMAS if k != "decision"], "synthese.html": ["decision"]}
-for page, noms in PAGES.items():
-    chemin = SITE / page
+# chaque page reçoit les schémas dont elle porte les balises, numérotés dans l'ordre où ils apparaissent
+for chemin in sorted(SITE.glob("*.html")):
+    page = chemin.name
     html = chemin.read_text(encoding="utf-8")
+    noms = re.findall(r"<!-- schema:([\w-]+) -->", html)
+    if not noms:
+        continue
     for n in noms:
         motif = re.compile(rf"(<!-- schema:{re.escape(n)} -->)(.*?)(<!-- /schema:{re.escape(n)} -->)", re.S)
         if not motif.search(html):
             raise SystemExit(f"{page} : balises <!-- schema:{n} --> introuvables")
         html = motif.sub(lambda m: m.group(1) + "\n" + SCHEMAS[n] + "\n" + m.group(3), html)
+    numero = iter(range(1, 100))
+    html = re.sub(r"<figcaption><b>Schéma \d+</b>", lambda m: f"<figcaption><b>Schéma {next(numero)}</b>", html)
     chemin.write_text(html, encoding="utf-8")
     print(f"{page} : {len(noms)} schéma(s) placé(s)")
 # les graphiques écrits à la main dans les pages (barres HTML, graphique du TD 2) reçoivent le même bandeau

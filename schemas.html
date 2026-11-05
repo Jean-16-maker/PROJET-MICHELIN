@@ -11,12 +11,12 @@
 <body>
 <header class="haut"><div class="wrap">
 <a class="marque" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FCE500"/><circle cx="20" cy="20" r="18" fill="none" stroke="#0F2A5C" stroke-width="3" stroke-dasharray="5 3.4"/><circle cx="20" cy="20" r="10" fill="#27509B"/><circle cx="20" cy="20" r="3.4" fill="#FCE500"/></svg><span>Michelin<small>CrossClimate 3 · dossier de prix</small></span></a>
-<nav aria-label="Navigation principale"><a href="index.html">1 · Le marché</a><a href="comptes.html">2 · Comptes</a><a href="prix-psychologique.html">3 · Prix psychologique</a><a href="client.html">4 · Test A/B</a><a href="proposition.html">5 · Proposition</a><a href="synthese.html">Synthèse</a><a href="sources.html">Sources</a></nav>
+<nav aria-label="Navigation principale"><a href="index.html">1 · Le marché</a><a href="comptes.html">2 · Comptes</a><a href="client.html">3 · Test A/B</a><a href="proposition.html">4 · Proposition</a><a href="synthese.html">Synthèse</a><a href="sources.html">Sources</a></nav>
 </div></header>
 <section class="hero"><div class="wrap">
 <span class="kicker">Annexe · Méthode</span>
 <h1>Comment les schémas <em>sont faits</em></h1>
-<p class="chapo">Les seize schémas du dossier sont dessinés par un programme, à partir des réponses du questionnaire. Aucun chiffre n'y est tapé à la main : si une réponse change, une commande redessine tout.</p>
+<p class="chapo">Les dix-sept schémas du dossier sont dessinés par un programme, à partir des réponses du questionnaire. Aucun chiffre n'y est tapé à la main : si une réponse change, une commande redessine tout.</p>
 </div></section>
 <main><div class="wrap">
 
@@ -77,6 +77,7 @@ html = motif.sub(lambda m: m.group(1) + schema + m.group(3), html)</code></pre>
 <p>Depuis le dossier <code>site/</code>, avec l'environnement Python de l'analyse (pandas, scipy, statsmodels), une commande suffit :</p>
 <pre class="code"><code>../analyse-projet-prix/.venv/bin/python annexes/fabriquer_schemas.py
 <span class="c"># client.html : 16 schéma(s) placé(s)</span>
+<span class="c"># proposition.html : 1 schéma(s) placé(s)</span>
 <span class="c"># synthese.html : 1 schéma(s) placé(s)</span>
 <span class="c"># Test A/B : 45 % contre 67 %, p = 0,024 ; puissance 62 % ; point mort de l'effet 13,3 points</span></code></pre>
 
@@ -96,7 +97,7 @@ html = motif.sub(lambda m: m.group(1) + schema + m.group(3), html)</code></pre>
 <p>Le programme a été écrit avec <b>Claude Code</b>, l'IA qui code présentée au cours d'Analyse de données (CM 1) : on décrit ce qu'on veut, l'agent écrit le code, le lance, regarde le résultat et corrige. La méthode a tenu en quatre temps :</p>
 <ol class="flux">
 <li><b>Décrire</b><span>pour chaque étape de l'analyse, le schéma qui répond le mieux à la question, et la phrase qu'il doit permettre d'écrire</span></li>
-<li><b>Factoriser</b><span>une dizaine de briques réutilisables (barre, point, flèche, boîte, axe, échelle) plutôt que seize dessins écrits à la main</span></li>
+<li><b>Factoriser</b><span>une dizaine de briques réutilisables (barre, point, flèche, boîte, axe, échelle) plutôt que dix-sept dessins écrits à la main</span></li>
 <li class="cle"><b>Regarder</b><span>chaque schéma est ouvert dans le navigateur, sur ordinateur et sur téléphone ; les étiquettes qui se chevauchent sont déplacées</span></li>
 <li><b>Recompter</b><span>les chiffres des schémas sont comparés à ceux du classeur Excel de l'analyse, calculés par un autre chemin</span></li>
 </ol>
