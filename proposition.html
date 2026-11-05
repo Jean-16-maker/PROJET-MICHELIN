@@ -33,48 +33,24 @@
 </div>
 <div class="tableau"><table><thead><tr><th class="">Pour 100 automobilistes interrogés</th><th class="n">À 97,90 €</th><th class="n">À 94,90 €</th></tr></thead><tbody><tr><td class="">Acheteurs potentiels</td><td class="n">52</td><td class="n">58</td></tr><tr><td class="">Marge par pneu</td><td class="n">20,22 €</td><td class="n">18,02 €</td></tr><tr class="total"><td class="">Marge totale pour Michelin</td><td class="n">1 051 €</td><td class="n">1 045 €</td></tr></tbody></table></div>
 <div class="bars"><h4>Marge totale pour 100 automobilistes interrogés (€)</h4><div class="bar vedette"><span class="lab">À 97,90 € (52 acheteurs)</span><span class="track"><i style="width:95.5%"></i></span><b>1 051 €</b></div><div class="bar "><span class="lab">À 94,90 € (58 acheteurs)</span><span class="track"><i style="width:95.0%"></i></span><b>1 045 €</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Marge totale pour 100 automobilistes interrogés (€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;À 97,90 € (52 acheteurs)&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:95.5%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;1 051 €&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;À 94,90 € (58 acheteurs)&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:95.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;1 045 €&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> à 94,90 €, il y a 6 acheteurs de plus pour 100 personnes interrogées, mais la marge totale baisse quand même, de 1 051 € à 1 045 € : la hausse du volume ne compense pas la perte de marge.</p>
 
 <h2>Budget marketing de la campagne « Sécurité 4 Saisons »</h2>
 <p>Nous proposons une campagne de <b>2,5 M€</b> en France. Ce montant représente environ 3 % du budget média mondial de Michelin, estimé à 89,5 M$ par an, soit environ 79 M€ <span class="src">[<a href="https://fr.themedialeader.com/omnicom-media-group-decroche-le-budget-michelin/" target="_blank" rel="noopener">The Media Leader</a>]</span>.</p>
 <div class="tableau"><table><thead><tr><th class="">Poste</th><th class="">Détail</th><th class="">Coût unitaire</th><th class="n">Montant</th></tr></thead><tbody><tr><td class="">Télévision</td><td class="">8 spots de 30 s autour du journal de 20 h sur TF1</td><td class="">Environ 100 000 € par spot</td><td class="n">800 000 €</td></tr><tr><td class="">Télévision</td><td class="">10 spots de 30 s entre 18 h et 20 h sur TF1</td><td class="">Environ 30 000 € par spot</td><td class="n">300 000 €</td></tr><tr><td class="">Digital</td><td class="">Google Ads sur « pneu 4 saisons » : environ 238 800 clics</td><td class="">3,35 € par clic</td><td class="n">800 000 €</td></tr><tr><td class="">Distributeurs</td><td class="">Offre « montage remboursé » pour environ 6 000 clients, et publicité sur le lieu de vente</td><td class="">Jusqu'à 100 € par client</td><td class="n">600 000 €</td></tr><tr class="total"><td class="">Total</td><td class=""></td><td class=""></td><td class="n">2 500 000 €</td></tr></tbody></table></div><p class="note">Sources : tarifs TF1 (<span class="src">[<a href="https://www.droit-interim.com/prix-pub-tf1/" target="_blank" rel="noopener">Droit Interim</a>]</span> : 80 000 à 120 000 € autour du journal de 20 h, 20 000 à 50 000 € entre 18 h et 20 h) ; coût par clic du secteur entretien automobile (Growth Angels, 2025) ; offre « montage remboursé » proposée par Michelin jusqu'au 4 octobre 2026 (<span class="src">[<a href="https://www.allopneus.com/produit/pneu-auto/michelin/tourisme-4saisons/crossclimate-3/205-55r16-91h/0002041955" target="_blank" rel="noopener">Allopneus</a>]</span>). Les tarifs TV varient selon la saison et l'audience : ce sont des <span class='statut estime'>ordres de grandeur</span>. Le coût de fabrication du spot n'est pas compté.</p>
 <div class="bars"><h4>Répartition du budget de 2,5 M€ (k€)</h4><div class="bar "><span class="lab">Télévision, journal de 20 h</span><span class="track"><i style="width:100.0%"></i></span><b>800</b></div><div class="bar "><span class="lab">Digital (Google Ads)</span><span class="track"><i style="width:100.0%"></i></span><b>800</b></div><div class="bar "><span class="lab">Distributeurs (montage remboursé)</span><span class="track"><i style="width:75.0%"></i></span><b>600</b></div><div class="bar "><span class="lab">Télévision, 18 h – 20 h</span><span class="track"><i style="width:37.5%"></i></span><b>300</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Répartition du budget de 2,5 M€ (k€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Télévision, journal de 20 h&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;800&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Digital (Google Ads)&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;800&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Distributeurs (montage remboursé)&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:75.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;600&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Télévision, 18 h – 20 h&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:37.5%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;300&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> le budget de 2,5 M€ se répartit entre la télévision (1,1 M€, 44 %), le digital (0,8 M€, 32 %) et les distributeurs (0,6 M€, 24 %).</p>
 <div class="encart">Le choix d'une offre « montage remboursé » plutôt que d'une baisse de prix suit la pratique actuelle de Michelin : le groupe attire les clients par des promotions limitées dans le temps, sans toucher à son prix catalogue.</div>
 
@@ -96,26 +72,12 @@
 <p>Pour un même pneu, le prix public varie de 92 à 106 € selon l'enseigne. Si Michelin facture tous les canaux au même prix (71,79 € HT), l'écart correspond à la marge de chaque distributeur.</p>
 <div class="tableau"><table><thead><tr><th class="">Distributeur (canal)</th><th class="n">Prix TTC</th><th class="n">Prix HT</th><th class="n">Marge implicite par pneu</th><th class="n">Taux de marge</th></tr></thead><tbody><tr><td class=""><a href="https://www.centralepneus.fr/pneu-auto/michelin/crossclimate-3/205-55-r16-91h-1824804" target="_blank" rel="noopener">Centrale Pneus</a> (Internet)</td><td class="n">92,09 €</td><td class="n">76,74 €</td><td class="n">4,95 €</td><td class="n">6,5 %</td></tr><tr><td class=""><a href="https://www.feuvert.fr/trouver-un-pneu/michelin-pneu-4-saisons-michelin-205-55r16-91h-crossclimate-3/p271870.html" target="_blank" rel="noopener">Feu Vert</a> (centre auto)</td><td class="n">96,50 €</td><td class="n">80,42 €</td><td class="n">8,63 €</td><td class="n">10,7 %</td></tr><tr><td class=""><a href="https://www.norauto.fr/e/pneu-michelin-crossclimate-3-et-3-sport.html" target="_blank" rel="noopener">Norauto</a> (centre auto)</td><td class="n">96,90 €</td><td class="n">80,75 €</td><td class="n">8,96 €</td><td class="n">11,1 %</td></tr><tr><td class=""><a href="https://www.allopneus.com/produit/pneu-auto/michelin/tourisme-4saisons/crossclimate-3/205-55r16-91h/0002041955" target="_blank" rel="noopener">Allopneus</a> (Internet)</td><td class="n">97,90 €</td><td class="n">81,58 €</td><td class="n">9,79 €</td><td class="n">12,0 %</td></tr><tr><td class=""><a href="https://www.speedy.fr/pneus/michelin/crossclimate-3-001_FR_50_526798" target="_blank" rel="noopener">Speedy</a> (réparateur rapide)</td><td class="n">105,95 €</td><td class="n">88,29 €</td><td class="n">16,50 €</td><td class="n">18,7 %</td></tr></tbody></table></div><p class="note">Prix <span class='statut constate'>relevés</span> le 1er octobre 2026, en 205/55 R16 91H. La marge implicite est <span class='statut estime'>estimée</span> : les prix réellement facturés par Michelin à chaque enseigne ne sont pas publics.</p>
 <div class="bars"><h4>Marge implicite du distributeur par pneu (€)</h4><div class="bar "><span class="lab">Speedy</span><span class="track"><i style="width:100.0%"></i></span><b>16,50</b></div><div class="bar vedette"><span class="lab">Allopneus (prix étalon)</span><span class="track"><i style="width:59.3%"></i></span><b>9,79</b></div><div class="bar "><span class="lab">Norauto</span><span class="track"><i style="width:54.3%"></i></span><b>8,96</b></div><div class="bar "><span class="lab">Feu Vert</span><span class="track"><i style="width:52.3%"></i></span><b>8,63</b></div><div class="bar "><span class="lab">Centrale Pneus</span><span class="track"><i style="width:30.0%"></i></span><b>4,95</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Marge implicite du distributeur par pneu (€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Speedy&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;16,50&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Allopneus (prix étalon)&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:59.3%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;9,79&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Norauto&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:54.3%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;8,96&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Feu Vert&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:52.3%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;8,63&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Centrale Pneus&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:30.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;4,95&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> pour le même pneu, la marge implicite du distributeur va de 4,95 € sur Internet à 16,50 € chez un réparateur rapide, soit plus du triple. Le distributeur gagne aussi sur la pose : Norauto facture le montage d'un pneu de 15 ou 16 pouces 9,95 € <span class="src">[<a href="https://www.norauto.fr/p/montage-pneu-15-et-16-montage-equilibrage-valve-F0422.html" target="_blank" rel="noopener">Norauto</a>]</span>. C'est ce qui permet aux sites Internet et aux centres auto de vendre le pneu avec une marge faible.</p>
 
 <h3>Communication</h3>
@@ -124,23 +86,12 @@
 <h3>Le compte complet, pneu par pneu</h3>
 <div class="tableau"><table><thead><tr><th class="">Par pneu</th><th class="n">À 97,90 €</th><th class="n">À 94,90 €</th></tr></thead><tbody><tr><td class="">Prix net touché par Michelin</td><td class="n">71,79 €</td><td class="n">69,59 €</td></tr><tr><td class="">Coût de revient (matières, usines, logistique)</td><td class="n">−51,57 €</td><td class="n">−51,57 €</td></tr><tr><td class="">Recherche et développement (3,0 % des ventes)</td><td class="n">−2,18 €</td><td class="n">−2,18 €</td></tr><tr><td class="">Frais commerciaux habituels (4,4 % des ventes)</td><td class="n">−3,18 €</td><td class="n">−3,18 €</td></tr><tr><td class="">Frais généraux et administratifs (9,3 % des ventes)</td><td class="n">−6,70 €</td><td class="n">−6,70 €</td></tr><tr class="total"><td class="">Résultat d'exploitation par pneu</td><td class="n">8,17 € (11,4 %)</td><td class="n">5,97 € (8,6 %)</td></tr></tbody></table></div><p class="note">Les pourcentages viennent du compte de résultat de Michelin du 1er semestre 2025 : 9 358 M€ de coût de revient, 396 M€ de R&amp;D, 577 M€ de frais commerciaux et 1 215 M€ de frais généraux, pour 13 028 M€ de ventes <span class="src">[<a href="https://dgaddcosprod.blob.core.windows.net/cxf-corporate/attachments/e1z4ruaxuxrl2gvprjlz7cfg-2025-first-half-financial-report.pdf" target="_blank" rel="noopener">Rapport semestriel, p. 17</a>]</span>. Ces coûts ne baissent pas quand le prix baisse : on garde les mêmes montants dans les deux colonnes. Valeurs <span class='statut estime'>estimées</span>.</p>
 <div class="bars"><h4>Résultat d'exploitation par pneu (€)</h4><div class="bar vedette"><span class="lab">À 97,90 €</span><span class="track"><i style="width:100.0%"></i></span><b>8,17 €</b></div><div class="bar alerte"><span class="lab">À 94,90 €</span><span class="track"><i style="width:73.1%"></i></span><b>5,97 €</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Résultat d&#x27;exploitation par pneu (€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;À 97,90 €&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;8,17 €&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar alerte&quot;&gt;&lt;span class=&quot;lab&quot;&gt;À 94,90 €&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:73.1%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;5,97 €&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> une baisse de 3 € du prix public fait perdre 2,20 € de résultat par pneu, soit 27 % : les coûts restent les mêmes, toute la baisse tombe sur le résultat.</p>
 
 <h2>Ce que ce budget autorise et ce qu'il interdit</h2>
@@ -154,24 +105,12 @@
 <p><b>Oui, à 97,90 €.</b> À ce prix, le pneu couvre tous ses coûts et rapporte encore 8,17 €. La campagne est remboursée avec un gain net de 1,54 M€ si l'objectif de 200 000 pneus est atteint.</p>
 <div class="tableau"><table><thead><tr><th class="">Scénario</th><th class="n">Pneus vendus en plus</th><th class="n">Marge brute supplémentaire</th><th class="n">Coût de la campagne</th><th class="n">Gain net</th></tr></thead><tbody><tr><td class="">97,90 €</td><td class="n">200 000</td><td class="n">4 044 000 €</td><td class="n">−2 500 000 €</td><td class="n">+1 544 000 €</td></tr><tr><td class="">94,90 €, même volume</td><td class="n">200 000</td><td class="n">3 604 000 €</td><td class="n">−2 500 000 €</td><td class="n">+1 104 000 €</td></tr><tr><td class="">94,90 €, avec 11,6 % de ventes en plus (partie 3)</td><td class="n">223 200</td><td class="n">4 022 064 €</td><td class="n">−2 500 000 €</td><td class="n">+1 522 064 €</td></tr></tbody></table></div><p class="note">Valeurs <span class='statut estime'>estimées</span> à partir de la marge brute par pneu (20,22 € et 18,02 €) et de l'objectif de 200 000 pneus, qui est une <span class='statut hypo'>hypothèse</span> du groupe.</p>
 <div class="bars"><h4>Gain net de la campagne selon le scénario (M€)</h4><div class="bar vedette"><span class="lab">97,90 €</span><span class="track"><i style="width:100.0%"></i></span><b>1,54</b></div><div class="bar "><span class="lab">94,90 €, avec 11,6 % de ventes en plus</span><span class="track"><i style="width:98.6%"></i></span><b>1,52</b></div><div class="bar "><span class="lab">94,90 €, même volume</span><span class="track"><i style="width:71.5%"></i></span><b>1,10</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Gain net de la campagne selon le scénario (M€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;97,90 €&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;1,54&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;94,90 €, avec 11,6 % de ventes en plus&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:98.6%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;1,52&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;94,90 €, même volume&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:71.5%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;1,10&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> même avec les acheteurs supplémentaires prévus par l'enquête, le prix de 94,90 € rapporte un peu moins que 97,90 €. Le prix actuel tient donc, et il reste le meilleur choix une fois tout le budget compté.</p>
 
 <h2>Point mort de la campagne</h2>
@@ -183,23 +122,12 @@
 <p>Nous fixons à la campagne un objectif de <b>200 000 pneus vendus en plus</b>. C'est 62 % au-dessus du point mort à 97,90 €, et cela représente 2,8 % des pneus 4 saisons vendus en France en 2025. Notre scénario d'erreur : les ventes sont inférieures de 30 % à cet objectif. Michelin ne vend que 140 000 pneus et doit écouler 60 000 pneus en stock.</p>
 <div class="tableau"><table><thead><tr><th class="">Coût</th><th class="">Calcul</th><th class="n">Montant</th></tr></thead><tbody><tr><td class="">Stockage pendant 3 mois</td><td class="">60 000 pneus ÷ 36 pneus par palette = 1 667 palettes, × 17,50 € par mois × 3 mois</td><td class="n">87 500 €</td></tr><tr><td class="">Promotion pour écouler le stock</td><td class="">60 000 pneus ÷ 4 = 15 000 clients, × 100 € de montage remboursé</td><td class="n">1 500 000 €</td></tr><tr class="total"><td class="">Coût total de l'erreur</td><td class=""></td><td class="n">1 587 500 €</td></tr></tbody></table></div><p class="note">Sources : stockage de 15 à 20 € par palette et par mois en France (<span class="src">[<a href="https://tarif-logistique.fr/prix-stockage-palette-mois/" target="_blank" rel="noopener">Tarif Logistique</a>]</span>) ; palette de stockage de 36 pneus tourisme (<span class="src">[<a href="https://martinsindustries.com/int_en/passenger-car-tyre-storage-pallet-mer-511" target="_blank" rel="noopener">Martins Industries</a>]</span>) ; offre « montage remboursé » jusqu'à 100 € (<span class="src">[<a href="https://www.allopneus.com/produit/pneu-auto/michelin/tourisme-4saisons/crossclimate-3/205-55r16-91h/0002041955" target="_blank" rel="noopener">Allopneus</a>]</span>).</p>
 <div class="bars"><h4>Coût de l'erreur (€)</h4><div class="bar alerte"><span class="lab">Promotion pour écouler le stock</span><span class="track"><i style="width:93.8%"></i></span><b>1 500 000 €</b></div><div class="bar "><span class="lab">Stockage pendant 3 mois</span><span class="track"><i style="width:5.5%"></i></span><b>87 500 €</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Coût de l&#x27;erreur (€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar alerte&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Promotion pour écouler le stock&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:93.8%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;1 500 000 €&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;Stockage pendant 3 mois&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:5.5%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;87 500 €&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> si les ventes tombent 30 % sous l'objectif, l'erreur coûte 1 587 500 €, dont plus de 94 % pour la seule promotion nécessaire à vider le stock.</p>
 <p>L'erreur coûterait donc <b>0,64 fois le budget de la campagne</b>. Le stockage pèse peu : c'est la promotion nécessaire pour vider le stock qui coûte cher. Dans le pire des cas, si le stock ne trouvait jamais preneur, la perte atteindrait le coût de production des pneus, soit 60 000 × 51,57 € = <b>3 094 145 €</b>.</p>
 
@@ -222,33 +150,12 @@
 <div class="bar alerte"><span class="lab">Coûts +15 % et ventes −30 %</span><span class="track"><i style="width:30.1%"></i></span><b>−752</b></div>
 <div class="bar alerte"><span class="lab">Effet de la durée de vie au plus bas (+3 points)</span><span class="track"><i style="width:75.8%"></i></span><b>−1 894</b></div>
 </div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Gain net de la campagne selon le scénario (k€) · barre pleine = 2 500 k€&lt;/h4&gt;
-
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Scénario prévu&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:61.8%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;+1 545&lt;/b&gt;&lt;/div&gt;
 
-&lt;div class=&quot;bar&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Riposte, prix à 94,90 €&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:44.2%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;+1 105&lt;/b&gt;&lt;/div&gt;
-
-&lt;div class=&quot;bar&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Ventes −30 %&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:13.2%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;+331&lt;/b&gt;&lt;/div&gt;
-
-&lt;div class=&quot;bar alerte&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Coûts +15 %&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:0.4%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;−2&lt;/b&gt;&lt;/div&gt;
-
-&lt;div class=&quot;bar alerte&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Coûts +15 % et ventes −30 %&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:30.1%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;−752&lt;/b&gt;&lt;/div&gt;
-
-&lt;div class=&quot;bar alerte&quot;&gt;&lt;span class=&quot;lab&quot;&gt;Effet de la durée de vie au plus bas (+3 points)&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:75.8%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;−1 894&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> en rouge, les scénarios où la campagne perd de l'argent ; gains et pertes sont sur la même échelle, la barre pleine valant 2,5 M€. Un seul coup dur ne met pas la campagne en perte, sauf une hausse de 15 % des coûts, qui l'amène tout juste à l'équilibre ; deux coups durs à la fois la font perdre 752 k€. Et si l'effet réel des 10 000 km était au bas de ce que permet notre test, la campagne perdrait 1,9 M€ : c'est le risque principal, parce que c'est l'hypothèse la moins précise.</p>
 <h3>Les points de rupture</h3>
 <div class="chiffres">

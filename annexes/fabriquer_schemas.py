@@ -685,6 +685,217 @@ SCHEMAS["decision"] = figure(1, "l'arbre de décision du dossier", decision("dec
 
 
 
+# ---- les versions courtes du code, montrées dans les bandeaux ----------------------------------------------------
+INTRO_COURT = ("Le principe, en version courte : d'abord les chiffres, calculés sur les réponses, puis le dessin "
+               "(les valeurs en commentaire sont celles du graphique). Le code complet, avec tous les réglages de mise en page, "
+               "est dans <a href=\"annexes/fabriquer_schemas.py\">annexes/fabriquer_schemas.py</a>.")
+
+
+def resume(k):
+    """Le code d'un graphique réduit à son principe, en quelques lignes."""
+    if k in ("modele", "modele-apres"):
+        return """# une boîte par idée, une flèche et une pastille par hypothèse
+boite(20, 150, "Version B : Michelin annoncé à 50 000 km")
+boite(225, 24, "Durée perçue")
+boite(450, 150, "Choix du Michelin")
+fleche(version, duree_percue)  ; pastille("H1")
+fleche(version, choix, epaisseur=3)  ; pastille("H2 · l'effet testé")
+fleche(duree_percue, choix)  ; pastille("H4")
+# ... une flèche par hypothèse, de H1 à H8
+# après le test : verte et pleine si l'hypothèse est validée, grise en pointillés sinon
+couleur = VERT if validee else GRIS"""
+    if k == "tirage":
+        return f"""# 1. Les chiffres : la part de chaque classe d'âge dans chaque version
+A = reponses[reponses.version == "A"]                      # {nA} répondants
+B = reponses[reponses.version == "B"]                      # {nB} répondants
+part_A = A.classe_age.value_counts(normalize=True)         # 18-24 : {pc(part(A, "tage", "18-24"))}
+part_B = B.classe_age.value_counts(normalize=True)         # 18-24 : {pc(part(B, "tage", "18-24"))}
+
+# 2. Le dessin : deux colonnes par classe, hautes de la part (150 pixels = 80 %)
+for classe in ["18-24", "25-34", "35-49", "50 et +"]:
+    colonne(classe, hauteur=part_A[classe] / 0.8 * 150, couleur=OCRE)   # version A
+    colonne(classe, hauteur=part_B[classe] / 0.8 * 150, couleur=BLEU)   # version B
+# même chose pour les kilomètres par an"""
+    if k == "moderation":
+        return f"""# 1. Les chiffres : dans chaque classe d'âge, la part qui choisit Michelin, version par version
+michelin = reponses.groupby(["classe_age", "version"]).choix_michelin.mean()
+# 18-24 : {pc(share(A, "tage", "18-24")[0])} en A, {pc(share(B, "tage", "18-24")[0])} en B
+
+# 2. Le dessin : deux colonnes par classe, hautes de la part (150 pixels = 100 %)
+for classe in ["18-24", "25-34", "35-49", "50 et +"]:
+    colonne(classe, hauteur=michelin[classe, "A"] * 150, couleur=OCRE)
+    colonne(classe, hauteur=michelin[classe, "B"] * 150, couleur=BLEU)
+# même chose pour les kilomètres par an"""
+    if k == "controle":
+        return f"""# 1. Les chiffres : la part de chaque réponse, de 1 à 7, dans chaque version
+parts = reponses.groupby("version").manip_km.value_counts(normalize=True)
+# moyenne : {fr(man["moy_A"])} sur 7 en A, {fr(man["moy_B"])} en B
+
+# 2. Le dessin : une barre par version, en 7 morceaux, centrée sur la réponse neutre (4)
+for version in ["A", "B"]:
+    p = parts[version]
+    x = centre - (p[1] + p[2] + p[3] + p[4] / 2) * 240     # « pas d'accord » part vers la gauche
+    for reponse in range(1, 8):
+        rectangle(x, largeur=p[reponse] * 240, couleur=couleurs[reponse])
+        x += p[reponse] * 240                               # le morceau suivant commence où finit celui-ci"""
+    if k == "jauge-d":
+        return f"""# 1. Le chiffre : l'écart entre les deux versions, en écarts-types (d de Cohen)
+d = (moyenne_B - moyenne_A) / ecart_type_commun            # ({fr(man["moy_B"])} − {fr(man["moy_A"])}) ÷ {fr((man["moy_B"] - man["moy_A"]) / man["d"])} = {fr(man["d"])}
+
+# 2. Le dessin : quatre zones (Cohen, 1988), et un repère sur notre valeur
+zones = [0, 0.2, 0.5, 0.8, 1.2]                            # négligeable, petit, moyen, fort
+for debut, fin in zip(zones, zones[1:]):
+    rectangle(x=debut * 400, largeur=(fin - debut) * 400)
+triangle(x=d * 400)"""
+    if k == "jauge-v":
+        return f"""# 1. Le chiffre : la force du lien entre version et choix (V de Cramer)
+V = sqrt(chi2 / N)                                          # √({fr(chi2)} ÷ {N}) = {fr(V)}
+
+# 2. Le dessin : quatre zones (Cohen, 1988), et un repère sur notre valeur
+zones = [0, 0.1, 0.3, 0.5, 0.6]                            # négligeable, petit, moyen, fort
+for debut, fin in zip(zones, zones[1:]):
+    rectangle(x=debut * 800, largeur=(fin - debut) * 800)
+triangle(x=V * 800)"""
+    if k == "choix":
+        return f"""# 1. Les chiffres
+pA, pB = {kA} / {nA}, {kB} / {nB}                                  # {pc(pA)} et {pc(pB)} choisissent Michelin
+icA = proportion_confint({kA}, {nA}, method="wilson")              # de {pc(icA[0])} à {pc(icA[1])}
+icB = proportion_confint({kB}, {nB}, method="wilson")              # de {pc(icB[0])} à {pc(icB[1])}
+
+# 2. Le dessin : 0 % en bas (y = 250), 100 % en haut (y = 40)
+y = lambda part: 250 - part * 210
+colonne(x=150, haut=y(pA), couleur=OCRE)  ;  trait(x=150, de_=y(icA[0]), a=y(icA[1]))
+colonne(x=310, haut=y(pB), couleur=BLEU)  ;  trait(x=310, de_=y(icB[0]), a=y(icB[1]))
+ligne_pointillee(y(0.5))                                   # 50 % : pas de préférence"""
+    if k == "robustesse":
+        return f"""# 1. Les chiffres : la p-value du même test A/B, calculée de plusieurs façons
+p = {{"Chi² de Pearson": chi2_contingency(tableau, correction=False)[1],     # {fr(ROBUSTESSE[0][1], 3)}
+     "Test exact de Fisher": fisher_exact(tableau)[1],                      # {fr(ROBUSTESSE[2][1], 3)}
+     "Régression logistique": logit("michelin ~ version").fit().pvalues[1], # {fr(ROBUSTESSE[3][1], 3)}
+     "Sans les réponses en double": ...}}
+
+# 2. Le dessin : une échelle logarithmique, de 0,001 à gauche à 1 à droite
+x = lambda valeur: 290 + (log10(valeur) + 3) / 3 * 230
+for ligne, (variante, valeur) in enumerate(p.items()):
+    point(x(valeur), y=44 + ligne * 30)
+ligne_pointillee(x(0.05))                                  # le seuil de 5 %"""
+    if k == "precision":
+        return f"""# 1. Les chiffres : l'écart entre B et A, et sa marge d'incertitude à 95 %
+ecart = pB - pA                                                    # +{fr(ecart * 100, 1)} points
+marge = 1.96 * sqrt(pA * (1 - pA) / {nA} + pB * (1 - pB) / {nB})        # {fr((ic_ecart[1] - ecart) * 100, 1)} points
+
+# 2. Le dessin : un point sur l'écart, un trait de part et d'autre
+point(x(ecart))
+trait(de_=x(ecart - marge), a=x(ecart + marge))                    # de +{fr(ic_ecart[0] * 100, 1)} à +{fr(ic_ecart[1] * 100, 1)} points"""
+    if k == "puissance":
+        return f"""# 1. Les chiffres : la chance de voir l'écart, selon le nombre de répondants
+h = 2 * asin(sqrt(pB)) - 2 * asin(sqrt(pA))                # la taille de l'écart : {fr(h)}
+points = [(n, NormalIndPower().power(h, nobs1=n, alpha=0.05)) for n in range(10, 201, 2)]
+
+# 2. Le dessin : une courbe qui relie les points, et deux repères
+courbe(points)
+point({(nA + nB) // 2}, {puissance:.2f})                                  # nous : {pc(puissance)}
+point({n80}, 0.80)                                             # 80 % à {n80} répondants par version
+ligne_pointillee(0.80)"""
+    if k == "logit":
+        return f"""# 1. Les chiffres : la régression logistique du choix
+modele = smf.logit("michelin ~ version_B + fidelite + qualite + prix + age", reponses).fit()
+odds_ratio = exp(modele.params)                    # version B : ×{fr(FOREST[0][1])} ; fidélité : ×{fr(FOREST[1][1])}
+intervalle = exp(modele.conf_int())
+
+# 2. Le dessin : une échelle logarithmique, 1 = aucun effet
+for variable in odds_ratio.index:
+    trait(x(intervalle.loc[variable, 0]), x(intervalle.loc[variable, 1]))
+    point(x(odds_ratio[variable]), couleur=BLEU if modele.pvalues[variable] < 0.05 else GRIS)
+ligne(x(1))"""
+    if k == "mediation":
+        return f"""# 1. Les chiffres : les trois chemins
+a = smf.ols("duree_percue ~ version_B", reponses).fit().params["version_B"]          # +{fr(MED["a"])}
+m = smf.logit("michelin ~ version_B + duree_percue", reponses).fit()
+b, c = m.params["duree_percue"], m.params["version_B"]                              # {fr(MED["b"], 3)} et {fr(MED["c"])}
+# effet indirect a × b : 5 000 tirages au hasard parmi les répondants (bootstrap)
+
+# 2. Le dessin : trois boîtes, trois flèches
+fleche(version, duree_percue, texte=f"a = {{a}}")
+fleche(duree_percue, choix, texte=f"b = {{b}}", pointilles=True)    # nul : en gris
+fleche(version, choix, texte=f"c′ = {{c}}")"""
+    if k == "echelles":
+        return f"""# 1. Les chiffres : le poids de chaque affirmation, par analyse factorielle confirmatoire (semopy)
+modele = "Fidelite =~ LO1 + LO2 + LO3 ; Qualite =~ QL2 + QL3 ; Prix =~ PR1 + PR2 + PR3"
+poids = ...                                                # LO1 : {fr(POIDS["likert_lo1"])} ... PR2 : {fr(POIDS["likert_pr2"])}
+
+# 2. Le dessin : une barre par affirmation, longue de son poids
+for item, valeur in poids.items():
+    barre(item, longueur=valeur * 310, couleur=BLEU if valeur >= 0.70 else ROUGE)
+ligne_pointillee(0.70 * 310)                               # le seuil de 0,70"""
+    if k == "rentabilite":
+        return f"""# 1. Le calcul : le gain net de la campagne, selon l'effet réel des 10 000 km
+def gain(effet):                                   # effet en points
+    pneus = 200_000 * effet / {fr(ecart * 100, 1)}               # les ventes suivent l'effet
+    return pneus * 20.22 - 2_500_000               # marge brute − coût de la campagne
+seuil = 123_614 / 200_000 * {fr(ecart * 100, 1)}                 # gain nul : {fr(SEUIL_EFFET, 1)} points
+
+# 2. Le dessin
+droite(de_=(0, gain(0)), a=(45, gain(45)))
+bande(de_={fr(ic_ecart[0] * 100, 1)}, a={fr(ic_ecart[1] * 100, 1)})                 # ce que permet notre test
+ligne_pointillee(seuil)"""
+    if k == "decision":
+        return """# des boîtes et des flèches, de la question à la recommandation
+boite("Notre question de prix : 97,90 € ou 94,90 € ?")
+boite("Baisser à 94,90 € ?")  ;  boite("Garder 97,90 € : avec quel argument ?")
+boite("Non : la baisse ne se paie pas")
+boite("La marque seule : 45 %")  ;  boite("La durée de vie : 67 %")
+fleche(question, baisser)  ;  fleche(question, garder)
+fleche(garder, duree_de_vie, couleur=VERT)          # la branche validée par le test A/B
+boite("Recommandation : maintenir 97,90 € et vendre la durée de vie")"""
+    if k == "trois-prix":
+        return f"""# 1. Les trois prix
+net = 97.90 / 1.20 * (1 - 0.12)                                    # ce que touche Michelin : {fr(net_actuel)} €
+cout_complet = net * (9358 + 396 + 577 + 1215) / 13028             # {fr(cout_complet)} €
+prix_couts = cout_complet / (1 - 0.117) / (1 - 0.12) * 1.20        # {fr(TROIS["couts"])} €
+prix_concurrence = 93.20                                            # Continental
+valeur_usage = 81.99 / 40_000 * 50_000                              # {fr(TROIS["valeur_usage"])} €
+
+# 2. Le dessin : une même échelle, de 65 € à gauche à 105 € à droite
+x = lambda prix: 150 + (prix - 65) / 40 * 450
+for prix in [prix_couts, prix_concurrence, 94.90, valeur_usage]:
+    point(x(prix))
+trait_vertical(x(97.90))                                            # le prix que nous défendons"""
+    raise KeyError(k)
+
+
+def aligne(code):
+    """Aligne les commentaires de fin de ligne en une seule colonne, pour que le code se lise d'un coup d'œil."""
+    lignes = code.split("\n")
+    coupe = [(l.split("  #", 1) if "  #" in l and not l.lstrip().startswith("#") else [l]) for l in lignes]
+    large = max((len(c[0].rstrip()) for c in coupe if len(c) == 2), default=0)
+    return "\n".join(c[0] if len(c) == 1 else c[0].rstrip().ljust(large) + "   #" + c[1] for c in coupe)
+
+
+def resume_barres(bloc):
+    une = re.search(r'<div class="bar(?: [^"]*)?">.*?</div>', bloc, re.S).group(0)
+    return ("<!-- une barre = un <i> dont la largeur (width) est la valeur, rapportée au maximum du graphique -->\n"
+            + une + "\n\n/* style.css */\n"
+            ".bar .track{background:var(--ciel);height:26px}                  /* la piste */\n"
+            ".bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */")
+
+
+def resume_td2(bloc):
+    noms = ["coût de revient", "autres coûts", "résultat", "distributeur", "TVA"]
+    rects = [re.sub(r"\s*class=\"seg\"|\s*stroke=\"#fff\" stroke-width=\"2\"", "", r) + "/>" for r in re.findall(r'<rect class="seg"[^>]*', bloc)][:5]
+    lignes = "\n".join(f"{r}   <!-- {n} -->" for r, n in zip(rects, noms))
+    return ("<!-- 3 pixels par euro, 0 € en bas (y = 340) : un segment de 51,57 € fait 154,7 pixels de haut -->\n" + lignes
+            + '\n<use href="#col" x="180"/>   <!-- la même colonne, recopiée pour la version B -->\n'
+            '<line y1="60.4" y2="60.4" stroke="#C2410C" stroke-dasharray="6 4"/>   <!-- le plafond de Continental, 93,20 € -->')
+
+
+def resume_graph(bloc):
+    chemin = re.search(r"<path [^>]*>", bloc).group(0)
+    rond = re.search(r"<circle [^>]*>", bloc).group(0)
+    return ("<!-- chaque courbe est un <path> : x = 48 + (prix − 60 €) × 7 ; y = 296 − part × 272 -->\n"
+            + chemin + "\n" + rond + "   <!-- un point par prix testé -->")
+
+
 # =================================================================================================================
 # 4. Sous chaque graphique, un bandeau qui montre le code qui l'a dessiné
 # =================================================================================================================
@@ -718,9 +929,9 @@ def code_python(fonctions):
 INTRO_PY = ("Python, fichier <a href=\"annexes/fabriquer_schemas.py\">annexes/fabriquer_schemas.py</a> : la fonction qui dessine ce graphique, "
             "puis les briques de dessin qu'elle utilise. Les chiffres (parts, tests, intervalles) sont calculés au début du script, "
             "à partir des réponses du questionnaire.")
-for k, fonctions in CODE.items():
+for k in CODE:
     assert SCHEMAS[k].endswith("</figure>"), k
-    SCHEMAS[k] = SCHEMAS[k][:-len("</figure>")] + bandeau(INTRO_PY, code_python(fonctions)) + "</figure>"
+    SCHEMAS[k] = SCHEMAS[k][:-len("</figure>")] + bandeau(INTRO_COURT, aligne(resume(k))) + "</figure>"
 
 
 def blocs(html, classe):
@@ -775,16 +986,14 @@ for chemin in sorted(SITE.glob("*.html")):
                      [(m.start(), propre.index("</svg>", m.start()) + 6) for m in re.finditer(r'<svg class="graph"', propre)]):
             bloc = propre[a:b]
             if classe == "bars":
-                code = bloc.replace('<div class="bar', '\n<div class="bar').replace("</div></div>", "</div>\n</div>")
-                code += "\n\n/* style.css : la mise en forme commune des graphiques en barres */\n" + CSS_BARRES
+                code = resume_barres(bloc)
                 intro = INTRO_BARRES
             elif classe == "graph":
-                code = re.sub(r"(<(?:line|text|rect|path|circle|g|polyline)\b)", r"\n\1", bloc).replace("</svg>", "\n</svg>")
-                code += "\n\n/* style.css */\n" + CSS_GRAPH
+                code = resume_graph(bloc)
                 intro = INTRO_GRAPH
             else:
                 style = re.search(r"<style>(.*?)</style>", propre, re.S).group(1).strip()
-                code, intro = bloc + "\n\n<style>\n" + style + "\n</style>", INTRO_TD2
+                code, intro = resume_td2(bloc), INTRO_TD2
             ajouts.append((b, "\n<!-- code:auto -->" + bandeau(intro, code) + "<!-- /code:auto -->"))
     for b, texte_ in sorted(ajouts, reverse=True):
         propre = propre[:b] + texte_ + propre[b:]

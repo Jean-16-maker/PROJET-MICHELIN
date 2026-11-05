@@ -35,42 +35,20 @@
 
 <div class="grille">
 <div><div class="bars"><h4>Résultat opérationnel des secteurs (M€)</h4><div class="bar "><span class="lab">2024</span><span class="track"><i style="width:100.0%"></i></span><b>3 378</b></div><div class="bar vedette"><span class="lab">2025</span><span class="track"><i style="width:80.5%"></i></span><b>2 719</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Résultat opérationnel des secteurs (M€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;2024&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;3 378&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;2025&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:80.5%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;2 719&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> le résultat opérationnel des secteurs recule de 3 378 à 2 719 M€ entre 2024 et 2025, soit environ −20 % (calcul du groupe) <span class="src">[<a href="https://fr.finance.yahoo.com/actualites/michelin-enregistre-2025-r%C3%A9sultat-op%C3%A9rationnel-164500833.html" target="_blank" rel="noopener">Communiqué (FR)</a>]</span>.</p></div>
 <div><div class="bars"><h4>Marge opérationnelle des secteurs (%)</h4><div class="bar "><span class="lab">2024</span><span class="track"><i style="width:100.0%"></i></span><b>12,4 %</b></div><div class="bar vedette"><span class="lab">2025</span><span class="track"><i style="width:84.7%"></i></span><b>10,5 %</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Marge opérationnelle des secteurs (%)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;2024&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;12,4 %&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;2025&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:84.7%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;10,5 %&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> la marge perd 1,9 point en un an : elle reste à deux chiffres, mais l'année est nettement moins bonne <span class="src">[<a href="https://fr.finance.yahoo.com/actualites/michelin-enregistre-2025-r%C3%A9sultat-op%C3%A9rationnel-164500833.html" target="_blank" rel="noopener">Communiqué (FR)</a>]</span>.</p></div>
 </div>
 
@@ -94,23 +72,12 @@
 <div class="tableau"><table><thead><tr><th class="">Ratio 2025</th><th class="">Calcul</th><th class="n">Résultat</th><th class="">Ce qu'il signifie</th></tr></thead><tbody><tr><td class="">Autonomie financière</td><td class="">Capitaux propres ÷ total du bilan</td><td class="n">51,6 %</td><td class="">Plus de la moitié des actifs est financée par les fonds propres.</td></tr><tr><td class="">Liquidité générale</td><td class="">Actifs courants ÷ passifs courants</td><td class="n">1,9</td><td class="">Michelin peut payer presque deux fois ses dettes à court terme.</td></tr><tr><td class="">Dette nette / EBITDA</td><td class="">2 345 M€ ÷ 4 663 M€</td><td class="n">0,5 an</td><td class="">Il suffirait de 6 mois de résultat d'exploitation pour rembourser la dette.</td></tr></tbody></table></div><p class="note">Ratios <span class='statut estime'>calculés par le groupe</span>. EBITDA des secteurs 2025 : 4 663 M€ <span class="src">[<a href="https://agngnconpm.cloudimg.io/v7/https:/dgaddcosprod.blob.core.windows.net/cxf-corporate/attachments/du5l2qtngtgeurmhnelmczny-2025-annual-results-presentation.pdf" target="_blank" rel="noopener">Présentation des résultats annuels 2025, p. 13</a>]</span>.</p>
 
 <div class="bars"><h4>Dette financière nette (M€)</h4><div class="bar "><span class="lab">2024</span><span class="track"><i style="width:100.0%"></i></span><b>3 112</b></div><div class="bar vedette"><span class="lab">2025</span><span class="track"><i style="width:75.4%"></i></span><b>2 345</b></div></div>
-<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>
-&lt;div class=&quot;bars&quot;&gt;&lt;h4&gt;Dette financière nette (M€)&lt;/h4&gt;
+<!-- code:auto --><details class="code-fig"><summary>Voir le code de ce graphique</summary><p class="note">Graphique en HTML et CSS, sans image ni bibliothèque : chaque barre est une balise &lt;i&gt; dont la largeur (<code>width</code>) est la valeur rapportée au maximum du graphique ; la feuille de style <code>style.css</code> dessine la piste, la couleur et l'alignement des étiquettes.</p><pre class="code"><code>&lt;!-- une barre = un &lt;i&gt; dont la largeur (width) est la valeur, rapportée au maximum du graphique --&gt;
 &lt;div class=&quot;bar &quot;&gt;&lt;span class=&quot;lab&quot;&gt;2024&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:100.0%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;3 112&lt;/b&gt;&lt;/div&gt;
-&lt;div class=&quot;bar vedette&quot;&gt;&lt;span class=&quot;lab&quot;&gt;2025&lt;/span&gt;&lt;span class=&quot;track&quot;&gt;&lt;i style=&quot;width:75.4%&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;2 345&lt;/b&gt;&lt;/div&gt;
-&lt;/div&gt;
 
-/* style.css : la mise en forme commune des graphiques en barres */
-.bars{background:#fff;border:1px solid var(--trait);border-radius:var(--rayon);padding:18px 20px;margin:14px 0 4px}
-.bars h4{margin:0 0 12px;font:800 .95rem/1.2 var(--titre);letter-spacing:.06em;text-transform:uppercase;color:var(--bleu-fonce)}
-.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr 92px;gap:12px;align-items:center;margin:9px 0;font-size:.92rem}
-.bar .track{background:var(--ciel);border-radius:6px;height:26px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--bleu);border-radius:6px 0 0 6px}
-.bar.vedette .track i{background:var(--jaune);box-shadow:inset 0 0 0 3px var(--bleu)}
-.bar.vedette .lab{font-weight:800}
-.bar b{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--titre);font-size:1.05rem}
-.bar.alerte .track i{background:var(--alerte)}
-@media(max-width:560px){.bar{grid-template-columns:1fr 78px;gap:4px 10px}.bar .lab{grid-column:1/-1}}</code></pre></details><!-- /code:auto -->
+/* style.css */
+.bar .track{background:var(--ciel);height:26px}                  /* la piste */
+.bar .track i{display:block;height:100%;background:var(--bleu)}  /* la barre */</code></pre></details><!-- /code:auto -->
 <p class="lecture"><b>Lecture.</b> la dette nette recule d'environ un quart en un an, de 3 112 à 2 345 M€, alors même que le résultat baisse : le groupe se désendette <span class="src">[<a href="https://agngnconpm.cloudimg.io/v7/https:/dgaddcosprod.blob.core.windows.net/cxf-corporate/attachments/zitbllli0ym93f0dm62a9flp-financial-information-at-december-31-2025.pdf" target="_blank" rel="noopener">Communiqué (PDF)</a>]</span>.</p>
 
 <div class="grille">
